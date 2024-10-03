@@ -86,7 +86,8 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
     <div
       style={{
         width: "100%",
-        background: "#fff",
+        background: "black",
+        //background: "rgb(239, 239, 239)",
         //background: "rgb(26,148,255)",
         display: "flex",
         justifyContent: "center",

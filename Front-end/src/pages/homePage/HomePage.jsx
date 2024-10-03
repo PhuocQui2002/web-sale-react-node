@@ -33,7 +33,9 @@ function HomePage() {
     queryFn: async () => {
       const res = await ProductService.getAllProduct();
       return res;
-    },  retry: 3, retryDelay: 1000,
+    },
+    retry: 3,
+    retryDelay: 1000,
   });
   console.log("data-product", products);
   return (
@@ -71,21 +73,20 @@ function HomePage() {
             {products?.data?.map((product) => {
               return (
                 <CartComponent
-                key={product._id}
-                countInStock={product.countInStock}
-                description={product.description}
-                image={product.image}
-                name={product.name}
-                price={product.price}
-                rating={product.rating}
-                type={product.type}
-                selled={product.selled}
-                discount={product.discount}
-                id={product._id}
+                  key={product._id}
+                  countInStock={product.countInStock}
+                  description={product.description}
+                  image={product.image}
+                  name={product.name}
+                  price={product.price}
+                  rating={product.rating}
+                  type={product.type}
+                  selled={product.selled}
+                  discount={product.discount}
+                  id={product._id}
                 />
               );
             })}
-            
           </WrapperProducts>
           <div
             style={{
