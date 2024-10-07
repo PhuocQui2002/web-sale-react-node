@@ -23,17 +23,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-
   const [avatar, setAvatar] = useState("");
 
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     UserService.updateUser(id, rests, access_token);
   });
+
   const dispatch = useDispatch();
   const { isSuccess, isError } = mutation;
 
@@ -44,6 +45,16 @@ const ProfilePage = () => {
     setAddress(user?.address);
     setAvatar(user?.avatar);
   }, [user]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success("Cập nhật thành công");
+      handleGetDetailsUser(user?.id, user?.access_token);
+    } else if (isError) {
+      message.error();
+    }
+  }, [isSuccess, isError]);
+
   const handleOnchangeEmail = (value) => {
     setEmail(value);
   };
@@ -64,18 +75,10 @@ const ProfilePage = () => {
     }
     setAvatar(file.preview);
   };
-  useEffect(() => {
-    if (isSuccess) {
-      message.success();
-      handleGetDetailsUser(user?.id, user?.access_token);
-    } else if (isError) {
-      message.error();
-    }
-  }, [isSuccess, isError]);
 
   const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
-    console.log("res-update ", res);
+    //console.log("res-update ", res);
     dispatch(updateUser({ ...res?.data, access_token: token }));
   };
   const handleUpdate = () => {
@@ -89,6 +92,7 @@ const ProfilePage = () => {
       access_token: user?.access_token,
     });
   };
+
   return (
     <div
       style={{
@@ -205,6 +209,7 @@ const ProfilePage = () => {
           </WrapperUploadFile>
           {avatar && (
             <img
+              key={avatar}
               src={avatar}
               style={{
                 height: "60px",

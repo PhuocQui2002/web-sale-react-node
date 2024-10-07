@@ -75,14 +75,18 @@ export const deleteProduct = async (id, access_token) => {
   return res.data;
 };
 
-// export const deleteManyProduct = async (data, access_token,) => {
-//     const res = await axiosJWT.post(`${import.meta.env.VITE_API_URL}/product/delete-many`, data, {
-//         headers: {
-//             token: `Bearer ${access_token}`,
-//         }
-//     })
-//     return res.data
-// }
+export const deleteManyProduct = async (data, access_token) => {
+  const res = await axiosJWT.post(
+    `${import.meta.env.VITE_API_URL}/product/deleteMany`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
 
 export const getAllTypeProduct = async () => {
   const res = await axios.get(

@@ -46,19 +46,20 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //setLoading(true)
+    setLoading(true)
+    //console.log("user?.name test", user?.name)
     setUserName(user?.name);
     setUserAvatar(user?.avatar);
-    //setLoading(false)
+    setLoading(false)
   }, [user?.name, user?.avatar]);
 
   const handleLogOut = async () => {
-    setLoading(true);
+    //setLoading(true);
     console.log("setLoading1", loading);
     await UserService.logOutUser();
     dispatch(resetUser());
     localStorage.removeItem("access_token");
-    setLoading(false);
+    //setLoading(false);
   };
   const handleProfile = () => {
     navigate("/profilePage");
@@ -175,6 +176,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
               )}
             </WrapperHeaderAccout>
           </LoadingComponent>
+
           {!isHiddenCart && (
             <div
               onClick={onNavigateShopingCart}
