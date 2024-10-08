@@ -1,14 +1,14 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
-import { Col, Row, Image } from "antd";
+import React, { useEffect, useState } from "react";
+import { Col, Row, Image, Rate } from "antd";
 import img from "../../assets/images/logoDN.jpg";
-//import imgSmall from "../../assets/images/imagesmall.webp";
+
 import { StarFilled, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import * as ProductService from "../../services/ProductService";
+
 import {
   WrapperPriceProduct,
   WrapperPriceTextProduct,
-  // WrapperStyleColImage,
-  // WrapperStyleImageSmall,
   WrapperStyleNameProduct,
   WrapperStyleTextSell,
   WrapperAddressProduct,
@@ -16,76 +16,78 @@ import {
   WrapperInputNumber,
 } from "./style";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
+import LoadingComponent from "../loadingComponent/loadingComponent";
+import { useSelector } from "react-redux";
 
-function ProductDetailsComponent() {
-//   const [cart, setCart] = useState([]); 
-//   const [product, setProduct] = useState(null);
+const ProductDetailsComponent = ({ idProduct }) => {
+  // useEffect(() => {
+  //   fetchGetDetailsProduct();
+  // }, []);
+  const user = useSelector((state) => state.user);
 
-//   const addToCart = (product) => {
-//       setCart((prevCart) => [...prevCart, product]); 
-//       alert('Them thanh cong');
-//   };
-//   const removeFromCart = (productId) => {
-//     setCart((prevCart) => prevCart.filter((item) => item.id !== productId)); 
-// };
+  const [numProduct, setNumProduct] = useState(0);
+  const onChangeInput = (value) => {
+    setNumProduct(Number(value));
+  };
+
+  const fetchGetDetailsProduct = async (context) => {
+    const id = context?.queryKey && context?.queryKey[1];
+    if (id) {
+      const res = await ProductService.getDetailsProduct(id);
+      return res.data;
+    }
+    throw new Error("Invalid Product ID"); // Ném lỗi nếu không có ID
+  };
+  const {
+    isLoading,
+    isError,
+    data: productDetails,
+  } = useQuery({
+    queryKey: ["product-details", idProduct],
+    queryFn: fetchGetDetailsProduct,
+    enabled: !!idProduct, // Chỉ thực hiện truy vấn khi idProduct có giá trị
+  });
+
+  console.log("productDetails", productDetails);
+  const handleChangeCount = (type) => {
+    console.log("type", type);
+    if (type === "increase") {
+      setNumProduct(numProduct + 1);
+    } else {
+      setNumProduct(numProduct - 1);
+    }
+  };
   return (
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
         span={10}
         style={{ borderRight: "1px solid #e5e5e5", paddingRight: "5px" }}
       >
-        <Image src={img} alt="img product" preview={true} />
-        {/* <Row
-          style={{
-            padding: "10px",
-            justifyContent: "space-between",
-          }}
-        >
-          <WrapperStyleColImage span={4}>
-            <WrapperStyleImageSmall
-              src={imgSmall}
-              alt="img small"
-              preview={true}
-            />
-          </WrapperStyleColImage>
-          <WrapperStyleColImage span={4}>
-            <WrapperStyleImageSmall
-              src={imgSmall}
-              alt="img small"
-              preview={true}
-            />
-          </WrapperStyleColImage>
-          <WrapperStyleColImage span={4}>
-            <WrapperStyleImageSmall
-              src={imgSmall}
-              alt="img small"
-              preview={true}
-            />
-          </WrapperStyleColImage>
-          <WrapperStyleColImage span={4}>
-            <WrapperStyleImageSmall
-              src={imgSmall}
-              alt="img small"
-              preview={true}
-            />
-          </WrapperStyleColImage>
-          
-        </Row> */}
+        <Image src={productDetails?.image} alt="img product" preview={true} />
       </Col>
       <Col span={14} style={{ paddingLeft: "10px" }}>
-        <WrapperStyleNameProduct>Tranh phong cảnh</WrapperStyleNameProduct>
+        <WrapperStyleNameProduct>
+          {productDetails?.name}
+        </WrapperStyleNameProduct>
         <div>
-          <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
-          <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
-          <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
+          <Rate
+            allowHalf
+            defaultValue={productDetails?.rating}
+            value={productDetails?.rating}
+          />
+
           <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
         </div>
+
+        <div>{productDetails?.description}</div>
         <WrapperPriceProduct>
-          <WrapperPriceTextProduct>Giá: 200$</WrapperPriceTextProduct>
+          <WrapperPriceTextProduct>
+            {productDetails?.price.toLocaleString()} VNĐ
+          </WrapperPriceTextProduct>
         </WrapperPriceProduct>
         <WrapperAddressProduct>
           <span>Giao đến </span>
-          <span className="address">3/2,Quận Ninh Kiều, TP Cần Thơ</span>-
+          <span className="address">{user?.address}</span>-
           <span className="change-address">Đổi địa chỉ</span>
         </WrapperAddressProduct>
         <div
@@ -104,6 +106,7 @@ function ProductDetailsComponent() {
                 background: "transparent",
                 cursor: "pointer",
               }}
+              onClick={() => handleChangeCount("decrease")}
             >
               <MinusOutlined
                 style={{
@@ -112,13 +115,19 @@ function ProductDetailsComponent() {
                 }}
               />
             </button>
-            <WrapperInputNumber defaultValue={3} size="3" />
+            <WrapperInputNumber
+              defaultValue={1}
+              onChange={onChangeInput}
+              value={numProduct}
+              size="small"
+            />
             <button
               style={{
                 border: "none",
                 background: "transparent",
                 cursor: "pointer",
               }}
+              onClick={() => handleChangeCount("increase")}
             >
               <PlusOutlined
                 style={{
@@ -171,6 +180,6 @@ function ProductDetailsComponent() {
       </Col>
     </Row>
   );
-}
+};
 
 export default ProductDetailsComponent;

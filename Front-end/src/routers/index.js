@@ -33,7 +33,7 @@ export const routers = [
     isShowHeader: true,
   },
   {
-    path: "/productdetails",
+    path: "/productdetails/:id",
     page: ProductDetailsPage,
     isShowHeader: true,
   },

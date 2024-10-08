@@ -6,19 +6,12 @@ import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 
 const ButtonInputSearch = (props) => {
   const {
-    // eslint-disable-next-line no-undef, react/prop-types
     size,
-    // eslint-disable-next-line react/prop-types
     placeholder,
-    // eslint-disable-next-line react/prop-types
     textButton,
-    // eslint-disable-next-line react/prop-types
     backgroundInput = "#fff",
-    // eslint-disable-next-line react/prop-types
     backgroundButton = "rgb(13,92,182)",
-    // eslint-disable-next-line react/prop-types, no-unused-vars
     colorButton = "#fff",
-    // eslint-disable-next-line react/prop-types
     bordered,
   } = props;
   return (
@@ -28,17 +21,19 @@ const ButtonInputSearch = (props) => {
         placeholder={placeholder}
         //bordered ={bordered}
         style={{ background: backgroundInput }}
+        {...props}
       />
-        <ButtonCpmponent
-          size={size}
-          bordered={bordered}
-          icon={<SearchOutlined color={colorButton} />}
-          styleButton={{ background: backgroundButton, border: !bordered && "none" }}
-          textButton = {textButton}
-          styleStextButton={{color : colorButton}}
-        >
-          
-        </ButtonCpmponent>
+      <ButtonCpmponent
+        size={size}
+        bordered={bordered}
+        icon={<SearchOutlined color={colorButton} />}
+        styleButton={{
+          background: backgroundButton,
+          border: !bordered && "none",
+        }}
+        textButton={textButton}
+        styleStextButton={{ color: colorButton }}
+      ></ButtonCpmponent>
     </div>
   );
 };

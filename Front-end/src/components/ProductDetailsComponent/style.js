@@ -32,7 +32,7 @@ export const WrapperPriceProduct = styled.div`
 
 export const WrapperPriceTextProduct = styled.h1`
     font-size: 32px;
-    line-height: 40px;
+    line-height: 10px;
     margin-right: 8px;
     font-weight: 500;
     padding: 10px;

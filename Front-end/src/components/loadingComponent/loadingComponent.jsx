@@ -1,13 +1,9 @@
 import { Spin } from "antd";
-
-// eslint-disable-next-line no-unused-vars
 import React from "react";
 
-// eslint-disable-next-line react/prop-types
-const LoadingComponent = ({ children, isPending, deday = 1000 }) => {
-    
+const LoadingComponent = ({ children, isPending, delay = 2000 }) => {
   return (
-    <Spin spinning = {isPending} delay={deday}>
+    <Spin spinning={isPending} delay={delay}>
       {children}
     </Spin>
   );

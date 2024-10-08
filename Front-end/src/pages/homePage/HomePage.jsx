@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TypeProduct from "../../components/typeProduct/TypeProduct";
 import {
   WrapperButtonMore,
@@ -12,41 +12,39 @@ import slider2 from "../../assets/images/slider5.jpg";
 import slider3 from "../../assets/images/slider6.jpg";
 import * as ProductService from "../../services/ProductService";
 import CartComponent from "../../components/cartComponent/CartComponent";
-// import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
-//import NavbarComponent from "../../components/navbarComponent/NavbarComponent";
+import { useSelector } from "react-redux";
+import LoadingComponent from "../../components/loadingComponent/loadingComponent";
+import { useDebounce } from "../../hooks/useDebounce";
 
 function HomePage() {
+  const [limit, setLimit] = useState(10);
   const arr = ["Trang chủ", "Sản phẩm bán chạy", "Liên hệ", "Thông tin"];
 
-  // const { data} = useQuery( {queryKey: ["products"], queryFn: async() => {
-  //   const res = await  ProductService.getAllProduct()
-  //   return res.json()
-  // } )
-  // const {data: users = [], refetch} = useQuery({queryKey:['users'], queryFn: async() => {
-  //   const res = await fetch('http://localhost:5000/users')
-  //   return res.json();
-  //  })
-  const { data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const res = await ProductService.getAllProduct();
-      return res;
-    },
+  const searchProduct = useSelector((state) => state?.product?.search);
+  const searchDebounce = useDebounce(searchProduct, 1000);
+
+  const fetchProductAll = async (context) => {
+    const search = context?.queryKey && context?.queryKey[2];
+    const limit = context?.queryKey && context?.queryKey[1];
+    const res = await ProductService.getAllProduct(search, limit);
+    return res;
+  };
+
+  const { isLoading, data: products, isFetching } = useQuery({
+    queryKey: ["products", limit, searchDebounce],
+    queryFn: fetchProductAll,
+    keepPreviousData: true,
     retry: 3,
     retryDelay: 1000,
   });
-  console.log("data-product", products);
+
   return (
-    <>
+    <LoadingComponent isPending={isLoading || isFetching} delay={0}>
       <div style={{ width: "1270px", margin: "0 auto" }}>
         <WrapperTypeProduct>
           {arr.map((item) => {
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <TypeProduct name={item} key={item} />
-            );
+            return <TypeProduct name={item} key={item} />;
           })}
         </WrapperTypeProduct>
       </div>
@@ -61,15 +59,7 @@ function HomePage() {
           }}
         >
           <SliderComponent arrImages={[slider1, slider2, slider3]} />
-          <WrapperProducts
-          // style={{
-          //   marginTop: "20px",
-          //   display: "flex",
-          //   alignItems: "center",
-          //   gap: "55px",
-          //   flexWrap: "wrap",
-          // }}
-          >
+          <WrapperProducts>
             {products?.data?.map((product) => {
               return (
                 <CartComponent
@@ -97,22 +87,26 @@ function HomePage() {
             }}
           >
             <WrapperButtonMore
-              textButton="Xem them"
+              textButton={isFetching ? "Load more" : "Xem thêm"}
+              disabled={
+                products?.total === products?.data?.length ||
+                products?.totalPage === 1
+              }
+              onClick={() => setLimit((prev) => prev + 5)}
               type="outline"
               styleButton={{
                 border: "1px solid rgb(11,116,229)",
                 color: "rgb(11,116,229)",
                 width: "240px",
                 height: "38px",
-                borderRadius: "5px",
+                borderRadius: "4px",
               }}
               styleStextButton={{ fontWeight: 500 }}
             />
           </div>
-          {/* <NavbarComponent/> */}
         </div>
       </div>
-    </>
+    </LoadingComponent>
   );
 }
 

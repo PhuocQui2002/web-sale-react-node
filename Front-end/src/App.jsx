@@ -31,14 +31,9 @@ export function App() {
   // }
   useEffect(() => {
     const { storageData, decoded } = handleDecoded();
-    console.log(
-      "storageData",
-      storageData,
-      "isJsonString(storageData)",
-      isJsonString,
-      "decoded",
-      decoded
-    );
+    // console.log("storageData", storageData);
+    // console.log("isJsonString(storageData)", isJsonString);
+    // console.log("decoded", decoded);
 
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData);

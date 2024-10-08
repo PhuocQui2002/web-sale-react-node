@@ -245,7 +245,7 @@ const AdminProductComponent = () => {
 
   const {
     data: dataDeleted,
-    //isLoading: isLoadingDeleted,
+    isLoading: isLoadingDeleted,
     isSuccess: isSuccessDelected,
     isError: isErrorDeleted,
   } = mutationDeleted;

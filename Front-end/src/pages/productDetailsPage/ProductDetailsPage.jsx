@@ -1,8 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
+import { useNavigate, useParams } from 'react-router-dom'
 import ProductDetailsComponent from "../../components/ProductDetailsComponent/ProductDetailsComponent";
 
 function ProductDetailsPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -12,7 +15,7 @@ function ProductDetailsPage() {
       }}
     >
       <h5>Chi tiết sản phẩm</h5>
-      <ProductDetailsComponent />
+      <ProductDetailsComponent  idProduct={id}/>
     </div>
   );
 }

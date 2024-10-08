@@ -1,11 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
 import NavbarComponent from "../../components/navbarComponent/NavbarComponent";
-import CartComponent1 from "../../components/cartComponent/CartComponent";
-import CartComponent2 from "../../components/cartComponent/CartComponent2";
-import CartComponent3 from "../../components/cartComponent/CartComponent3";
-import CartComponent4 from "../../components/cartComponent/CartComponent4";
-import CartComponent5 from "../../components/cartComponent/CartComponent5";
+import CartComponent from "../../components/cartComponent/CartComponent";
+
 import { Row } from "antd";
 import { Pagination } from "antd";
 import { WrapperProducts, WrapperNavbar } from "./styles";
@@ -33,17 +30,8 @@ function TypeProcduct() {
             <NavbarComponent />
           </WrapperNavbar>
           <WrapperProducts span={20}>
-            <CartComponent1 />
-            <CartComponent2 />
-            <CartComponent3 />
-            <CartComponent1 />
-            <CartComponent2 />
-            <CartComponent3 />
-            <CartComponent4 />
-            <CartComponent5 />
-            <CartComponent3 />
-            <CartComponent4 />
-            <CartComponent5 />
+            <CartComponent />
+          
           </WrapperProducts>
         </Row>
         <Pagination

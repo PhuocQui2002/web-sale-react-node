@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { Badge, Button, Col, Image, Popover } from "antd";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   UserOutlined,
@@ -19,9 +20,7 @@ import ButtonInputSearch from "../buttonInputSearch/ButtonInputSearch";
 import mixilogo from "../../assets/images/mixilogo.jpg";
 import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slides/userSlide";
-
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { searchProduct } from "../../redux/slides/productSlide";
 import LoadingComponent from "../loadingComponent/loadingComponent";
 
 // eslint-disable-next-line react/prop-types
@@ -32,9 +31,11 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
 
   const [userName, setUserName] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
+  const [search, setSearch] = useState("");
 
-  const onSearch = () => {
-    alert("Search");
+  const onSearch = (e) => {
+    setSearch(e.target.value);
+    dispatch(searchProduct(e.target.value));
   };
   const onNavigateShopingCart = () => {
     navigate("/shoppingCart");
@@ -46,11 +47,11 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     //console.log("user?.name test", user?.name)
     setUserName(user?.name);
     setUserAvatar(user?.avatar);
-    setLoading(false)
+    setLoading(false);
   }, [user?.name, user?.avatar]);
 
   const handleLogOut = async () => {
@@ -129,7 +130,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
               textButton="Search"
               bordered=""
               size="large"
-              onSearch={onSearch}
+              onChange={onSearch}
               placeholder="input search text"
             />
           </Col>

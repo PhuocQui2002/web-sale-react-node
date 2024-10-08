@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-// eslint-disable-next-line no-unused-vars
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   StyleNameProduct,
   WrapperReportText,
@@ -11,26 +10,35 @@ import {
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
 import logo from "../../assets/images/logo.png";
+
 //import painting from "../../assets/images/logoDN.jpg";
 
 const CartComponent = (props) => {
+
+  
+  
   const {
-      countInStock,
-      description,
-      image,
-      name,
-      price,
-      rating,
-      type,
-      discount,
-      selled,
-      id,
+    countInStock,
+    description,
+    image,
+    name,
+    price,
+    rating,
+    type,
+    discount,
+    selled,
+    id,
   } = props;
+  const navigate = useNavigate();
+  const handleDetailsProduct = (id) => {
+    navigate(`/productdetails/${id}`);
+  };
   return (
     <WrapperCardStyle
       hoverable
       style={{ width: "230px" }}
       cover={<img alt="example" src={image} />}
+      onClick={() => handleDetailsProduct(id)}
     >
       <img
         src={logo}
@@ -54,7 +62,8 @@ const CartComponent = (props) => {
         <span>| Đã bán {selled} </span>
       </WrapperReportText>
       <WrapperPriceText>
-        {price} VNĐ <WrapperDiscountText>giảm { discount || 5}%</WrapperDiscountText>
+        {price.toLocaleString()} VNĐ{" "}
+        <WrapperDiscountText>giảm {discount || 5}%</WrapperDiscountText>
       </WrapperPriceText>
     </WrapperCardStyle>
   );
