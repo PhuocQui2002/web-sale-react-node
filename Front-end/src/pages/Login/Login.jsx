@@ -21,12 +21,14 @@ import imageLogo from "../../assets/images/logo1.jpg";
 import mixilogo from "../../assets/images/mixilogo.jpg";
 // import { FromContainer } from "./style";
 // import logo from "../../assets/images/logo.svg";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 function SignInPage() {
+  const user = useSelector((state) => state.user);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -54,8 +56,13 @@ function SignInPage() {
   const { data, isPending, isSuccess } = mutation;
 
   useEffect(() => {
+    
     if (isSuccess) {
-      navigate("/");
+      if (location?.state) {
+        navigate(location?.state);
+      } else {
+        navigate("/");
+      }
 
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 

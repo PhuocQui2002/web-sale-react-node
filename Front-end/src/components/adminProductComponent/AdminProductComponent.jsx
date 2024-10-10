@@ -7,10 +7,10 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { WrapperHeader, WrapperUploadFile } from "./style";
-import { Button, Modal, Form, Space } from "antd";
+import { Button, Modal, Form, Space, Select } from "antd";
 import TableComponent from "../tableComponent/table";
 import InputComponent from "../inputComponent/InputComponent";
-import { getBase64 } from "../../utils";
+import { getBase64, renderOptions } from "../../utils";
 import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/messageComponent/messageComponent";
@@ -21,10 +21,22 @@ import ModalComponent from "../modalComponent/ModalComponent";
 
 const AdminProductComponent = () => {
   const user = useSelector((state) => state?.user);
+  // const inittial = () => ({
+  //   name: "",
+  //   price: "",
+  //   description: "",
+  //   rating: "",
+  //   image: "",
+  //   type: "",
+  //   countInStock: "",
+  //   newType: "",
+  //   discount: "",
+  // });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [typeProducts, setTypeProducts] = useState([]);
 
   ////////////////////////////////
   const [searchText, setSearchText] = useState("");
@@ -84,7 +96,20 @@ const AdminProductComponent = () => {
   //   console.log("Success:", stateProduct);
   // };
   const onFinish = () => {
-    mutation.mutate(stateProduct, {
+    const params = {
+      name: stateProduct.name,
+      price: stateProduct.price,
+      description: stateProduct.description,
+      rating: stateProduct.rating,
+      image: stateProduct.image,
+      type:
+        stateProduct.type === "add_type"
+          ? stateProduct.newType
+          : stateProduct.type,
+      countInStock: stateProduct.countInStock,
+      discount: " ",
+    };
+    mutation.mutate(params, {
       onSuccess: () => {
         // Gọi refetch để cập nhật dữ liệu bảng sau khi thêm thành công
         queryProduct.refetch();
@@ -186,6 +211,7 @@ const AdminProductComponent = () => {
     }
     //setIsLoadingUpdate(false);
   };
+
   console.log("StateEditProduct", stateEditProduct);
 
   useEffect(() => {
@@ -386,6 +412,10 @@ const AdminProductComponent = () => {
     //   ),
   });
   ////////////////////////////////
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    return res;
+  };
 
   const queryProduct = useQuery({
     queryKey: ["products"],
@@ -394,6 +424,12 @@ const AdminProductComponent = () => {
       return res;
     },
   });
+
+  const typeProduct = useQuery({
+    queryKey: ["type-product"],
+    queryFn: fetchAllTypeProduct,
+  });
+  console.log("typeProduct-type", typeProduct);
   const { data: products } = queryProduct;
 
   console.log("data-product", products);
@@ -523,7 +559,12 @@ const AdminProductComponent = () => {
     });
     form.resetFields();
   };
-
+  const handleChangeSelect = (value) => {
+    setStateProduct({
+      ...stateProduct,
+      type: value,
+    });
+  };
   return (
     <div>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -612,12 +653,35 @@ const AdminProductComponent = () => {
               },
             ]}
           >
-            <InputComponent
+            {/* <InputComponent
               onChange={handleOnChange}
               value={stateProduct.type}
               name="type"
+            /> */}
+            <Select
+              name="type"
+              defaultValue=""
+              value={stateProduct.type}
+              style={{ width: 120 }}
+              onChange={handleChangeSelect}
+              options={renderOptions(typeProduct?.data?.data)}
             />
           </Form.Item>
+          {stateProduct.type === "add_type" && (
+            <Form.Item
+              label="New type"
+              name="newType"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              <InputComponent
+                value={stateProduct.newType}
+                // eslint-disable-next-line no-undef
+                onChange={handleOnChange}
+                name="newType"
+              />
+            </Form.Item>
+          )}
+
           <Form.Item
             label="Giá sản phẩm"
             name="price"

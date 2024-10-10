@@ -33,6 +33,8 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const [userAvatar, setUserAvatar] = useState("");
   const [search, setSearch] = useState("");
 
+  const order = useSelector((state) => state.order);
+
   const onSearch = (e) => {
     setSearch(e.target.value);
     dispatch(searchProduct(e.target.value));
@@ -185,7 +187,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
                 cursor: "pointer",
               }}
             >
-              <Badge count={4} size="small">
+              <Badge count={order?.orderItems?.length} size="small">
                 <ShoppingOutlined style={{ fontSize: "30px", color: "#fff" }} />
               </Badge>
               <WrapperTextHeader>Cart</WrapperTextHeader>

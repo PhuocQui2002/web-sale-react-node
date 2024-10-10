@@ -5,6 +5,8 @@ import img from "../../assets/images/logoDN.jpg";
 import { StarFilled, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   WrapperPriceProduct,
@@ -17,12 +19,16 @@ import {
 } from "./style";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import LoadingComponent from "../loadingComponent/loadingComponent";
-import { useSelector } from "react-redux";
+import { addOrderProduct } from "../../redux/slides/orderSlide";
 
 const ProductDetailsComponent = ({ idProduct }) => {
   // useEffect(() => {
   //   fetchGetDetailsProduct();
   // }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log("location", location);
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   const [numProduct, setNumProduct] = useState(0);
@@ -49,6 +55,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
   });
 
   console.log("productDetails", productDetails);
+  console.log("user", user);
+
   const handleChangeCount = (type) => {
     console.log("type", type);
     if (type === "increase") {
@@ -57,6 +65,25 @@ const ProductDetailsComponent = ({ idProduct }) => {
       setNumProduct(numProduct - 1);
     }
   };
+  console.log("numProduct:", numProduct);
+  const handleAddOrderProduct = () => {
+    if (!user?.id) {
+      navigate("/login", { state: location?.pathname });
+    } else {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: productDetails?.name,
+            amount: numProduct,
+            image: productDetails?.image,
+            price: productDetails?.price,
+            product: productDetails?._id,
+          },
+        })
+      );
+    }
+  };
+
   return (
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
@@ -98,7 +125,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
             borderBottom: "1px solid #e5e5e5",
           }}
         >
-          <div style={{ marginTop: "6px" }}>Số lượng</div>
+          <div style={{ marginTop: "6px", marginBottom: "6px" }}>
+            Số lượng trong kho {productDetails?.countInStock}{" "}
+          </div>
           <WrapperQualityProduct>
             <button
               style={{
@@ -156,6 +185,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
               fontSize: "15px",
               fontweight: "700",
             }}
+            onClick={handleAddOrderProduct}
           />
           <ButtonCpmponent
             //bodered={false}

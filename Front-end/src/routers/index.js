@@ -4,7 +4,7 @@ import Register from "../pages/Register/Register";
 import HomePage from "../pages/homePage/HomePage";
 import NotFoundPage from "../pages/notFoundPage/NotFoundPage";
 import shoppingCart from "../pages/orderPage/OrderPage";
-import ProductPage from "../pages/productPages/ProductPage";
+
 import TypeProcduct from "../pages/typeProduct/TypeProcduct";
 import ProfilePage from "../pages/profilePage/ProfilePage";
 import AdminPage from "../pages/adminPage/AdminPage";
@@ -23,12 +23,7 @@ export const routers = [
     isShowHeader: true,
   },
   {
-    path: "/product",
-    page: ProductPage,
-    isShowHeader: true,
-  },
-  {
-    path: "/type",
+    path: '/product/:type',
     page: TypeProcduct,
     isShowHeader: true,
   },

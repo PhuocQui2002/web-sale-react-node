@@ -30,6 +30,7 @@ export const getProductType = async (type, page, limit) => {
       `${
         import.meta.env.VITE_API_URL
       }/product/getAllProduct?filter=type&filter=${type}&limit=${limit}&page=${page}`
+      
     );
     return res.data;
   }
@@ -90,7 +91,7 @@ export const deleteManyProduct = async (data, access_token) => {
 
 export const getAllTypeProduct = async () => {
   const res = await axios.get(
-    `${import.meta.env.VITE_API_URL}/product/get-all-type`
+    `${import.meta.env.VITE_API_URL}/product/getAllType`
   );
   return res.data;
 };

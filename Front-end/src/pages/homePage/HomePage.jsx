@@ -12,18 +12,20 @@ import slider2 from "../../assets/images/slider5.jpg";
 import slider3 from "../../assets/images/slider6.jpg";
 import * as ProductService from "../../services/ProductService";
 import CartComponent from "../../components/cartComponent/CartComponent";
+import LoadingComponent from "../../components/loadingComponent/loadingComponent";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import LoadingComponent from "../../components/loadingComponent/loadingComponent";
 import { useDebounce } from "../../hooks/useDebounce";
 
 function HomePage() {
   const [limit, setLimit] = useState(10);
+  const [typeProducts, setTypeProducts] = useState([]);
+
   const arr = ["Trang chủ", "Sản phẩm bán chạy", "Liên hệ", "Thông tin"];
 
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 1000);
-
+  //console.log("searchProduct", searchProduct);
   const fetchProductAll = async (context) => {
     const search = context?.queryKey && context?.queryKey[2];
     const limit = context?.queryKey && context?.queryKey[1];
@@ -31,7 +33,22 @@ function HomePage() {
     return res;
   };
 
-  const { isLoading, data: products, isFetching } = useQuery({
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    if (res?.status === "OK") {
+      setTypeProducts(res?.data);
+    }
+    console.log("res", res);
+  };
+
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
+  const {
+    isLoading,
+    data: products,
+    isFetching,
+  } = useQuery({
     queryKey: ["products", limit, searchDebounce],
     queryFn: fetchProductAll,
     keepPreviousData: true,
@@ -43,7 +60,7 @@ function HomePage() {
     <LoadingComponent isPending={isLoading || isFetching} delay={0}>
       <div style={{ width: "1270px", margin: "0 auto" }}>
         <WrapperTypeProduct>
-          {arr.map((item) => {
+          {typeProducts.map((item) => {
             return <TypeProduct name={item} key={item} />;
           })}
         </WrapperTypeProduct>
@@ -55,7 +72,7 @@ function HomePage() {
           style={{
             width: "1270px",
             margin: "0 auto",
-            height: "2000px",
+            height: "1010px",
           }}
         >
           <SliderComponent arrImages={[slider1, slider2, slider3]} />
