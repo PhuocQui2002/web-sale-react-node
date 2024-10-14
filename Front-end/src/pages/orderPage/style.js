@@ -17,7 +17,7 @@ export const WrapperStyleHeaderDilivery = styled.div`
   background: rgb(255, 255, 255);
   padding: 9px 16px;
   border-radius: 4px;
-  display: flex;
+  //display: flex;
   align-items: center;
   span {
     color: rgb(36, 36, 36);
@@ -67,7 +67,7 @@ export const WrapperRight = styled.div`
 `
 
 export const WrapperInfo = styled.div`
-  padding: 17px 20px;
+  padding: 17px 0px;
   border-bottom: 1px solid #f5f5f5;
   background: #fff;
   border-top-right-radius: 6px;

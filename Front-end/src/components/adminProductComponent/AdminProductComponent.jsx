@@ -21,17 +21,17 @@ import ModalComponent from "../modalComponent/ModalComponent";
 
 const AdminProductComponent = () => {
   const user = useSelector((state) => state?.user);
-  // const inittial = () => ({
-  //   name: "",
-  //   price: "",
-  //   description: "",
-  //   rating: "",
-  //   image: "",
-  //   type: "",
-  //   countInStock: "",
-  //   newType: "",
-  //   discount: "",
-  // });
+  const inittial = () => ({
+    name: "",
+    price: "",
+    description: "",
+    rating: "",
+    image: "",
+    type: "",
+    countInStock: "",
+    newType: "",
+    discount: "",
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
@@ -107,7 +107,7 @@ const AdminProductComponent = () => {
           ? stateProduct.newType
           : stateProduct.type,
       countInStock: stateProduct.countInStock,
-      discount: " ",
+      discount: stateProduct.discount,
     };
     mutation.mutate(params, {
       onSuccess: () => {
@@ -731,6 +731,22 @@ const AdminProductComponent = () => {
             />
           </Form.Item>
           <Form.Item
+            label="Giảm giá"
+            name="discount"
+            rules={[
+              {
+                required: true,
+                message: "Giảm giá",
+              },
+            ]}
+          >
+            <InputComponent
+              onChange={handleOnChange}
+              value={stateProduct.discount}
+              name="discount"
+            />
+          </Form.Item>
+          <Form.Item
             label="Mô tả sản phẩm"
             name="description"
             rules={[
@@ -908,6 +924,22 @@ const AdminProductComponent = () => {
               onChange={handleOnChangeEdit}
               value={stateEditProduct.description}
               name="description"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Giảm giá"
+            name="discount"
+            rules={[
+              {
+                required: true,
+                message: "Giảm giá",
+              },
+            ]}
+          >
+            <InputComponent
+              onChange={handleOnChangeEdit}
+              value={stateEditProduct.discount}
+              name="discount"
             />
           </Form.Item>
           <Form.Item

@@ -8,6 +8,8 @@ import shoppingCart from "../pages/orderPage/OrderPage";
 import TypeProcduct from "../pages/typeProduct/TypeProcduct";
 import ProfilePage from "../pages/profilePage/ProfilePage";
 import AdminPage from "../pages/adminPage/AdminPage";
+import PaymentPage from "../pages/paymentPage/PaymentPage";
+import OrderSuccess from "../pages/orderSuccess/OrderSuccess";
 
 
 
@@ -59,5 +61,15 @@ export const routers = [
     page: AdminPage,
     isShowHeader: false,
     isPrivate: true,
+  },
+  {
+    path: "/payment",
+    page: PaymentPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/orderSuccess",
+    page: OrderSuccess,
+    isShowHeader: true,
   },
 ];

@@ -100,7 +100,10 @@ const ProfilePage = () => {
         margin: "0 auto",
       }}
     >
-      <WrapperHeader>ProfilePage</WrapperHeader>
+      <WrapperHeader style={{
+        textAlign:"center",
+        margin: "30px auto",
+      }}>Thông tin người dùng</WrapperHeader>
       <WrapperContentProfile>
         <WrapperInput>
           <WrapperLabel htmlFor="name">Name</WrapperLabel>
@@ -110,7 +113,7 @@ const ProfilePage = () => {
             value={name}
             onChange={handleOnchangeName}
           />
-          <ButtonComponent
+          {/* <ButtonComponent
             onClick={handleUpdate}
             size={40}
             styleButton={{
@@ -125,7 +128,7 @@ const ProfilePage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
-          ></ButtonComponent>
+          ></ButtonComponent> */}
         </WrapperInput>
         <WrapperInput>
           <WrapperLabel htmlFor="email">Email</WrapperLabel>
@@ -135,7 +138,7 @@ const ProfilePage = () => {
             value={email}
             onChange={handleOnchangeEmail}
           />
-          <ButtonComponent
+          {/* <ButtonComponent
             onClick={handleUpdate}
             size={40}
             styleButton={{
@@ -150,7 +153,7 @@ const ProfilePage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
-          ></ButtonComponent>
+          ></ButtonComponent> */}
         </WrapperInput>
         <WrapperInput>
           <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
@@ -160,7 +163,7 @@ const ProfilePage = () => {
             value={phone}
             onChange={handleOnchangePhone}
           />
-          <ButtonComponent
+          {/* <ButtonComponent
             onClick={handleUpdate}
             size={40}
             styleButton={{
@@ -175,7 +178,7 @@ const ProfilePage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
-          ></ButtonComponent>
+          ></ButtonComponent> */}
         </WrapperInput>
         <WrapperInput>
           <WrapperLabel htmlFor="phone">Adress</WrapperLabel>
@@ -185,7 +188,7 @@ const ProfilePage = () => {
             value={address}
             onChange={handleOnchangeAddress}
           />
-          <ButtonComponent
+          {/* <ButtonComponent
             onClick={handleUpdate}
             size={40}
             styleButton={{
@@ -200,7 +203,7 @@ const ProfilePage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
-          ></ButtonComponent>
+          ></ButtonComponent> */}
         </WrapperInput>
         <WrapperInput>
           <WrapperLabel htmlFor="name">Avatar</WrapperLabel>

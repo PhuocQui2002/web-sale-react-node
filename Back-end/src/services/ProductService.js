@@ -124,6 +124,8 @@ const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
+      let allProduct = [];
+
       //console.log('totalProduct' ,totalProduct)
       if (sort) {
         const objectSort = {};
@@ -160,10 +162,20 @@ const getAllProduct = (limit, page, sort, filter) => {
           totalPage: Math.ceil(totalProduct / limit),
         });
       }
-
-      const allProduct = await Product.find()
-        .limit(limit)
-        .skip(page * limit);
+      if (!limit) {
+        allProduct = await Product.find().sort({
+          createdAt: -1,
+          updatedAt: -1,
+        });
+      } else {
+        allProduct = await Product.find()
+          .limit(limit)
+          .skip(page * limit)
+          .sort({ createdAt: -1, updatedAt: -1 });
+      }
+      // const allProduct = await Product.find()
+      //   .limit(limit)
+      //   .skip(page * limit);
       resolve({
         status: "OK",
         message: "Success",

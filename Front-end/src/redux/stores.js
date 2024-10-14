@@ -16,7 +16,6 @@ import {
 
 import storage from "redux-persist/lib/storage";
 
-
 const persistConfig = {
   key: "root",
   version: 1,
@@ -39,6 +38,6 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
-export let persistor = persistStore(store)
+export let persistor = persistStore(store);

@@ -13,6 +13,11 @@ const orderSchema = new mongoose.Schema({
                 ref: 'Product',
                 required: true,
             },
+            review: {
+                rating: { type: Number, min: 1, max: 5 }, // Đánh giá từ 1-5 sao
+                comment: { type: String }, // Bình luận về sản phẩm
+                reviewedAt: { type: Date }, // Ngày đánh giá
+            },
         },
     ],
     shippingAddress: {

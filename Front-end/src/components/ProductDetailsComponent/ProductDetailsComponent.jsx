@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Image, Rate } from "antd";
+import { Col, Row, Image, Rate, Select, Radio } from "antd";
 import img from "../../assets/images/logoDN.jpg";
 
 import { StarFilled, MinusOutlined, PlusOutlined } from "@ant-design/icons";
@@ -30,7 +30,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
   console.log("location", location);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
+  const [size, setSize] = useState("small");
+  const [frameType, setFrameType] = useState("none");
   const [numProduct, setNumProduct] = useState(0);
   const onChangeInput = (value) => {
     setNumProduct(Number(value));
@@ -94,7 +95,13 @@ const ProductDetailsComponent = ({ idProduct }) => {
       </Col>
       <Col span={14} style={{ paddingLeft: "10px" }}>
         <WrapperStyleNameProduct>
-          {productDetails?.name}
+          <span
+            style={{
+              fontFamily: "Playfair Display, serif",
+            }}
+          >
+            {productDetails?.name}
+          </span>
         </WrapperStyleNameProduct>
         <div>
           <Rate
@@ -109,7 +116,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <div>{productDetails?.description}</div>
         <WrapperPriceProduct>
           <WrapperPriceTextProduct>
-            {productDetails?.price.toLocaleString()} VNĐ
+            Giá {productDetails?.price.toLocaleString()} VNĐ
           </WrapperPriceTextProduct>
         </WrapperPriceProduct>
         <WrapperAddressProduct>
@@ -126,7 +133,13 @@ const ProductDetailsComponent = ({ idProduct }) => {
           }}
         >
           <div style={{ marginTop: "6px", marginBottom: "6px" }}>
-            Số lượng trong kho {productDetails?.countInStock}{" "}
+            <span
+              style={{
+                fontSize: "20px",
+              }}
+            >
+              Số lượng trong kho {productDetails?.countInStock}
+            </span>{" "}
           </div>
           <WrapperQualityProduct>
             <button
@@ -167,6 +180,47 @@ const ProductDetailsComponent = ({ idProduct }) => {
             </button>
           </WrapperQualityProduct>
         </div>
+        <div>
+          <div>
+            <div style={{ marginBottom: "10px" }}>
+              <span style={{ fontSize: "15px", fontWeight: "bold", marginRight: "10px", }}>
+                Chọn kích thước tranh:
+              </span>
+              <Radio.Group
+                onChange={(e) => setSize(e.target.value)}
+                value={size}
+                style={{ marginTop: "10px" }}
+              >
+                <Radio value="small">Nhỏ (40x60 cm)</Radio>
+                <Radio value="medium">Trung bình (60x90 cm)</Radio>
+                <Radio value="large">Lớn (80x120 cm)</Radio>
+              </Radio.Group>
+            </div>
+
+            <div style={{ marginBottom: "10px" }}>
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                  
+                }}
+              >
+                Chọn loại khung:
+              </span>
+              <Select
+                defaultValue="none"
+                style={{ width: 200, marginTop: "10px", marginRight: "10px" }}
+                onChange={(value) => setFrameType(value)}
+              >
+                <Select.Option value="none">Không khung</Select.Option>
+                <Select.Option value="classic">Khung gỗ</Select.Option>
+                <Select.Option value="modern">Khung sắt</Select.Option>
+                <Select.Option value="luxury">Khung cao cấp</Select.Option>
+              </Select>
+            </div>
+          </div>
+        </div>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <ButtonCpmponent
             //bodered={false}
@@ -190,6 +244,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <ButtonCpmponent
             //bodered={false}
             //onClick={() => addToCart(product)}
+            onClick={handleAddOrderProduct}
             size={40}
             styleButton={{
               background: "#fff",

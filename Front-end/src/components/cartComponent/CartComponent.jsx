@@ -9,7 +9,8 @@ import {
   WrapperCardStyle,
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
-import logo from "../../assets/images/logo.png";
+//import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logohinh.webp";
 
 //import painting from "../../assets/images/logoDN.jpg";
 

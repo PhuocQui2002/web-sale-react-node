@@ -25,6 +25,7 @@ const AdminUserComponent = () => {
   const user = useSelector((state) => state?.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -34,6 +35,7 @@ const AdminUserComponent = () => {
   
 
   const [rowSelected, setRowSelected] = useState("");
+  
   const [stateUser, setStateUser] = useState({
     name: "",
     email: "",
