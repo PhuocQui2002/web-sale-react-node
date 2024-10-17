@@ -215,8 +215,12 @@ const AdminProductComponent = () => {
   console.log("StateEditProduct", stateEditProduct);
 
   useEffect(() => {
-    form.setFieldsValue(stateEditProduct);
-  }, [form, stateEditProduct]);
+    if (!isModalOpen) {
+      form.setFieldsValue(stateEditProduct);
+    } else {
+      form.setFieldsValue(inittial());
+    }
+  }, [form, stateEditProduct, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected) {

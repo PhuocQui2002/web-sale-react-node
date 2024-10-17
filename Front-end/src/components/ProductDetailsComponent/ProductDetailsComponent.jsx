@@ -5,6 +5,9 @@ import img from "../../assets/images/logoDN.jpg";
 import { StarFilled, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
+import * as SizeService from "../../services/SizeService";
+import * as FrameService from "../../services/FrameService";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,9 +33,12 @@ const ProductDetailsComponent = ({ idProduct }) => {
   console.log("location", location);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [size, setSize] = useState("small");
+
   const [frameType, setFrameType] = useState("none");
   const [numProduct, setNumProduct] = useState(0);
+
+  const [size, setSize] = useState("Nhỏ (40x60 cm)");
+
   const onChangeInput = (value) => {
     setNumProduct(Number(value));
   };
@@ -45,6 +51,40 @@ const ProductDetailsComponent = ({ idProduct }) => {
     }
     throw new Error("Invalid Product ID"); // Ném lỗi nếu không có ID
   };
+
+  const fetchGetSize = async () => {
+    const res = await SizeService.getAllSize();
+    //console.log("fetchGetSize1", res )
+    return res.data;
+  };
+
+  const {
+    isLoading: isLoadingSize,
+    isError: isErrorSize,
+    data: sizeDetails,
+  } = useQuery({
+    queryKey: ["Size"],
+    queryFn: fetchGetSize,
+    enabled: !!idProduct,
+  });
+  //console.log("fetchGetSize", sizeDetails);
+
+  const fetchGetFrame = async () => {
+    const res = await FrameService.getFrame();
+    //console.log("fetchGetSize1", res )
+    return res.data;
+  };
+
+  const {
+    isLoading: isLoadingFrame,
+    isError: isErrorFrame,
+    data: frameDetails,
+  } = useQuery({
+    queryKey: ["Frame"],
+    queryFn: fetchGetFrame,
+  });
+  console.log("frameDetails", frameDetails);
+
   const {
     isLoading,
     isError,
@@ -85,6 +125,26 @@ const ProductDetailsComponent = ({ idProduct }) => {
     }
   };
 
+  const handleSize = (e) => {
+    setSize(e.target.value);
+    console.log("size:", e.target.value);
+  };
+  const handleSelectFrame = (value) => {
+    setFrameType(value);
+    console.log("setFrameType:", value);
+  };
+
+  const selectedSize = sizeDetails?.find((item) => item.nameSize === size);
+  const sizePrice = selectedSize ? selectedSize.priceSize : 0;
+  console.log("sizePrice:", sizePrice);
+
+  const selectedFrame = frameDetails?.find(
+    (item) => item.nameFrame === frameType
+  );
+  const framePrice = selectedFrame ? selectedFrame.priceFrame : 0;
+  console.log("framePrice:", framePrice);
+
+  const TotalPrice = framePrice + sizePrice;
   return (
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
@@ -116,7 +176,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <div>{productDetails?.description}</div>
         <WrapperPriceProduct>
           <WrapperPriceTextProduct>
-            Giá {productDetails?.price.toLocaleString()} VNĐ
+            Giá {(productDetails?.price + TotalPrice).toLocaleString()} VNĐ
           </WrapperPriceTextProduct>
         </WrapperPriceProduct>
         <WrapperAddressProduct>
@@ -183,40 +243,48 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <div>
           <div>
             <div style={{ marginBottom: "10px" }}>
-              <span style={{ fontSize: "15px", fontWeight: "bold", marginRight: "10px", }}>
+              <span
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  marginRight: "10px",
+                }}
+              >
                 Chọn kích thước tranh:
               </span>
               <Radio.Group
-                onChange={(e) => setSize(e.target.value)}
+                onChange={handleSize}
                 value={size}
                 style={{ marginTop: "10px" }}
               >
-                <Radio value="small">Nhỏ (40x60 cm)</Radio>
-                <Radio value="medium">Trung bình (60x90 cm)</Radio>
-                <Radio value="large">Lớn (80x120 cm)</Radio>
+                {sizeDetails?.map((item) => (
+                  <Radio key={item._id} value={item.nameSize}>
+                    {item?.nameSize}
+                    {/* ({item.priceSize} VND) */}
+                  </Radio>
+                ))}
               </Radio.Group>
             </div>
-
             <div style={{ marginBottom: "10px" }}>
               <span
                 style={{
                   fontSize: "15px",
                   fontWeight: "bold",
                   marginRight: "10px",
-                  
                 }}
               >
                 Chọn loại khung:
               </span>
               <Select
-                defaultValue="none"
+                defaultValue="Không khung"
                 style={{ width: 200, marginTop: "10px", marginRight: "10px" }}
-                onChange={(value) => setFrameType(value)}
+                onChange={handleSelectFrame}
               >
-                <Select.Option value="none">Không khung</Select.Option>
-                <Select.Option value="classic">Khung gỗ</Select.Option>
-                <Select.Option value="modern">Khung sắt</Select.Option>
-                <Select.Option value="luxury">Khung cao cấp</Select.Option>
+                {frameDetails?.map((frame) => (
+                  <Select.Option key={frame._id} value={frame.nameFrame}>
+                    {frame.nameFrame} - {frame.priceFrame.toLocaleString()} VND
+                  </Select.Option>
+                ))}
               </Select>
             </div>
           </div>

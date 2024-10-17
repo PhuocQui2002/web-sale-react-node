@@ -10,6 +10,8 @@ import ProfilePage from "../pages/profilePage/ProfilePage";
 import AdminPage from "../pages/adminPage/AdminPage";
 import PaymentPage from "../pages/paymentPage/PaymentPage";
 import OrderSuccess from "../pages/orderSuccess/OrderSuccess";
+import MyOrderPage from "../pages/myOderPage/MyOderPage";
+import DetailsOrderPage from "../pages/detailsOrderPage/DetailsOrderPage";
 
 
 
@@ -70,6 +72,16 @@ export const routers = [
   {
     path: "/orderSuccess",
     page: OrderSuccess,
+    isShowHeader: true,
+  },
+  {
+    path: "/myOderPage",
+    page: MyOrderPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/getDetailsOrder/:id",
+    page: DetailsOrderPage,
     isShowHeader: true,
   },
 ];

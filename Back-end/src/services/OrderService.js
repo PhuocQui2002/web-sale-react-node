@@ -19,81 +19,113 @@ const createOrder = (newOrder) => {
       email,
     } = newOrder;
     try {
-      //   const promises = orderItems.map(async (order) => {
-      //     const productData = await Product.findOneAndUpdate(
-      //       {
-      //         _id: order.product,
-      //         countInStock: { $gte: order.amount },
-      //       },
-      //       {
-      //         $inc: {
-      //           countInStock: -order.amount,
-      //           selled: +order.amount,
-      //         },
-      //       },
-      //       { new: true }
-      //     );
-      //     if (productData) {
-      //       return {
-      //         status: "OK",
-      //         message: "SUCCESS",
-      //       };
-      //     } else {
-      //       return {
-      //         status: "OK",
-      //         message: "ERR",
-      //         id: order.product,
-      //       };
-      //     }
-      //   });
-      //   const results = await Promise.all(promises);
-      //   const newData = results && results.filter((item) => item.id);
-      //   if (newData.length) {
-      //     const arrId = [];
-      //     newData.forEach((item) => {
-      //       arrId.push(item.id);
-      //     });
-      //     resolve({
-      //       status: "ERR",
-      //       message: `San pham voi id: ${arrId.join(",")} khong du hang`,
-      //     });
-      //   } else {
-      const createdOrder = await Order.create({
-        orderItems,
-        shippingAddress: {
-          fullName,
-          address,
-          city,
-          phone,
-        },
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        totalPrice,
-        user: user,
-        isPaid,
-        paidAt,
+      const promises = orderItems.map(async (order) => {
+        const productData = await Product.findOneAndUpdate(
+          {
+            _id: order.product,
+            countInStock: { $gte: order.amount },
+          },
+          {
+            $inc: {
+              countInStock: -order.amount,
+              selled: +order.amount,
+            },
+          },
+          { new: true }
+        );
+        if (productData) {
+          return {
+            status: "OK",
+            message: "SUCCESS",
+          };
+        } else {
+          return {
+            status: "OK",
+            message: "ERR",
+            id: order.product,
+          };
+        }
       });
-      if (createdOrder) {
-        //   await EmailService.sendEmailCreateOrder(email, orderItems);
-        resolve({
-          status: "OK",
-          message: "success",
-          data: createdOrder,
+      const results = await Promise.all(promises);
+      console.log("results", results);
+      const newData = results && results.filter((item) => item.id);
+      if (newData.length) {
+        const arrId = [];
+        newData.forEach((item) => {
+          arrId.push(item.id);
         });
+        reject({
+          status: "ERR",
+          message: `San pham voi id: ${arrId.join(",")} khong du hang`,
+        });
+      } else {
+        const createdOrder = await Order.create({
+          orderItems,
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            phone,
+          },
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          totalPrice,
+          user: user,
+          isPaid,
+          paidAt,
+        });
+        if (createdOrder) {
+          //   await EmailService.sendEmailCreateOrder(email, orderItems);
+          resolve({
+            status: "OK",
+            message: "success",
+            data: createdOrder,
+          });
+        }
+        // if (createdOrder) {
+        //     await EmailService.sendEmailCreateOrder(email,orderItems)
+        //     resolve({
+        //         status: 'OK',
+        //         message: 'success'
+        //     })
+        // }
       }
-      //}
     } catch (e) {
       //   console.log('e', e)
       reject(e);
     }
-    console.log("new-order", newOrder);
+  });
+};
+
+const getAllOrder = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const order = await Order.find({
+        user: id,
+      });
+      //console.log('order', order)
+      if (order === null) {
+        reject({
+          status: "ERR",
+          message: "The order is not defined",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "SUCESSS",
+        data: order,
+      });
+    } catch (e) {
+      // console.log('e', e)
+      reject(e);
+    }
   });
 };
 
 const addProductReview = async (req, res) => {
   try {
-    
     const order = await Order.findById(req.params.orderId);
     console.log("addProductReview 2", order);
     // Kiểm tra nếu đơn hàng tồn tại và đã được giao
@@ -130,7 +162,34 @@ const addProductReview = async (req, res) => {
       .json({ message: "Lỗi server controller", error: error.message });
   }
 };
+
+const getOrderDetails = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const order = await Order.findById({
+        _id: id,
+      });
+      if (order === null) {
+        resolve({
+          status: "ERR",
+          message: "The order is not defined",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "SUCESSS",
+        data: order,
+      });
+    } catch (e) {
+      // console.log('e', e)
+      reject(e);
+    }
+  });
+};
 module.exports = {
   createOrder,
   addProductReview,
+  getAllOrder,
+  getOrderDetails,
 };

@@ -16,8 +16,6 @@ import logo from "../../assets/images/logohinh.webp";
 
 const CartComponent = (props) => {
 
-  
-  
   const {
     countInStock,
     description,

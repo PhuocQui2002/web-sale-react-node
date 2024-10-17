@@ -67,6 +67,9 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const handleProfile = () => {
     navigate("/profilePage");
   };
+  const handleMyOrder = () => {
+    navigate("/myOderPage");
+  };
   const handleAdmin = () => {
     navigate("/AdminPage");
   };
@@ -74,6 +77,9 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
     <div>
       <WrapperContentPopup onClick={handleProfile}>
         Thông tin người dùng
+      </WrapperContentPopup>
+      <WrapperContentPopup onClick={handleMyOrder}>
+        Đơn hàng
       </WrapperContentPopup>
       {user?.isAdmin && (
         <WrapperContentPopup onClick={handleAdmin}>

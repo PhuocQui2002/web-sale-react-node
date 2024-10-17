@@ -2,7 +2,7 @@ const OrderService = require("../services/OrderService");
 
 const createOrder = async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const {
       paymentMethod,
       itemsPrice,
@@ -31,6 +31,26 @@ const createOrder = async (req, res) => {
     const response = await OrderService.createOrder(req.body);
     return res.status(200).json(response);
   } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
+const getAllOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    //console.log("orderId = req.params.id", orderId)
+    if (!orderId) {
+      return res.status(401).json({
+        status: "ERR",
+        message: "The userId is required",
+      });
+    }
+    const response = await OrderService.getAllOrder(orderId);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
     return res.status(404).json({
       message: e,
     });
@@ -71,26 +91,27 @@ const addProductReview = async (req, res) => {
   }
 };
 
-const getOrderById = async (req, res) => {
+const getDetailsOrder = async (req, res) => {
   try {
-    const orderId = req.params.orderId; // Lấy orderId từ params
-    console.log("Order ID:", orderId); // In ra orderId để kiểm tra
-
-    const order = await Order.findById(orderId); // Tìm đơn hàng theo ID
-
-    if (!order) {
-      return res.status(404).json({ message: "Đơn hàng không tồn tại." });
-    }
-
-    res.status(200).json(order); // Trả về thông tin đơn hàng
-  } catch (error) {
-    console.error("Lỗi:", error); // In lỗi ra console
-    res.status(500).json({ message: "Lỗi server", error: error.message });
+      const orderId = req.params.id
+      if (!orderId) {
+          return res.status(200).json({
+              status: 'ERR',
+              message: 'The userId is required'
+          })
+      }
+      const response = await OrderService.getOrderDetails(orderId)
+      return res.status(200).json(response)
+  } catch (e) {
+      // console.log(e)
+      return res.status(404).json({
+          message: e
+      })
   }
-};
-
+}
 module.exports = {
   createOrder,
   addProductReview,
-  getOrderById,
+  getDetailsOrder,
+  getAllOrder,
 };
