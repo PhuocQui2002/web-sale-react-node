@@ -35,7 +35,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
 
   const [frameType, setFrameType] = useState("none");
-  const [numProduct, setNumProduct] = useState(0);
+  const [numProduct, setNumProduct] = useState(1);
 
   const [size, setSize] = useState("Nhỏ (40x60 cm)");
 
@@ -98,12 +98,16 @@ const ProductDetailsComponent = ({ idProduct }) => {
   console.log("productDetails", productDetails);
   console.log("user", user);
 
-  const handleChangeCount = (type) => {
+  const handleChangeCount = (type, limited) => {
     console.log("type", type);
     if (type === "increase") {
-      setNumProduct(numProduct + 1);
+      if (!limited) {
+        setNumProduct(numProduct + 1);
+      }
     } else {
-      setNumProduct(numProduct - 1);
+      if (!limited) {
+        setNumProduct(numProduct - 1);
+      }
     }
   };
   console.log("numProduct:", numProduct);
@@ -117,8 +121,13 @@ const ProductDetailsComponent = ({ idProduct }) => {
             name: productDetails?.name,
             amount: numProduct,
             image: productDetails?.image,
-            price: productDetails?.price,
+            //price: productDetails?.price,
             product: productDetails?._id,
+            size: size,
+            frame: frameType,
+            totalPrice: productDetails?.price + TotalPrice,
+            discount: productDetails?.discount,
+            countInstock: productDetails?.countInStock,
           },
         })
       );
@@ -126,9 +135,20 @@ const ProductDetailsComponent = ({ idProduct }) => {
   };
 
   const handleSize = (e) => {
-    setSize(e.target.value);
+    setSize(e?.target?.value);
+    //updateSoluong(e?.target?.value);
     console.log("size:", e.target.value);
   };
+
+  // const updateSoluong = (size) => {
+  //   if (size === "Lớn (80x120 cm)") {
+  //     setNumProduct(1);
+  //   } else if (size === "Trung bình (60x90 cm)") {
+  //     setNumProduct(2);
+  //   } else {
+  //     setNumProduct(3);
+  //   }
+  // };
   const handleSelectFrame = (value) => {
     setFrameType(value);
     console.log("setFrameType:", value);
@@ -145,6 +165,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
   console.log("framePrice:", framePrice);
 
   const TotalPrice = framePrice + sizePrice;
+
+  const handleAddCard = () => {
+    navigate("/payment");
+  };
   return (
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
@@ -179,11 +203,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
             Giá {(productDetails?.price + TotalPrice).toLocaleString()} VNĐ
           </WrapperPriceTextProduct>
         </WrapperPriceProduct>
-        <WrapperAddressProduct>
+        {/* <WrapperAddressProduct>
           <span>Giao đến </span>
           <span className="address">{user?.address}</span>-
           <span className="change-address">Đổi địa chỉ</span>
-        </WrapperAddressProduct>
+        </WrapperAddressProduct> */}
         <div
           style={{
             margin: "10px 0 20px",
@@ -208,7 +232,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 background: "transparent",
                 cursor: "pointer",
               }}
-              onClick={() => handleChangeCount("decrease")}
+              onClick={() => handleChangeCount("decrease", numProduct === 1)}
             >
               <MinusOutlined
                 style={{
@@ -229,7 +253,12 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 background: "transparent",
                 cursor: "pointer",
               }}
-              onClick={() => handleChangeCount("increase")}
+              onClick={() =>
+                handleChangeCount(
+                  "increase",
+                  numProduct === productDetails?.countInStock
+                )
+              }
             >
               <PlusOutlined
                 style={{
@@ -253,7 +282,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 Chọn kích thước tranh:
               </span>
               <Radio.Group
-                onChange={handleSize}
+                onChange={(e) => {
+                  handleSize(e);
+                }}
                 value={size}
                 style={{ marginTop: "10px" }}
               >
@@ -307,7 +338,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
               fontSize: "15px",
               fontweight: "700",
             }}
-            onClick={handleAddOrderProduct}
+            onClick={handleAddCard}
           />
           <ButtonCpmponent
             //bodered={false}

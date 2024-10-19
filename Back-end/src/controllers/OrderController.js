@@ -4,6 +4,7 @@ const createOrder = async (req, res) => {
   try {
     console.log(req.body);
     const {
+      orderItems,
       paymentMethod,
       itemsPrice,
       shippingPrice,
@@ -93,25 +94,66 @@ const addProductReview = async (req, res) => {
 
 const getDetailsOrder = async (req, res) => {
   try {
-      const orderId = req.params.id
-      if (!orderId) {
-          return res.status(200).json({
-              status: 'ERR',
-              message: 'The userId is required'
-          })
-      }
-      const response = await OrderService.getOrderDetails(orderId)
-      return res.status(200).json(response)
+    const orderId = req.params.id;
+    if (!orderId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The userId is required",
+      });
+    }
+    const response = await OrderService.getOrderDetails(orderId);
+    return res.status(200).json(response);
   } catch (e) {
-      // console.log(e)
-      return res.status(404).json({
-          message: e
-      })
+    // console.log(e)
+    return res.status(404).json({
+      message: e,
+    });
   }
-}
+};
+// const cancelOrderDetails = async (req, res) => {
+//   try {
+//     const orderId = req.params.id;
+//     console.log("orderId", orderId);
+//     if (!orderId) {
+//       return res.status(200).json({
+//         status: "ERR",
+//         message: "The orderId is required",
+//       });
+//     }
+//     const response = await OrderService.cancelOrderDetails(orderId);
+//     return res.status(200).json(response);
+//   } catch (e) {
+//     // console.log(e)
+//     return res.status(404).json({
+//       message: e,
+//     });
+//   }
+// };
+const cancelOrderDetails = async (req, res) => {
+  try {
+    const  orderId= req.params.id;
+    const data= req.body
+    console.log("orderId",orderId);
+    if (!orderId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The orderId is required",
+      });
+    }
+    const response = await OrderService.cancelOrderDetails(orderId, data)
+    return res.status(200).json(response);
+  } catch (e) {
+    // console.log(e)
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+
 module.exports = {
   createOrder,
   addProductReview,
   getDetailsOrder,
   getAllOrder,
+  cancelOrderDetails,
 };

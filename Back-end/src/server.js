@@ -14,7 +14,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 app.use(express.json());
 const port = process.env.PORT || 3001;
 app.use(bodyParser.json());
-// app.use(express.urlencoded({extended: true})); 
+// app.use(express.urlencoded({extended: true}));
 // app.use(express.json());
 app.use(cookieParser());
 routes(app);
@@ -30,8 +30,10 @@ mongoose
   .catch((err) => {
     console.log(err.message);
   });
+
 const server = app.listen(process.env.PORT, () => {
   console.log("Server listening on port " + process.env.PORT);
+  //console.log("process.env.PORT", process.env.CLIENT_ID);
 });
 
 // app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)

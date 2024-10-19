@@ -80,20 +80,21 @@ function OrderPage() {
   };
   console.log("listChecked-onChange", listChecked);
 
-  const handleChangeCount = (type, idProduct, limited) => {
+  const handleChangeCount = (type, idProduct, limited, size, frame) => {
+    console.log("listChecked-onChange", size, frame);
     if (type === "increase") {
       if (!limited) {
-        dispatch(increaseAmount({ idProduct }));
+        dispatch(increaseAmount({ idProduct, size, frame }));
       }
     } else {
       if (!limited) {
-        dispatch(decreaseAmount({ idProduct }));
+        dispatch(decreaseAmount({ idProduct, size, frame }));
       }
     }
   };
 
-  const handleDeleteOrder = (idProduct) => {
-    dispatch(removeOrderProduct({ idProduct }));
+  const handleDeleteOrder = (idProduct, size, frame) => {
+    dispatch(removeOrderProduct({ idProduct, size, frame }));
   };
 
   const handleOnchangeCheckAll = (e) => {
@@ -130,7 +131,7 @@ function OrderPage() {
 
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      return total + cur.price * cur.amount;
+      return total + cur.totalPrice * cur.amount;
     }, 0);
     console.log("result-priceMemo", result);
     return result;
@@ -319,6 +320,8 @@ function OrderPage() {
               >
                 <span>Đơn giá</span>
                 <span>Số lượng</span>
+                <span>Khung</span>
+                <span>Kích thước</span>
                 <span>Thành tiền</span>
                 <DeleteOutlined
                   style={{ cursor: "pointer" }}
@@ -328,6 +331,8 @@ function OrderPage() {
             </WrapperStyleHeader>
             <WrapperListOrder>
               {order?.orderItems?.map((order) => {
+                console.log("oder-page", order);
+                
                 return (
                   <WrapperItemOrder key={order?.product}>
                     <div
@@ -340,8 +345,10 @@ function OrderPage() {
                     >
                       <CustomCheckbox
                         onChange={onChange}
-                        value={order?.product}
-                        checked={listChecked.includes(order?.product)}
+                        value={order?.product + order?.size + order?.frame}
+                        checked={listChecked.includes(
+                          order?.product + order?.size + order?.frame
+                        )}
                       ></CustomCheckbox>
                       {/* <img
                         src={order?.image}
@@ -380,7 +387,7 @@ function OrderPage() {
                     >
                       <span>
                         <span style={{ fontSize: "13px", color: "#242424" }}>
-                          {convertPrice(order?.price)}
+                          {convertPrice(order?.totalPrice)}
                         </span>
                       </span>
                       <WrapperCountOrder>
@@ -394,7 +401,9 @@ function OrderPage() {
                             handleChangeCount(
                               "decrease",
                               order?.product,
-                              order?.amount === 1
+                              order?.amount === 1,
+                              order?.size,
+                              order?.frame
                             )
                           }
                         >
@@ -420,7 +429,8 @@ function OrderPage() {
                               "increase",
                               order?.product,
                               order?.amount === order.countInstock,
-                              order?.amount === 1
+                              order?.size,
+                              order?.frame
                             )
                           }
                         >
@@ -429,6 +439,10 @@ function OrderPage() {
                           />
                         </button>
                       </WrapperCountOrder>
+                      <div>{order?.size}</div>
+                      <div>
+                        {order?.frame == "none" ? "Không khung" : order?.frame}
+                      </div>
                       <span
                         style={{
                           color: "rgb(255, 66, 78)",
@@ -436,11 +450,17 @@ function OrderPage() {
                           fontWeight: 500,
                         }}
                       >
-                        {convertPrice(order?.price * order?.amount)}
+                        {convertPrice(order?.totalPrice * order?.amount)}
                       </span>
                       <DeleteOutlined
                         style={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteOrder(order?.product)}
+                        onClick={() =>
+                          handleDeleteOrder(
+                            order?.product,
+                            order?.size,
+                            order?.frame
+                          )
+                        }
                       />
                     </div>
                   </WrapperItemOrder>
@@ -498,7 +518,7 @@ function OrderPage() {
                       fontWeight: "bold",
                     }}
                   >
-                    {`${priceDiscountMemo} %`}
+                    {`${priceDiscountMemo} VNĐ`}
                   </span>
                 </div>
                 <div

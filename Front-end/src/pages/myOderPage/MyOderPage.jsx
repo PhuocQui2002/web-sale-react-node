@@ -39,18 +39,19 @@ const MyOrderPage = () => {
   };
 
   const mutation = useMutationHooks((data) => {
-    const { id, token, orderItems, userId } = data;
-    const res = OrderService.cancelOrder(id, token, orderItems, userId);
+    const { id, token,  orderItems} = data;
+    const res = OrderService.cancelOrder(id, token , orderItems);
     return res;
   });
 
   const handleCanceOrder = (order) => {
+    //console.log("user cancel order", user?.access_token)
     mutation.mutate(
       {
         id: order._id,
         token: user?.access_token,
         orderItems: order?.orderItems,
-        userId: user.id,
+        //: user.id,
       },
       {
         onSuccess: () => {
@@ -78,28 +79,62 @@ const MyOrderPage = () => {
 
   const renderProduct = (data) => {
     return data?.map((order) => {
+      console.log("order-myorder", order);
       return (
         <WrapperHeaderItem key={order?._id}>
-          <img
-            src={order?.image}
-            style={{
-              width: "70px",
-              height: "70px",
-              objectFit: "cover",
-              border: "1px solid rgb(238, 238, 238)",
-              padding: "2px",
-            }}
-          />
           <div
             style={{
-              width: 260,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              marginLeft: "10px",
+              width: "300px",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
             }}
           >
-            {order?.name}
+            <img
+              src={order?.image}
+              style={{
+                width: "70px",
+                height: "70px",
+                objectFit: "cover",
+                border: "1px solid rgb(238, 238, 238)",
+                padding: "2px",
+              }}
+            />
+            <div
+              style={{
+                width: 260,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                marginLeft: "10px",
+              }}
+            >
+              {order?.name}
+            </div>
+          </div>
+          <div
+            style={{
+              width: "400px",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <p
+              style={{ marginRight: "20px", fontSize: "15px", width: "280px" }}
+            >
+              Kích thước: {order?.size}
+            </p>
+            <div
+              style={{
+                width: 200,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Khung: {order?.frame == "none" ? "Không khung" : order?.frame}
+            </div>
           </div>
           <div
             style={{
@@ -116,7 +151,7 @@ const MyOrderPage = () => {
           <span
             style={{ fontSize: "13px", color: "#242424", marginLeft: "auto" }}
           >
-            {convertPrice(order?.price)}
+            Giá: {convertPrice(order?.totalPrice)}
           </span>
         </WrapperHeaderItem>
       );
@@ -125,10 +160,11 @@ const MyOrderPage = () => {
 
   return (
     <WrapperContainer>
-      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
-        <h4>Đơn hàng của tôi</h4>
+      <div style={{ height: "100vh", width: "1270px", margin: "0 auto" }}>
+        <span>Đơn hàng của tôi</span>
         <WrapperListOrder>
           {data?.map((order) => {
+            console.log("odddd", order);
             return (
               <WrapperItemOrder key={order?._id}>
                 <WrapperStatus>

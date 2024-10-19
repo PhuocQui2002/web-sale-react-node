@@ -52,11 +52,12 @@ const OrderSuccess = () => {
             </WrapperInfo>
             <WrapperItemOrderInfo>
               {state.orders?.map((order) => {
+                console.log("orders-success", order);
                 return (
                   <WrapperItemOrder key={order?.name}>
                     <div
                       style={{
-                        width: "400px",
+                        width: "300px",
                         display: "flex",
                         alignItems: "center",
                         gap: 4,
@@ -78,7 +79,27 @@ const OrderSuccess = () => {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {order?.name}
+                        <p>{order?.name}</p>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        width: "500px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                      }}
+                    >
+                      <p style={{marginRight:"20px", fontSize: "15px" , width: "280px"}}>Kích thước: {order?.size}</p>
+                      <div
+                        style={{
+                          width: 200,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        Khung: {order?.frame == "none" ? "Không khung" : order?.frame}
                       </div>
                     </div>
                     <div
@@ -89,13 +110,14 @@ const OrderSuccess = () => {
                         gap: "40px",
                       }}
                     >
+                      <p style={{  color: "#242424" , overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",}}>
+                        Giá tiền: {convertPrice(order?.totalPrice)}
+                      </p>
+
                       <span>
-                        <span style={{ fontSize: "13px", color: "#242424" }}>
-                          Giá tiền: {convertPrice(order?.price)}
-                        </span>
-                      </span>
-                      <span>
-                        <span style={{ fontSize: "13px", color: "#242424" }}>
+                        <span style={{  color: "#242424" }}>
                           Số lượng: {order?.amount}
                         </span>
                       </span>
@@ -105,8 +127,7 @@ const OrderSuccess = () => {
               })}
             </WrapperItemOrderInfo>
             <div>
-            
-            <span style={{ fontSize: "16px", color: "red" }}>
+              <span style={{ fontSize: "16px", color: "red" }}>
                 Phí ship : {convertPrice(state?.diliveryPriceMemo)}
               </span>
               <span style={{ fontSize: "16px", color: "red" }}>

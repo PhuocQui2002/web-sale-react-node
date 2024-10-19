@@ -65,8 +65,8 @@ export const WrapperItemOrder = styled.div`
   background: #fff;
   margin-top: 12px;
   flex-direction: column;
-  width: 950px;
-  margin: 0 auto;
+  width: 100%;
+  //margin: 0 auto;
   background: #fff;
   border-radius: 6px;
   box-shadow: 0 12px 12px #ccc;

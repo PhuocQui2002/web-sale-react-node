@@ -21,13 +21,15 @@ import * as OrderService from "../../services/OrderService";
 import { updateUser } from "../../redux/slides/userSlide";
 import { useNavigate } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlide";
-//import { PayPalButton } from "react-paypal-button-v2";
-// import * as PaymentService from '../../services/PaymentService'
+import { PayPalButton } from "react-paypal-button-v2";
+import * as PaymentService from '../../services/PaymentService'
 import ModalComponent from "../../components/modalComponent/ModalComponent";
 import InputComponent from "../../components/inputComponent/InputComponent";
 
 const PaymentPage = () => {
+ 
   const order = useSelector((state) => state.order);
+  //console.log("order-payment1", order);
   const user = useSelector((state) => state.user);
 
   const [delivery, setDelivery] = useState("fast");
@@ -68,7 +70,7 @@ const PaymentPage = () => {
 
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
-      return total + cur.price * cur.amount;
+      return total + cur.totalPrice * cur.amount;
     }, 0);
     return result;
   }, [order]);
@@ -131,10 +133,12 @@ const PaymentPage = () => {
         totalPrice: totalPriceMemo,
         user: user?.id,
         email: user?.email,
+        // size: order?.size,
+        // frame: order?.frame
       });
     }
   };
-  console.log("order", order);
+  console.log("order-payment", order);
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, { ...rests }, token);
@@ -189,26 +193,27 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
 
-  //   const onSuccessPaypal = (details, data) => {
-  //     mutationAddOrder.mutate(
-  //       {
-  //         token: user?.access_token,
-  //         orderItems: order?.orderItemsSlected,
-  //         fullName: user?.name,
-  //         address:user?.address,
-  //         phone:user?.phone,
-  //         city: user?.city,
-  //         paymentMethod: payment,
-  //         itemsPrice: priceMemo,
-  //         shippingPrice: diliveryPriceMemo,
-  //         totalPrice: totalPriceMemo,
-  //         user: user?.id,
-  //         isPaid :true,
-  //         paidAt: details.update_time,
-  //         email: user?.email
-  //       }
-  //     )
-  //   }
+    const onSuccessPaypal = (details, data) => {
+      mutationAddOrder.mutate(
+        {
+          token: user?.access_token,
+          orderItems: order?.orderItemsSlected,
+          fullName: user?.name,
+          address:user?.address,
+          phone:user?.phone,
+          city: user?.city,
+          paymentMethod: payment,
+          itemsPrice: priceMemo,
+          shippingPrice: diliveryPriceMemo,
+          totalPrice: totalPriceMemo,
+          user: user?.id,
+          isPaid :true,
+          paidAt: details.update_time,
+          email: user?.email
+          
+        }
+      )
+    }
 
   const handleUpdateInforUser = () => {
     const { name, address, city, phone } = stateUserDetails;
@@ -239,25 +244,27 @@ const PaymentPage = () => {
     setPayment(e.target.value);
   };
 
-  //   const addPaypalScript = async () => {
-  //     const { data } = await PaymentService.getConfig()
-  //     const script = document.createElement('script')
-  //     script.type = 'text/javascript'
-  //     script.src = `https://www.paypal.com/sdk/js?client-id=${data}`
-  //     script.async = true;
-  //     script.onload = () => {
-  //       setSdkReady(true)
-  //     }
-  //     document.body.appendChild(script)
-  //   }
+    const addPaypalScript = async () => {
+      const { data } = await PaymentService.getConfig()
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = `https://sandbox.paypal.com/sdk/js?client-id=${data}`
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true)
+      }
+      document.body.appendChild(script)
+      console.log("dataCLIENT_ID: " + data)
+    }
 
-  //   useEffect(() => {
-  //     if(!window.paypal) {
-  //       addPaypalScript()
-  //     }else {
-  //       setSdkReady(true)
-  //     }
-  //   }, [])
+    useEffect(() => {
+      if(!window.paypal) {
+        addPaypalScript()
+      }else {
+        setSdkReady(true)
+      }
+      
+    }, [])
 
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
@@ -387,36 +394,43 @@ const PaymentPage = () => {
                 </span>
               </WrapperTotal>
             </div>
-            {/* {payment === "paypal" && sdkReady ? (
-              <div style={{ width: "320px" }}>
+            {payment === "paypal" && sdkReady ? (
+              <div
+                style={{
+                  height: "48px",
+                  width: "320px",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              >
                 <PayPalButton
-                  amount={Math.round(totalPriceMemo / 30000)}
+                  amount={Math.round(totalPriceMemo / 25000)}
                   // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                  //onSuccess={onSuccessPaypal}
+                  onSuccess={onSuccessPaypal} 
                   onError={() => {
-                    alert("Erroe");
+                    alert("Lỗi kết nối Paypal");
                   }}
                 />
               </div>
-            ) : ( */}
-            <ButtonCpmponent
-              onClick={() => handleAddOrder()}
-              size={40}
-              styleButton={{
-                background: "rgb(87 196 202 / 95%)",
-                height: "48px",
-                width: "320px",
-                border: "none",
-                borderRadius: "4px",
-              }}
-              textButton={"Thanh toán"}
-              styleTextButton={{
-                color: "#fff",
-                fontSize: "15px",
-                fontWeight: "700",
-              }}
-            ></ButtonCpmponent>
-            {/* )} */}
+            ) : (
+              <ButtonCpmponent
+                onClick={() => handleAddOrder()}
+                size={40}
+                styleButton={{
+                  background: "rgb(87 196 202 / 95%)",
+                  height: "48px",
+                  width: "320px",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+                textButton={"Thanh toán"}
+                styleTextButton={{
+                  color: "#fff",
+                  fontSize: "15px",
+                  fontWeight: "700",
+                }}
+              ></ButtonCpmponent>
+            )}
           </WrapperRight>
         </div>
       </div>

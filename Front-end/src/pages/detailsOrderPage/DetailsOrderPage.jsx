@@ -36,7 +36,7 @@ const DetailsOrderPage = () => {
   console.log("data", data);
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
-      return total + cur.price * cur.amount;
+      return total + cur.totalPrice * cur.amount;
     }, 0);
     return result;
   }, [data]);
@@ -91,9 +91,11 @@ const DetailsOrderPage = () => {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ width: "670px" }}>Sản phẩm</div>
+            <div style={{ width: "600px" }}>Sản phẩm</div>
             <WrapperItemLabel>Giá</WrapperItemLabel>
             <WrapperItemLabel>Số lượng</WrapperItemLabel>
+            <WrapperItemLabel>Kích thước</WrapperItemLabel>
+            <WrapperItemLabel>Khung</WrapperItemLabel>
             <WrapperItemLabel>Giảm giá</WrapperItemLabel>
           </div>
           {data?.orderItems?.map((order) => {
@@ -124,8 +126,11 @@ const DetailsOrderPage = () => {
                     {order?.name}
                   </div>
                 </WrapperNameProduct>
-                <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
+                <WrapperItem>{convertPrice(order?.totalPrice)}</WrapperItem>
                 <WrapperItem>{order?.amount}</WrapperItem>
+
+                <WrapperItem>{order?.frame}</WrapperItem>
+                <WrapperItem>{order?.size}</WrapperItem>
                 <WrapperItem>
                   {order?.discount
                     ? convertPrice((priceMemo * order?.discount) / 100)

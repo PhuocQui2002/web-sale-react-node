@@ -26,7 +26,10 @@ export const orderSlide = createSlice({
       console.log("state?.orderItems", state?.orderItems);
 
       const existingOrder = state?.orderItems?.find(
-        (item) => item?.product === orderItem.product
+        (item) =>
+          item?.product === orderItem.product &&
+          item?.size === orderItem.size &&
+          item?.frame === orderItem.frame
       );
       console.log("itemOrder", existingOrder);
       if (existingOrder) {
@@ -35,14 +38,25 @@ export const orderSlide = createSlice({
         state.orderItems.push({ ...orderItem });
       }
     },
+
     removeOrderProduct: (state, action) => {
-      const { idProduct } = action.payload;
+      const orderItem = action.payload;
 
       const existingOrder = state?.orderItems?.filter(
-        (item) => item?.product !== idProduct
+        (item) =>
+          !(
+            item?.product === orderItem.idProduct &&
+            item?.size === orderItem.size &&
+            item?.frame === orderItem.frame
+          )
       );
       const itemOrderSeleted = state?.orderItemsSlected?.filter(
-        (item) => item?.product !== idProduct
+        (item) =>
+          !(
+            item?.product === orderItem.idProduct &&
+            item?.size === orderItem.size &&
+            item?.frame === orderItem.frame
+          )
       );
 
       state.orderItems = existingOrder;
@@ -51,13 +65,22 @@ export const orderSlide = createSlice({
     resetOrder: (state) => {
       state.isSucessOrder = false;
     },
+
     increaseAmount: (state, action) => {
-      const { idProduct } = action.payload;
+      const orderItem = action.payload;
+      console.log("Order item:", orderItem);
+      console.log("State order items:", state.orderItems);
       const existingOrder = state?.orderItems?.find(
-        (item) => item?.product === idProduct
+        (item) =>
+          item?.product === orderItem.idProduct &&
+          item?.size === orderItem.size &&
+          item?.frame === orderItem.frame
       );
       const itemOrderSelected = state?.orderItemsSlected?.find(
-        (item) => item?.product === idProduct
+        (item) =>
+          item?.product === orderItem.idProduct &&
+          item?.size === orderItem.size &&
+          item?.frame === orderItem.frame
       );
       existingOrder.amount++;
       if (itemOrderSelected) {
@@ -65,12 +88,15 @@ export const orderSlide = createSlice({
       }
     },
     decreaseAmount: (state, action) => {
-      const { idProduct } = action.payload;
+      const orderItem = action.payload;
       const itemOrder = state?.orderItems?.find(
-        (item) => item?.product === idProduct
+        (item) =>
+          item?.product === orderItem.idProduct &&
+          item?.size === orderItem.size &&
+          item?.frame === orderItem.frame
       );
       const itemOrderSelected = state?.orderItemsSlected?.find(
-        (item) => item?.product === idProduct
+        (item) => item?.product === orderItem
       );
       itemOrder.amount--;
       if (itemOrderSelected) {
@@ -91,11 +117,11 @@ export const orderSlide = createSlice({
       state.orderItemsSlected = itemOrdersSelected;
     },
     selectedOrder: (state, action) => {
-      console.log("checked-selectedOrder", state, action)
+      console.log("checked-selectedOrder", state, action);
       const { listChecked } = action.payload;
       const orderSelected = [];
       state.orderItems.forEach((order) => {
-        if (listChecked.includes(order.product)) {
+        if (listChecked.includes(order.product + order.size + order.frame)) {
           orderSelected.push(order);
         }
       });

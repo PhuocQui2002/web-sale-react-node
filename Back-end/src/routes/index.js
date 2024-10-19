@@ -7,7 +7,7 @@ const EvaluateRouter = require("./EvaluateRouter");
 
 
 
-// const PaymentRouter = require('./PaymentRouter')
+ const PaymentRouter = require('./PaymentRouter')
 
 const routes = (app) => {
   app.use("/api/user", UserRouter);
@@ -16,6 +16,8 @@ const routes = (app) => {
   app.use("/api/frame", FrameRouter);
   app.use("/api/size", SizeRouter);
   app.use("/api/evaluate", EvaluateRouter);
+  app.use('/api/payment', PaymentRouter)
+
 
 };
 
