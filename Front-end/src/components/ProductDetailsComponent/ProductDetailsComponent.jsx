@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Image, Rate, Select, Radio } from "antd";
+import { Col, Row, Image, Rate, Select, Radio, message } from "antd";
 import img from "../../assets/images/logoDN.jpg";
 
 import { StarFilled, MinusOutlined, PlusOutlined } from "@ant-design/icons";
@@ -22,7 +22,7 @@ import {
 } from "./style";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import LoadingComponent from "../loadingComponent/loadingComponent";
-import { addOrderProduct } from "../../redux/slides/orderSlide";
+import { addOrderProduct, buyNowProduct } from "../../redux/slides/orderSlide";
 
 const ProductDetailsComponent = ({ idProduct }) => {
   // useEffect(() => {
@@ -131,6 +131,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           },
         })
       );
+      message.success("Thêm sản phẩm vào giỏ hàng thành công!");
     }
   };
 
@@ -167,6 +168,24 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const TotalPrice = framePrice + sizePrice;
 
   const handleAddCard = () => {
+    if (!user?.id) {
+      navigate("/login", { state: location?.pathname });
+    } else {
+      dispatch(
+        buyNowProduct({
+          name: productDetails?.name,
+          amount: numProduct,
+          image: productDetails?.image,
+          //price: productDetails?.price,
+          product: productDetails?._id,
+          size: size,
+          frame: frameType,
+          totalPrice: productDetails?.price + TotalPrice,
+          discount: productDetails?.discount,
+          countInstock: productDetails?.countInStock,
+        })
+      );
+    }
     navigate("/payment");
   };
   return (

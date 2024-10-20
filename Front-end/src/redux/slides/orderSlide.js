@@ -127,6 +127,13 @@ export const orderSlide = createSlice({
       });
       state.orderItemsSlected = orderSelected;
     },
+    buyNowProduct: (state, action) => {
+      const orderItem = action.payload;
+      const orderSelected = [];
+      orderSelected.push(orderItem);
+      state.orderItemsSlected = orderSelected;
+      console.log("buy-now-selectedOrder", state.orderItemsSlected)
+    },
   },
 });
 
@@ -139,6 +146,7 @@ export const {
   removeAllOrderProduct,
   selectedOrder,
   resetOrder,
+  buyNowProduct,
 } = orderSlide.actions;
 
 export default orderSlide.reducer;

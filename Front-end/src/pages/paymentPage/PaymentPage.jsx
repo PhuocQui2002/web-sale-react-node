@@ -29,7 +29,7 @@ import InputComponent from "../../components/inputComponent/InputComponent";
 const PaymentPage = () => {
  
   const order = useSelector((state) => state.order);
-  //console.log("order-payment1", order);
+  console.log("order-payment1", order?.orderItemsSlected);
   const user = useSelector((state) => state.user);
 
   const [delivery, setDelivery] = useState("fast");
@@ -72,19 +72,20 @@ const PaymentPage = () => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       return total + cur.totalPrice * cur.amount;
     }, 0);
+    console.log("result",result);
     return result;
+    
   }, [order]);
 
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       const totalDiscount = cur.discount ? cur.discount : 0;
-      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
+      return total + (cur.totalPrice * totalDiscount * cur.amount) / 100;
     }, 0);
     if (Number(result)) {
       return result;
     }
     return 0;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {

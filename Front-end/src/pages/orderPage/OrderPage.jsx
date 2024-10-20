@@ -44,6 +44,7 @@ import * as OrderService from "../../services/OrderService";
 
 function OrderPage() {
   const order = useSelector((state) => state.order);
+
   const user = useSelector((state) => state.user);
 
   const [listChecked, setListChecked] = useState([]);
@@ -254,6 +255,8 @@ function OrderPage() {
       description: "5 sản phẩm",
     },
   ];
+
+  const reversedOrderItems = order?.orderItems?.slice().reverse();
   return (
     <div style={{ background: "#D3D3D3", with: "100%", height: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
@@ -330,7 +333,7 @@ function OrderPage() {
               </div>
             </WrapperStyleHeader>
             <WrapperListOrder>
-              {order?.orderItems?.map((order) => {
+              {reversedOrderItems.map((order) => {
                 console.log("oder-page", order);
                 
                 return (

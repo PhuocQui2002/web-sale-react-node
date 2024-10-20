@@ -11,16 +11,6 @@ const orderSchema = new mongoose.Schema(
         discount: { type: Number },
         size: { type: String },
         frame: { type: String },
-        // size: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: 'Size',
-        //     required: true,
-        // },
-        // frame: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: 'Frame',
-        //     required: true,
-        // },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",

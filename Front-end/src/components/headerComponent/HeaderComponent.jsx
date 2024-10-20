@@ -114,14 +114,14 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
             isHiddenSearch && isHiddenSearch ? "space-between" : "unset",
         }}
       >
-        <Col span={5}>
+        <Col onClick={onNavigateSHome} span={5} >
           <Image
             src={mixilogo}
             preview={false}
             alt="logo-mixi"
             height="40px"
             width="60px"
-            onClick={onNavigateSHome}
+            
             style={{
               height: "40px",
               borderRadius: "50%",
@@ -129,7 +129,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
               cursor: "pointer",
             }}
           />
-          <WrapperTextHeader>MIXI SHOP</WrapperTextHeader>
+          <WrapperTextHeader> MIXI SHOP</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
