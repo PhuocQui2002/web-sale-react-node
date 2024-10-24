@@ -148,6 +148,7 @@ const PaymentPage = () => {
 
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
+    console.log("order-payment-token", token)
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });

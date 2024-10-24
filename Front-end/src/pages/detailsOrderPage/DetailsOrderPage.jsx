@@ -40,7 +40,16 @@ const DetailsOrderPage = () => {
     }, 0);
     return result;
   }, [data]);
-
+  const priceDiscountMemo = useMemo(() => {
+    const result = data?.orderItems?.reduce((total, cur) => {
+      const totalDiscount = cur.discount ? cur.discount : 0;
+      return total + (cur.totalPrice * totalDiscount * cur.amount) / 100;
+    }, 0);
+    if (Number(result)) {
+      return result;
+    }
+    return 0;
+  }, [data]);
   return (
     <div style={{ width: "100%", height: "100vh", background: "#f5f5fa" }}>
       <div style={{ width: "1270px", margin: "0 auto", height: "1270px" }}>
@@ -128,12 +137,12 @@ const DetailsOrderPage = () => {
                 </WrapperNameProduct>
                 <WrapperItem>{convertPrice(order?.totalPrice)}</WrapperItem>
                 <WrapperItem>{order?.amount}</WrapperItem>
-
-                <WrapperItem>{order?.frame}</WrapperItem>
                 <WrapperItem>{order?.size}</WrapperItem>
+                <WrapperItem>{order?.frame == "none" ? "Không khung" : order?.frame}</WrapperItem>
+
                 <WrapperItem>
                   {order?.discount
-                    ? convertPrice((priceMemo * order?.discount) / 100)
+                    ? convertPrice(order?.discount / 100 * order?.totalPrice)
                     : "0 VND"}
                 </WrapperItem>
               </WrapperProduct>

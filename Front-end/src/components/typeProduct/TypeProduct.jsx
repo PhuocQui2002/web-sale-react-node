@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
+import { Select } from "antd";
 
 function TypeProduct({ name }) {
   const navigate = useNavigate();
@@ -13,12 +15,24 @@ function TypeProduct({ name }) {
     );
   };
   return (
-    <div
-      style={{ padding: "0 10px", cursor: "pointer" }}
-      onClick={() => handleNavigatetype(name)}
-    >
-      {name}
-    </div>
+    <>
+      <ButtonCpmponent
+        styleButton={{
+          padding: "0 10px",
+          cursor: "pointer",
+          color: "black",
+          fontSize: "14px",
+        }}
+        onClick={() => handleNavigatetype(name)}
+        textButton={name}
+      />
+      {/* <Select
+      defaultValue={name}
+      style={{ width: 120 }}
+      //disabled
+      options={[{ value: {name}, label: {name} }]}
+    /> */}
+    </>
   );
 }
 

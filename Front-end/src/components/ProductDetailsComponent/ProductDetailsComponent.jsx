@@ -58,6 +58,12 @@ const ProductDetailsComponent = ({ idProduct }) => {
     return res.data;
   };
 
+  const fetchGetEavluate = async () => {
+    const res = await SizeService.getAllSize();
+    //console.log("fetchGetSize1", res )
+    return res.data;
+  };
+
   const {
     isLoading: isLoadingSize,
     isError: isErrorSize,
@@ -121,7 +127,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             name: productDetails?.name,
             amount: numProduct,
             image: productDetails?.image,
-            //price: productDetails?.price,
+            type: productDetails?.type,
             product: productDetails?._id,
             size: size,
             frame: frameType,
@@ -176,7 +182,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           name: productDetails?.name,
           amount: numProduct,
           image: productDetails?.image,
-          //price: productDetails?.price,
+          type: productDetails?.type,
           product: productDetails?._id,
           size: size,
           frame: frameType,

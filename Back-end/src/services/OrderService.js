@@ -98,7 +98,7 @@ const createOrder = (newOrder) => {
   });
 };
 
-const getAllOrder = (id) => {
+const getAllOrderByUserId = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const order = await Order.find({
@@ -241,32 +241,53 @@ const cancelOrderDetails = (id, data) => {
   })
 }
 
-// const cancelOrderDetails2 = (id, data) => {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       const order = await Order.findByIdAndDelete(id);
-//       console.log(order)
-//       if (order === null) {
-//         reject({
-//           status: "ERR",
-//           message: "The order is not defined",
-//         });
-//       }
-//       resolve({
-//         status: "OK",
-//         message: "success",
-//         data: order,
-//       });
-//     } catch (e) {
-//       reject(e);
-//     }
-//   });
-// };
+const getAllOrder = () => {
+  return new Promise(async (resolve, reject) => {
+      try {
+          const allOrder = await Order.find().sort({createdAt: -1, updatedAt: -1})
+          resolve({
+              status: 'OK',
+              message: 'Success',
+              data: allOrder
+          })
+      } catch (e) {
+          reject(e)
+      }
+  })
+}
 
+const updateOrder = (orderID, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const checkOrder = await Order.findOne({
+        _id: orderID,
+      });
+      if (checkOrder === null) {
+        resolve({
+          status: "ERR",
+          message: "The order is not defined",
+        });
+      }
+
+      const updatedOrder = await Order.findByIdAndUpdate(orderID, data, {
+        new: true,
+      });
+      resolve({
+        status: "OK",
+        message: "SUCCESS",
+        data: updatedOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 module.exports = {
   createOrder,
   addProductReview,
-  getAllOrder,
+  getAllOrderByUserId,
   getOrderDetails,
   cancelOrderDetails,
+  getAllOrder,
+  updateOrder
 };

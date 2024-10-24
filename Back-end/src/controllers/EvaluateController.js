@@ -33,9 +33,28 @@ const getAllEvaluate = async (req, res) => {
     });
   }
 };
+const getAllOrderByProductId = async (req, res) => {
+  try {
+    const evaluateProductId = req.params.id;
+    if (!evaluateProductId) {
+      return res.status(401).json({
+        status: "ERR",
+        message: "The evaluateProductId is required",
+      });
+    }
+    const response = await EvaluateService.getAllEvaluateById(evaluateProductId);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 
   
   module.exports = {
     createEvaluate,
-    getAllEvaluate
+    getAllEvaluate,
+    getAllOrderByProductId
   };

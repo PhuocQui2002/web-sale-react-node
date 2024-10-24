@@ -8,6 +8,8 @@ const {
 
 router.post("/create", EvaluateController.createEvaluate);
 router.get("/getAllEvaluate", EvaluateController.getAllEvaluate);
+router.get('/getAllOrderByProductId/:id',EvaluateController.getAllOrderByProductId)
+
 
 
 

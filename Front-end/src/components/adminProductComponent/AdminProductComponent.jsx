@@ -433,10 +433,10 @@ const AdminProductComponent = () => {
     queryKey: ["type-product"],
     queryFn: fetchAllTypeProduct,
   });
-  console.log("typeProduct-type", typeProduct);
+  //console.log("typeProduct-type", typeProduct);
   const { data: products } = queryProduct;
 
-  console.log("data-product", products);
+  //console.log("data-product", products);
 
   const columns = [
     {

@@ -15,7 +15,6 @@ import logo from "../../assets/images/logohinh.webp";
 //import painting from "../../assets/images/logoDN.jpg";
 
 const CartComponent = (props) => {
-
   const {
     countInStock,
     description,
@@ -62,7 +61,11 @@ const CartComponent = (props) => {
       </WrapperReportText>
       <WrapperPriceText>
         {price.toLocaleString()} VNĐ{" "}
-        <WrapperDiscountText>giảm {discount || 5}%</WrapperDiscountText>
+        {discount > 0 ? (
+          <WrapperDiscountText>giảm {discount}%</WrapperDiscountText>
+        ) : (
+          <div></div>
+        )}
       </WrapperPriceText>
     </WrapperCardStyle>
   );

@@ -16,31 +16,40 @@ import ButtonComponent from "../../components/buttonCpmponent/ButtonCpmponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/messageComponent/messageComponent";
+import EvaluateComponents from "../../components/evaluateComponents/EvaluateComponents";
 
 const MyOrderPage = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+
   const fetchMyOrder = async () => {
     const res = await OrderService.getAllOrderByUserId(
       user?.id,
       user?.access_token
     );
-    // console.log("res-oder: " + res);
-    return res.data;
+
+    return res?.data;
   };
+
+  useEffect(() => {
+    fetchMyOrder(user?.id, user?.access_token);
+  });
+
   const queryOrder = useQuery({
     queryKey: ["orders"],
     queryFn: fetchMyOrder,
   });
+
   const { isLoading, data } = queryOrder;
+
   //   console.log("data-queryOrder", data);
   const handleDetailsOrder = (id) => {
     navigate(`/getDetailsOrder/${id}`, { token: user?.access_token });
   };
 
   const mutation = useMutationHooks((data) => {
-    const { id, token,  orderItems} = data;
-    const res = OrderService.cancelOrder(id, token , orderItems);
+    const { id, token, orderItems } = data;
+    const res = OrderService.cancelOrder(id, token, orderItems);
     return res;
   });
 
@@ -64,20 +73,20 @@ const MyOrderPage = () => {
     isLoading: isLoadingCancel,
     isSuccess: isSuccessCancel,
     isError: isErrorCancle,
-    data: dataCancel,
+   
   } = mutation;
 
-  useEffect(() => {
-    if (isSuccessCancel && dataCancel?.status === "OK") {
-      message.success();
-    } else if (isSuccessCancel && dataCancel?.status === "ERR") {
-      message.error(dataCancel?.message);
-    } else if (isErrorCancle) {
-      message.error();
-    }
-  }, [isErrorCancle, isSuccessCancel]);
+  // useEffect(() => {
+  //   if (isSuccessCancel && dataCancel?.status === "OK") {
+  //     message.success();
+  //   } else if (isSuccessCancel && dataCancel?.status === "ERR") {
+  //     message.error(dataCancel?.message);
+  //   } else if (isErrorCancle) {
+  //     message.error();
+  //   }
+  // }, [isErrorCancle, isSuccessCancel]);
 
-  const renderProduct = (data) => {
+  const renderProduct = (data, isDelivered) => {
     return data?.map((order) => {
       console.log("order-myorder", order);
       return (
@@ -147,7 +156,21 @@ const MyOrderPage = () => {
           >
             Số lượng {order?.amount}
           </div>
-
+          {isDelivered ? (
+            <div
+              style={{
+                height: "48px",
+                width: "320px",
+                border: "none",
+                borderRadius: "4px",
+                textAlign: "end",
+              }}
+            >
+              <EvaluateComponents idProduct={order?.product} idUser={user.id} />
+            </div>
+          ) : (
+            <div></div>
+          )}
           <span
             style={{ fontSize: "13px", color: "#242424", marginLeft: "auto" }}
           >
@@ -164,7 +187,7 @@ const MyOrderPage = () => {
         <span>Đơn hàng của tôi</span>
         <WrapperListOrder>
           {data?.map((order) => {
-            console.log("odddd", order);
+            //console.log("odddd", order);
             return (
               <WrapperItemOrder key={order?._id}>
                 <WrapperStatus>
@@ -192,7 +215,7 @@ const MyOrderPage = () => {
                     }`}</span>
                   </div>
                 </WrapperStatus>
-                {renderProduct(order?.orderItems)}
+                {renderProduct(order?.orderItems, order?.isDelivered)}
                 <WrapperFooterItem>
                   <div>
                     <span style={{ color: "rgb(255, 66, 78)" }}>
@@ -220,6 +243,7 @@ const MyOrderPage = () => {
                       textButton={"Hủy đơn hàng"}
                       styleTextButton={{ color: "#9255FD", fontSize: "14px" }}
                     ></ButtonComponent>
+
                     <ButtonComponent
                       onClick={() => handleDetailsOrder(order?._id)}
                       size={40}

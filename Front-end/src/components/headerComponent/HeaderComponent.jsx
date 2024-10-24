@@ -26,6 +26,8 @@ import LoadingComponent from "../loadingComponent/loadingComponent";
 // eslint-disable-next-line react/prop-types
 function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const [loading, setLoading] = useState(false);
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
+
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -66,12 +68,15 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   };
   const handleProfile = () => {
     navigate("/profilePage");
+    setIsOpenPopup(false);
   };
   const handleMyOrder = () => {
     navigate("/myOderPage");
+    setIsOpenPopup(false);
   };
   const handleAdmin = () => {
     navigate("/AdminPage");
+    setIsOpenPopup(false);
   };
   const content = (
     <div>
@@ -114,14 +119,13 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
             isHiddenSearch && isHiddenSearch ? "space-between" : "unset",
         }}
       >
-        <Col onClick={onNavigateSHome} span={5} >
+        <Col onClick={onNavigateSHome} span={5}>
           <Image
             src={mixilogo}
             preview={false}
             alt="logo-mixi"
             height="40px"
             width="60px"
-            
             style={{
               height: "40px",
               borderRadius: "50%",
@@ -149,7 +153,11 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
           style={{ display: "flex", gap: "54px", alignItems: "center" }}
         >
           <LoadingComponent isPending={loading}>
-            <WrapperHeaderAccout>
+            <WrapperHeaderAccout
+              style={{
+                marginLeft: "10px",
+              }}
+            >
               {userAvatar ? (
                 <img
                   src={userAvatar}
@@ -165,10 +173,20 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
                 <UserOutlined style={{ fontSize: "30px" }} />
               )}
 
-              {user?.name ? ( ///
+              {user?.access_token ? (
                 <>
-                  <Popover content={content} trigger="click">
-                    <div style={{ cursor: "pointer" }}>{userName}</div>
+                  <Popover content={content} trigger="click" open={isOpenPopup}>
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        maxWidth: 100,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                      onClick={() => setIsOpenPopup((prev) => !prev)}
+                    >
+                      {userName?.length ? userName : user?.email}
+                    </div>
                   </Popover>
                 </>
               ) : (
@@ -191,6 +209,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
               onClick={onNavigateShopingCart}
               style={{
                 cursor: "pointer",
+                marginLeft: "40px",
               }}
             >
               <Badge count={order?.orderItems?.length} size="small">

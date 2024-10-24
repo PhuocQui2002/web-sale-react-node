@@ -141,7 +141,7 @@ function OrderPage() {
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       const totalDiscount = cur.discount ? cur.discount : 0;
-      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
+      return total + (cur.totalPrice * totalDiscount * cur.amount) / 100;
     }, 0);
     if (Number(result)) {
       return result;
@@ -521,7 +521,7 @@ function OrderPage() {
                       fontWeight: "bold",
                     }}
                   >
-                    {`${priceDiscountMemo} VNĐ`}
+                    {convertPrice(priceDiscountMemo)}
                   </span>
                 </div>
                 <div

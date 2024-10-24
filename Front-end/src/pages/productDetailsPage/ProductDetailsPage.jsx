@@ -2,17 +2,20 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductDetailsComponent from "../../components/ProductDetailsComponent/ProductDetailsComponent";
+import ProductEvaluateComponent from "../../components/productEvaluateComponent/ProductEvaluateComponent";
 
 function ProductDetailsPage() {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
+  console.log("idProduct", id);
+
   return (
     <div
       style={{
         // height: "1000px",
-        background: "#efefef",
+        //background: "#efefef",
         padding: "0 120px",
-        height: "735px",
+        height: "100vh",
       }}
     >
       <div
@@ -29,6 +32,7 @@ function ProductDetailsPage() {
         <span>Chi tiết sản phẩm</span>
       </div>
       <ProductDetailsComponent idProduct={id} />
+      <ProductEvaluateComponent idProductEvaluate={id} />
     </div>
   );
 }
