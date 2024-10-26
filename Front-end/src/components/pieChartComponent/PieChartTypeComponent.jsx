@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { convertDataChart  } from "../../utils";
+import { convertDataChart, convertDataChart2  } from "../../utils";
 
 const PieChartComponent = (props) => {
  
-  const data = convertDataChart(props.data, props.field);
+  const data = convertDataChart2(props.data, props.field);
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "green"];
 
   const RADIAN = Math.PI / 180;

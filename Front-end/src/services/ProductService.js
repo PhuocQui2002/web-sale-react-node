@@ -36,6 +36,18 @@ export const getProductType = async (type, page, limit) => {
   }
 };
 
+export const getProductPrice = async ( min, max) => {
+  if ( min , max) {
+    const res = await axios.get(
+      `${
+        import.meta.env.VITE_API_URL
+      }/product/getAllProduct?filter=price&filter=${min}&filter=${max}`
+      
+    );
+    return res.data;
+  }
+};
+
 export const createProduct = async (data) => {
   const res = await axios.post(
     `${import.meta.env.VITE_API_URL}/product/create`,

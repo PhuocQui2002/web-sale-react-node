@@ -11,16 +11,19 @@ import InputComponent from "../inputComponent/InputComponent";
 
 import { SnippetsOutlined, EditOutlined } from "@ant-design/icons";
 import PieChartComponent from "../pieChartComponent/PieChartComponent";
+import PieChartTypeComponent from "../pieChartComponent/PieChartTypeComponent";
+
 import DrawerComponent from "../drawerComponent/DrawerComponent";
 import { Button, Form, message } from "antd";
 import { useMutationHooks } from "../../hooks/useMutationHook";
+import BarChartComponent from "../pieChartComponent/BarChartComponent ";
+import LineChartComponent from "../pieChartComponent/LineChartComponent ";
 
 const AdminOderComponent = () => {
   const user = useSelector((state) => state?.user);
 
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
-
 
   // const searchInput = useReff(null);
   const [rowSelected, setRowSelected] = useState("");
@@ -35,9 +38,13 @@ const AdminOderComponent = () => {
     const res = await OrderService.getAllOrder(user?.access_token);
     return res;
   };
-  const queryOrder = useQuery({ queryKey: ["ordersupdate"], queryFn: getAllOrder });
+  const queryOrder = useQuery({
+    queryKey: ["ordersupdate"],
+    queryFn: getAllOrder,
+  });
   const { isLoading: isLoadingOrders, data: orders } = queryOrder;
- 
+  //console.log("orders", orders?.data);
+
   const dataTable =
     orders?.data?.length &&
     orders?.data?.map((order) => {
@@ -63,7 +70,6 @@ const AdminOderComponent = () => {
 
   const handleEditOrder = () => {
     if (rowSelected) {
-     
       fetchGetDetailsOrder(rowSelected);
       //setRowSelected("")
     }
@@ -72,9 +78,7 @@ const AdminOderComponent = () => {
 
   const handleDetailOrder = () => {
     if (rowSelected) {
-      
       fetchGetDetailsOrder(rowSelected);
-      
     }
     setIsOpenDrawerDetail(true);
   };
@@ -145,7 +149,6 @@ const AdminOderComponent = () => {
     );
   };
 
- 
   const columns = [
     {
       title: "User name",
@@ -206,7 +209,7 @@ const AdminOderComponent = () => {
     stateDetailOrder({});
     form2.resetFields();
   };
-  
+
   useEffect(() => {
     if (isOpenDrawer) {
       form.setFieldsValue(stateEditOrder);
@@ -218,7 +221,6 @@ const AdminOderComponent = () => {
       form2.setFieldsValue(stateDetailOrder);
     }
   }, [form2, stateDetailOrder, isOpenDrawerDetail]);
-
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);
@@ -245,15 +247,19 @@ const AdminOderComponent = () => {
 
   return (
     <div>
-      <div >
+      <div>
         <div style={{ display: "flex" }}>
-          <div style={{ height: 200, width: 200 , marginBottom: "10px"}}>
-            Thống kê đơn hàng đã giao
-            <PieChartComponent data={orders?.data} />
+          <div style={{ height: 250, width: 250 }}>
+            Thống kê đơn hàng theo type
+            <PieChartTypeComponent data={orders?.data} field="type" />
           </div>
-          {/* <div style={{ height: 200, width: 200 }}>
-            Thống kê đã thanh toán ch giao
-            <PieChartComponent data={orders?.data} />
+          <div style={{ height: 250, width: 250 }}>
+            Thống kê đơn hàng đã giao
+            <PieChartComponent data={orders?.data} field="isDelivered" />
+          </div>
+          {/* <div style={{ height: "100px",  width: 250 }}>
+            Thống kê đơn hàng đã giao
+            <LineChartComponent data={orders?.data} field="isDelivered" />
           </div> */}
         </div>
         <TableComponent
@@ -375,7 +381,6 @@ const AdminOderComponent = () => {
           style={{
             maxWidth: 600,
           }}
-          
           autoComplete="off"
         >
           {stateDetailOrder?.orderItems?.map((item, index) => (
@@ -440,7 +445,6 @@ const AdminOderComponent = () => {
                 />
               </Form.Item>
             </div>
-            
           ))}
         </Form>
       </DrawerComponent>

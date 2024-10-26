@@ -120,7 +120,7 @@ const getDetailsProduct = (id) => {
   });
 };
 
-const getAllProduct = (limit, page, sort, filter) => {
+ const getAllProduct = (limit, page, sort, filter) => {
   return new Promise(async (resolve, reject) => {
     try {
       const totalProduct = await Product.countDocuments();
@@ -189,6 +189,91 @@ const getAllProduct = (limit, page, sort, filter) => {
     }
   });
 };
+
+const getAllProduct2 = (limit, page, sort, filter, minPrice, maxPrice) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const totalProduct = await Product.countDocuments();
+      let allProduct = [];
+
+      // Tạo đối tượng truy vấn cơ bản
+      const query = {};
+      
+      // Nếu có bộ lọc theo giá, thêm vào đối tượng truy vấn
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        if (minPrice !== undefined) {
+          query.price = { ...query.price, $gte: minPrice }; // Sản phẩm có giá lớn hơn hoặc bằng minPrice
+        }
+        if (maxPrice !== undefined) {
+          query.price = { ...query.price, $lte: maxPrice }; // Sản phẩm có giá nhỏ hơn hoặc bằng maxPrice
+        }
+      }
+
+      // Kiểm tra và xử lý sắp xếp
+      if (sort) {
+        const objectSort = {};
+        objectSort[sort[1]] = sort[0];
+        console.log("objectSort", objectSort);
+        const allProductSort = await Product.find(query) // Sử dụng query đã tạo
+          .limit(limit)
+          .skip(page * limit)
+          .sort(objectSort);
+        
+        return resolve({
+          status: "OK",
+          message: "Success",
+          data: allProductSort,
+          total: totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      // Kiểm tra và xử lý bộ lọc
+      if (filter) {
+        const label = filter[0];
+        query[label] = { $regex: filter[1] }; // Thêm điều kiện bộ lọc vào truy vấn
+        const allObjectFilter = await Product.find(query)
+          .limit(limit)
+          .skip(page * limit);
+
+        return resolve({
+          status: "OK",
+          message: "Success",
+          data: allObjectFilter,
+          total: totalProduct,
+          pageCurrent: Number(page + 1),
+          totalPage: Math.ceil(totalProduct / limit),
+        });
+      }
+
+      // Nếu không có limit, lấy tất cả sản phẩm
+      if (!limit) {
+        allProduct = await Product.find(query).sort({
+          createdAt: -1,
+          updatedAt: -1,
+        });
+      } else {
+        allProduct = await Product.find(query) // Sử dụng query đã tạo
+          .limit(limit)
+          .skip(page * limit)
+          .sort({ createdAt: -1, updatedAt: -1 });
+      }
+
+      return resolve({
+        status: "OK",
+        message: "Success",
+        data: allProduct,
+        total: totalProduct,
+        pageCurrent: Number(page + 1),
+        totalPage: Math.ceil(totalProduct / limit),
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 const deleteManyProduct = (ids) => {
   console.log("deleteManyProduct", ids)
   return new Promise(async (resolve, reject) => {
@@ -206,7 +291,7 @@ const deleteManyProduct = (ids) => {
 const getAllType = () => {
   return new Promise(async (resolve, reject) => {
       try {
-          const allType = await Product.distinct('type')
+          const allType = await Product.distinct('type').sort({ createdAt: -1, updatedAt: -1 })
           resolve({
               status: 'OK',
               message: 'Success',
@@ -218,6 +303,21 @@ const getAllType = () => {
   })
 }
 
+const getAllPrice = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+        const allType = await Product.distinct('price').sort({ createdAt: -1, updatedAt: -1 })
+        resolve({
+            status: 'OK',
+            message: 'Success',
+            data: allType,
+        })
+    } catch (e) {
+        reject(e)
+    }
+})
+};
+
 
 
 module.exports = {
@@ -227,5 +327,6 @@ module.exports = {
   getDetailsProduct,
   getAllProduct,
   deleteManyProduct,
-  getAllType
+  getAllType,
+  getAllPrice
 };

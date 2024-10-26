@@ -12,6 +12,7 @@ import PaymentPage from "../pages/paymentPage/PaymentPage";
 import OrderSuccess from "../pages/orderSuccess/OrderSuccess";
 import MyOrderPage from "../pages/myOderPage/MyOderPage";
 import DetailsOrderPage from "../pages/detailsOrderPage/DetailsOrderPage";
+import ForgetPasswordPage from "../pages/forgetPasswordPage/ForgetPasswordPage";
 
 
 
@@ -83,5 +84,10 @@ export const routers = [
     path: "/getDetailsOrder/:id",
     page: DetailsOrderPage,
     isShowHeader: true,
+  },
+  {
+    path: "/forgetPassword",
+    page: ForgetPasswordPage,
+    //isShowHeader: true,
   },
 ];

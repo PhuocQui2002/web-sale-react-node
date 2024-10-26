@@ -45,33 +45,98 @@ export const renderOptions = (arr) => {
 };
 
 export const convertPrice = (price) => {
-    try {
-        const result  = price?.toLocaleString().replaceAll(',', '.')
-        return `${result} VND`
-    } catch (error) {
-        return null
-    }
-}
-
-  export const convertDataChart = (data, type) => {
-    try {
-        const object = {}
-        Array.isArray(data) && data.forEach((opt) => {
-            if(!object[opt[type]]) {
-                object[opt[type]] = 1
-            } else {
-                object[opt[type]]+=1
-                console.log('c;getBase64', object[opt[type]], typeof(object[opt[type]]))
-            }
-        })
-        const results = Array.isArray(Object.keys(object)) && Object.keys(object).map((item) => {
-            return {
-                name: orderContant.payment[item],
-                value: object[item]
-            }
-        })
-        return results
-    }catch(e) {
-        return []
-    }
+  try {
+    const result = price?.toLocaleString().replaceAll(",", ".");
+    return `${result} VND`;
+  } catch (error) {
+    return null;
   }
+};
+
+// export const convertDataChart = (data, type) => {
+//   try {
+//     const object = {};
+//     Array.isArray(data) &&
+//       data.forEach((opt) => {
+//         if (!object[opt[type]]) {
+//           object[opt[type]] = 1;
+//         } else {
+//           object[opt[type]] += 1;
+//           console.log(
+//             "c;getBase64",
+//             object[opt[type]],
+//             typeof object[opt[type]]
+//           );
+//         }
+//       });
+//     const results =
+//       Array.isArray(Object.keys(object)) &&
+//       Object.keys(object).map((item) => {
+//         return {
+//           name: "Đơn hàng đã giao",
+//           value: object[item],
+//         };
+//       });
+//     return results;
+//   } catch (e) {
+//     return [];
+//   }
+// };
+export const convertDataChart = (data, type) => {
+  try {
+    const object = {};
+    Array.isArray(data) &&
+      data.forEach((opt) => {
+        const name = opt[type] ? "Đơn đã giao" : "Đơn chưa giao";
+        if (!object[name]) {
+          object[name] = 1;
+        } else {
+          object[name] += 1;
+        }
+      });
+    const results =
+      Array.isArray(Object.keys(object)) &&
+      Object.keys(object).map((item) => {
+        return {
+          name: item,
+          value: object[item],
+        };
+      });
+    return results;
+  } catch (e) {
+    return [];
+  }
+};
+
+export const convertDataChart2 = (data) => {
+  try {
+    const object = {};
+    
+    Array.isArray(data) &&
+      data.forEach((order) => {
+        // Loop through each order's orderItems
+        order.orderItems.forEach((item) => {
+          const typeName = item.type;
+          
+          if (!object[typeName]) {
+            object[typeName] = 1;
+          } else {
+            object[typeName] += 1;
+          }
+        });
+      });
+    
+    const results =
+      Array.isArray(Object.keys(object)) &&
+      Object.keys(object).map((item) => {
+        return {
+          name: item,
+          value: object[item],
+        };
+      });
+      
+    return results;
+  } catch (e) {
+    return [];
+  }
+};

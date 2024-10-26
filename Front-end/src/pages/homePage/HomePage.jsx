@@ -21,7 +21,7 @@ function HomePage() {
   const [limit, setLimit] = useState(10);
   const [typeProducts, setTypeProducts] = useState([]);
 
-  const arr = ["Trang chủ", "Sản phẩm bán chạy", "Liên hệ", "Thông tin"];
+  //const arr = ["Trang chủ", "Sản phẩm bán chạy", "Liên hệ", "Thông tin"];
 
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 1000);

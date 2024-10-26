@@ -1,80 +1,91 @@
-/* eslint-disable react/jsx-key */
-/* eslint-disable no-unused-vars */
-// eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   WrapperLableText,
-  WrapperTextValue,
   WrapperContent,
-  WrapperTextPrice,
 } from "./style";
-import { Checkbox, Rate, Row } from "antd";
+import { Checkbox, Select } from "antd";
+import * as ProductService from "../../services/ProductService";
 
-function NavbarComponent() {
-  const onChange = () => {};
+function NavbarComponent({typeCheck}) {
+  console.log("navbarComponent", typeCheck);
+  const [typeProducts, setTypeProducts] = useState([]);
+  const [selectedCheckbox, setSelectedCheckbox] = useState(typeCheck);
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    if (res?.status === "OK") {
+      setTypeProducts(res?.data);
+    }
+    console.log("res", res);
+  };
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
+
+  const onCheckboxChange = (value) => {
+    
+    setSelectedCheckbox(value);
+
+  };
+
   const renderContent = (type, options) => {
     switch (type) {
-      case "text":
-        // eslint-disable-next-line no-unused-vars
-        return options.map((option) => {
-          return <WrapperTextValue>{option}</WrapperTextValue>;
-        });
       case "checkbox":
         return (
-          <Checkbox.Group
-            style={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-            }}
-            onChange={onChange}
-          >
-            {options.map((option) => {
-              return (
-                <Checkbox style={{ marginLeft: 0 }} value={option.value}>
-                  {option.label}
-                </Checkbox>
-              );
-            })}
-          </Checkbox.Group>
+          <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
+            {options.map((option) => (
+              <Checkbox
+                key={option}
+                checked={selectedCheckbox === option}
+                onChange={() => onCheckboxChange(option)}
+                style={{ marginLeft: 0 }}
+              >
+                {option}
+              </Checkbox>
+            ))}
+          </div>
         );
-      case "star":
-        // eslint-disable-next-line no-unused-vars
-        return options.map((option) => {
-          return (
-            <div style={{ display: "flex", gap: "4px" }}>
-              {" "}
-              <Rate disabled defaultValue={option} />
-              <span>Tu {option} s</span>
-            </div>
-          );
-        });
       case "price":
-        // eslint-disable-next-line no-unused-vars
-        return options.map((option) => {
-          return <WrapperTextPrice>{option}</WrapperTextPrice>;
-        });
+        return (
+          <Select
+            defaultValue="lucy"
+            style={{
+              width: 120,
+            }}
+            options={[
+              {
+                value: "jack",
+                label: "Jack",
+              },
+              {
+                value: "lucy",
+                label: "Lucy",
+              },
+              {
+                value: "Yiminghe",
+                label: "yiminghe",
+              },
+              {
+                value: "disabled",
+                label: "Disabled",
+                disabled: true,
+              },
+            ]}
+          />
+        );
       default:
         return {};
     }
   };
+
   return (
     <div>
-      <WrapperLableText>List</WrapperLableText>
+      <WrapperLableText>Tìm kiếm theo sản phẩm</WrapperLableText>
       <WrapperContent>
-        {renderContent("text", ["Động vật", "Phong cảnh", "Vũ trụ"])}
+        {renderContent("checkbox", typeProducts)}
       </WrapperContent>
       <WrapperContent>
-        {renderContent("checkbox", [
-          { value: "Dongvat", label: "Động vật" },
-          { value: "PhongCanh", label: "Phong cảnh" },
-          { value: "VuTru", label: "Vũ trụ" },
-        ])}
-      </WrapperContent>
-      <WrapperContent>{renderContent("star", [3, 4, 5])}</WrapperContent>
-      <WrapperContent>
-        {renderContent("price", ["duoi 400$", "duoi 500$"])}
+        {renderContent("price", ["duoi 400000 VNĐ", "trên 400000 VNĐ"])}
       </WrapperContent>
     </div>
   );

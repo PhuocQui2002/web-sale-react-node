@@ -50,7 +50,9 @@ function SignInPage() {
     });
     console.log("Login", email, password);
   };
-
+  const handleForget = () => {
+    navigate("/forgetPassword");
+  };
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
   // eslint-disable-next-line no-unused-vars
   const { data, isPending, isSuccess } = mutation;
@@ -178,7 +180,7 @@ function SignInPage() {
           </LoadingComponent>
 
           <p>
-            <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
+            <WrapperTextLight onClick={handleForget}>Quên mật khẩu?</WrapperTextLight>
           </p>
           <p>
             Chưa có tài khoản?{" "}
