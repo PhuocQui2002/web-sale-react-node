@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import * as CartService from "../../services/CartService";
 const initialState = {
   orderItems: [],
   orderItemsSlected: [],
@@ -106,16 +106,22 @@ export const orderSlide = createSlice({
 
     removeAllOrderProduct: (state, action) => {
       const { listChecked } = action.payload;
+      console.log("listChecked2", listChecked);
 
       const itemOrders = state?.orderItems?.filter(
-        (item) => !listChecked.includes(item.product)
+        (item) =>
+          !listChecked.includes(`${item.product}${item.size}${item.frame}`)
       );
-      const itemOrdersSelected = state?.orderItems?.filter(
-        (item) => !listChecked.includes(item.product)
+
+      const itemOrdersSelected = state?.orderItemsSlected?.filter(
+        (item) =>
+          !listChecked.includes(`${item.product}${item.size}${item.frame}`)
       );
+
       state.orderItems = itemOrders;
       state.orderItemsSlected = itemOrdersSelected;
     },
+
     selectedOrder: (state, action) => {
       console.log("checked-selectedOrder", state, action);
       const { listChecked } = action.payload;
@@ -132,7 +138,15 @@ export const orderSlide = createSlice({
       const orderSelected = [];
       orderSelected.push(orderItem);
       state.orderItemsSlected = orderSelected;
-      console.log("buy-now-selectedOrder", state.orderItemsSlected)
+      console.log("buy-now-selectedOrder", state.orderItemsSlected);
+    },
+    updateCart: (state, action) => {
+      const orderItem = action.payload;
+
+      state.orderItems = orderItem;
+    },
+    clearCart: (state, action) => {
+      state.orderItems = [];
     },
   },
 });
@@ -147,6 +161,8 @@ export const {
   selectedOrder,
   resetOrder,
   buyNowProduct,
+  updateCart,
+  clearCart,
 } = orderSlide.actions;
 
 export default orderSlide.reducer;

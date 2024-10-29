@@ -22,7 +22,8 @@ export const WrapperStyleNameProduct = styled.h1`
 export const WrapperStyleTextSell = styled.span`
     font-size: 15px;
     line-height: 24px;
-    color: rgb(120, 120, 120)
+    color: black
+    font-weight: 500
 `
 
 export const WrapperPriceProduct = styled.div`
@@ -31,7 +32,7 @@ export const WrapperPriceProduct = styled.div`
 `
 
 export const WrapperPriceTextProduct = styled.h1`
-    font-size: 32px;
+    font-size: 30px;
     line-height: 10px;
     margin-right: 8px;
     font-weight: 500;

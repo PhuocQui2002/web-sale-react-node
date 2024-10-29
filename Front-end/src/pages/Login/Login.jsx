@@ -13,12 +13,15 @@ import {
 import InputForm from "../../components/InputForm/InputForm";
 import ButtonCpmponent from "../../components/buttonCpmponent/ButtonCpmponent";
 import * as UserService from "../../services/UserService";
+import * as CartService from "../../services/CartService";
+
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import LoadingComponent from "../../components/loadingComponent/loadingComponent";
 import { updateUser } from "../../redux/slides/userSlide";
 
 import imageLogo from "../../assets/images/logo1.jpg";
 import mixilogo from "../../assets/images/mixilogo.jpg";
+import { updateCart } from "../../redux/slides/orderSlide";
 // import { FromContainer } from "./style";
 // import logo from "../../assets/images/logo.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -58,7 +61,6 @@ function SignInPage() {
   const { data, isPending, isSuccess } = mutation;
 
   useEffect(() => {
-    
     if (isSuccess) {
       if (location?.state) {
         navigate(location?.state);
@@ -66,13 +68,18 @@ function SignInPage() {
         navigate("/");
       }
 
+     
+
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
-        console.log("decoded", decoded);
+        //console.log("decoded", decoded);
+        
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
+          CartService.getCartByUserId(decoded?.id, dispatch);
+
         }
       }
     }
@@ -84,6 +91,7 @@ function SignInPage() {
     const res = await UserService.getDetailsUser(id, token);
     console.log("res", res);
     dispatch(updateUser({ ...res?.data, access_token: token }));
+    
   };
 
   return (
@@ -180,7 +188,9 @@ function SignInPage() {
           </LoadingComponent>
 
           <p>
-            <WrapperTextLight onClick={handleForget}>Quên mật khẩu?</WrapperTextLight>
+            <WrapperTextLight onClick={handleForget}>
+              Quên mật khẩu?
+            </WrapperTextLight>
           </p>
           <p>
             Chưa có tài khoản?{" "}

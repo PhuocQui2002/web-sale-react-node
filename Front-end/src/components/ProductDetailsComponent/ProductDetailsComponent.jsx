@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
 import * as SizeService from "../../services/SizeService";
 import * as FrameService from "../../services/FrameService";
+import * as CartService from "../../services/CartService";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +24,7 @@ import {
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import LoadingComponent from "../loadingComponent/loadingComponent";
 import { addOrderProduct, buyNowProduct } from "../../redux/slides/orderSlide";
+import { useMutationHooks } from "../../hooks/useMutationHook";
 
 const ProductDetailsComponent = ({ idProduct }) => {
   // useEffect(() => {
@@ -89,7 +91,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
     queryKey: ["Frame"],
     queryFn: fetchGetFrame,
   });
-  console.log("frameDetails", frameDetails);
+  //console.log("frameDetails", frameDetails);
 
   const {
     isLoading,
@@ -101,8 +103,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
     enabled: !!idProduct, // Chỉ thực hiện truy vấn khi idProduct có giá trị
   });
 
-  console.log("productDetails", productDetails);
-  console.log("user", user);
+  // console.log("productDetails", productDetails);
+  // console.log("user", user);
 
   const handleChangeCount = (type, limited) => {
     console.log("type", type);
@@ -116,11 +118,37 @@ const ProductDetailsComponent = ({ idProduct }) => {
       }
     }
   };
-  console.log("numProduct:", numProduct);
+  //console.log("numProduct:", numProduct);
+
+  const mutation = useMutationHooks((data) => {
+    const { userID, orderItems } = data;
+    //console.log("data", data);
+
+    const res = CartService.createCart({
+      userID,
+      orderItems,
+    });
+    return res;
+  });
+  const { data } = mutation;
+  //console.log("data-addCart", data);
+
   const handleAddOrderProduct = () => {
     if (!user?.id) {
       navigate("/login", { state: location?.pathname });
     } else {
+      const orderItem = {
+        name: productDetails?.name,
+        amount: numProduct,
+        image: productDetails?.image,
+        type: productDetails?.type,
+        product: productDetails?._id,
+        size: size,
+        frame: frameType,
+        totalPrice: productDetails?.price + TotalPrice,
+        discount: productDetails?.discount,
+        countInstock: productDetails?.countInStock,
+      };
       dispatch(
         addOrderProduct({
           orderItem: {
@@ -137,6 +165,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
           },
         })
       );
+      mutation.mutate({
+        userID: user?.id,
+        orderItems: [orderItem]
+      });
       message.success("Thêm sản phẩm vào giỏ hàng thành công!");
     }
   };
@@ -144,7 +176,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const handleSize = (e) => {
     setSize(e?.target?.value);
     //updateSoluong(e?.target?.value);
-    console.log("size:", e.target.value);
+    //console.log("size:", e.target.value);
   };
 
   // const updateSoluong = (size) => {
@@ -158,18 +190,18 @@ const ProductDetailsComponent = ({ idProduct }) => {
   // };
   const handleSelectFrame = (value) => {
     setFrameType(value);
-    console.log("setFrameType:", value);
+    //console.log("setFrameType:", value);
   };
 
   const selectedSize = sizeDetails?.find((item) => item.nameSize === size);
   const sizePrice = selectedSize ? selectedSize.priceSize : 0;
-  console.log("sizePrice:", sizePrice);
+  //console.log("sizePrice:", sizePrice);
 
   const selectedFrame = frameDetails?.find(
     (item) => item.nameFrame === frameType
   );
   const framePrice = selectedFrame ? selectedFrame.priceFrame : 0;
-  console.log("framePrice:", framePrice);
+  //console.log("framePrice:", framePrice);
 
   const TotalPrice = framePrice + sizePrice;
 
@@ -219,10 +251,19 @@ const ProductDetailsComponent = ({ idProduct }) => {
             value={productDetails?.rating}
           />
 
-          <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
+          <WrapperStyleTextSell>
+            {" "}
+            | Đã bán {productDetails?.selled}+
+          </WrapperStyleTextSell>
         </div>
 
-        <div>{productDetails?.description}</div>
+        <p
+          style={{
+            fontSize: "15px",
+          }}
+        >
+          {productDetails?.description}
+        </p>
         <WrapperPriceProduct>
           <WrapperPriceTextProduct>
             Giá {(productDetails?.price + TotalPrice).toLocaleString()} VNĐ

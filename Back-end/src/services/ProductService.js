@@ -130,7 +130,7 @@ const getDetailsProduct = (id) => {
       if (sort) {
         const objectSort = {};
         objectSort[sort[1]] = sort[0];
-        console.log("objectSort", objectSort);
+        //console.log("objectSort", objectSort);
         const allProductSort = await Product.find()
           .limit(limit)
           .skip(page * limit)

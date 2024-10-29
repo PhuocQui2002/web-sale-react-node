@@ -72,7 +72,7 @@ const AdminUserComponent = () => {
   };
 
   const onUpdateUser = () => {
-    console.log("onUpdateUser");
+    //console.log("onUpdateUser");
     mutationUpdate.mutate(
       {
         id: rowSelected,
@@ -109,13 +109,13 @@ const AdminUserComponent = () => {
 
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
-    console.log("data", data);
+    //console.log("data", data);
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
   });
   const mutationDeleted = useMutationHooks((data) => {
     const { id, token } = data;
-    console.log("id, token", id, token);
+    //console.log("id, token", id, token);
     const res = UserService.deleteUser(id, token);
     return res;
   });
@@ -133,7 +133,7 @@ const AdminUserComponent = () => {
     }
     //setIsLoadingUpdate(false);
   };
-  console.log("StateEditUser", stateEditUser);
+  //console.log("StateEditUser", stateEditUser);
 
   useEffect(() => {
     form.setFieldsValue(stateEditUser);
@@ -146,7 +146,7 @@ const AdminUserComponent = () => {
   }, [rowSelected, user?.access_token]);
   ////////////////////////////////
   const handleEditUser = () => {
-    console.log("rowSelected", rowSelected);
+    //console.log("rowSelected", rowSelected);
     if (rowSelected) {
       fetchGetDetailsUser(rowSelected, user?.access_token);
     }
@@ -182,7 +182,7 @@ const AdminUserComponent = () => {
     isSuccess: isSuccessUpdated,
     isError: isErrorUpdated,
   } = mutationUpdate;
-  console.log("dataUpdated", dataUpdated);
+  //console.log("dataUpdated", dataUpdated);
 
   const {
     data: dataDeleted,
@@ -309,13 +309,13 @@ const AdminUserComponent = () => {
     queryKey: ["users"],
     queryFn: async () => {
       const res = await UserService.getAllUser(user?.access_token);
-      console.log("res-useradmin", res);
+      //console.log("res-useradmin", res);
       return res;
     },
   });
   const { isPending: isPendingUser, data: users } = queryUser;
 
-  console.log("data-User", users);
+  //console.log("data-User", users);
 
   const columns = [
     {

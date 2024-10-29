@@ -17,19 +17,19 @@ import { useMemo } from "react";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
+import * as CartService from "../../services/CartService";
 
 import { updateUser } from "../../redux/slides/userSlide";
 import { useNavigate } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlide";
 import { PayPalButton } from "react-paypal-button-v2";
-import * as PaymentService from '../../services/PaymentService'
+import * as PaymentService from "../../services/PaymentService";
 import ModalComponent from "../../components/modalComponent/ModalComponent";
 import InputComponent from "../../components/inputComponent/InputComponent";
 
 const PaymentPage = () => {
- 
   const order = useSelector((state) => state.order);
-  console.log("order-payment1", order?.orderItemsSlected);
+ // console.log("order-payment1", order?.orderItemsSlected);
   const user = useSelector((state) => state.user);
 
   const [delivery, setDelivery] = useState("fast");
@@ -42,7 +42,7 @@ const PaymentPage = () => {
     name: "",
     phone: "",
     address: "",
-    city: "",
+    //city: "",
   });
   const [form] = Form.useForm();
 
@@ -55,7 +55,7 @@ const PaymentPage = () => {
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
-        city: user?.city,
+        //city: user?.city,
         name: user?.name,
         address: user?.address,
         phone: user?.phone,
@@ -72,9 +72,8 @@ const PaymentPage = () => {
     const result = order?.orderItemsSlected?.reduce((total, cur) => {
       return total + cur.totalPrice * cur.amount;
     }, 0);
-    console.log("result",result);
+    //console.log("result", result);
     return result;
-    
   }, [order]);
 
   const priceDiscountMemo = useMemo(() => {
@@ -117,7 +116,7 @@ const PaymentPage = () => {
       user?.name &&
       user?.address &&
       user?.phone &&
-      user?.city &&
+      //user?.city &&
       priceMemo &&
       user?.id
     ) {
@@ -127,7 +126,7 @@ const PaymentPage = () => {
         fullName: user?.name,
         address: user?.address,
         phone: user?.phone,
-        city: user?.city,
+        //city: user?.city,
         paymentMethod: payment,
         itemsPrice: priceMemo,
         shippingPrice: diliveryPriceMemo,
@@ -139,7 +138,7 @@ const PaymentPage = () => {
       });
     }
   };
-  console.log("order-payment", order);
+  //console.log("order-payment", order);
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, { ...rests }, token);
@@ -148,7 +147,7 @@ const PaymentPage = () => {
 
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
-    console.log("order-payment-token", token)
+    console.log("order-payment-token", token);
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });
@@ -161,14 +160,16 @@ const PaymentPage = () => {
     isError,
   } = mutationAddOrder;
 
-  console.log("mutationAddOrder", mutationAddOrder);
+  //console.log("mutationAddOrder", mutationAddOrder);
   useEffect(() => {
     if (isSuccess && dataAdd?.status === "OK") {
-      const arrayOrdered = [];
-      order?.orderItemsSlected?.forEach((element) => {
-        arrayOrdered.push(element.product);
-      });
+      console.log("order?.orderItemsSlected", order?.orderItemsSlected)
+      const arrayOrdered = order?.orderItemsSlected?.map(
+        (element) => `${element.product}${element.size}${element.frame}`
+      );
+      CartService.deleteOrderItemCart(user?.id, order?.orderItemsSlected, user?.access_token);
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
+
       message.success("Đặt hàng thành công");
       navigate("/orderSuccess", {
         state: {
@@ -195,36 +196,33 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
 
-    const onSuccessPaypal = (details, data) => {
-      mutationAddOrder.mutate(
-        {
-          token: user?.access_token,
-          orderItems: order?.orderItemsSlected,
-          fullName: user?.name,
-          address:user?.address,
-          phone:user?.phone,
-          city: user?.city,
-          paymentMethod: payment,
-          itemsPrice: priceMemo,
-          shippingPrice: diliveryPriceMemo,
-          totalPrice: totalPriceMemo,
-          user: user?.id,
-          isPaid :true,
-          paidAt: details.update_time,
-          email: user?.email
-          
-        }
-      )
-    }
+  const onSuccessPaypal = (details, data) => {
+    mutationAddOrder.mutate({
+      token: user?.access_token,
+      orderItems: order?.orderItemsSlected,
+      fullName: user?.name,
+      address: user?.address,
+      phone: user?.phone,
+      //city: user?.city,
+      paymentMethod: payment,
+      itemsPrice: priceMemo,
+      shippingPrice: diliveryPriceMemo,
+      totalPrice: totalPriceMemo,
+      user: user?.id,
+      isPaid: true,
+      paidAt: details.update_time,
+      email: user?.email,
+    });
+  };
 
   const handleUpdateInforUser = () => {
-    const { name, address, city, phone } = stateUserDetails;
-    if (name && address && city && phone) {
+    const { name, address, phone } = stateUserDetails;
+    if (name && address && phone) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, phone }));
             setIsOpenModalUpdateInfo(false);
           },
         }
@@ -246,27 +244,26 @@ const PaymentPage = () => {
     setPayment(e.target.value);
   };
 
-    const addPaypalScript = async () => {
-      const { data } = await PaymentService.getConfig()
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.src = `https://sandbox.paypal.com/sdk/js?client-id=${data}`
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true)
-      }
-      document.body.appendChild(script)
-      console.log("dataCLIENT_ID: " + data)
-    }
+  const addPaypalScript = async () => {
+    const { data } = await PaymentService.getConfig();
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = `https://sandbox.paypal.com/sdk/js?client-id=${data}`;
+    script.async = true;
+    script.onload = () => {
+      setSdkReady(true);
+    };
+    document.body.appendChild(script);
+    console.log("dataCLIENT_ID: " + data);
+  };
 
-    useEffect(() => {
-      if(!window.paypal) {
-        addPaypalScript()
-      }else {
-        setSdkReady(true)
-      }
-      
-    }, [])
+  useEffect(() => {
+    if (!window.paypal) {
+      addPaypalScript();
+    } else {
+      setSdkReady(true);
+    }
+  }, []);
 
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
@@ -312,7 +309,7 @@ const PaymentPage = () => {
                 <div>
                   <span>Địa chỉ: </span>
                   <span style={{ fontWeight: "bold" }}>
-                    {`${user?.address} ${user?.city}`}{" "}
+                    {`${user?.address}`}{" "}
                   </span>
                   <span
                     onClick={handleChangeAddress}
@@ -408,7 +405,7 @@ const PaymentPage = () => {
                 <PayPalButton
                   amount={Math.round(totalPriceMemo / 25000)}
                   // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                  onSuccess={onSuccessPaypal} 
+                  onSuccess={onSuccessPaypal}
                   onError={() => {
                     alert("Lỗi kết nối Paypal");
                   }}
@@ -459,17 +456,6 @@ const PaymentPage = () => {
               value={stateUserDetails["name"]}
               onChange={handleOnchangeDetails}
               name="name"
-            />
-          </Form.Item>
-          <Form.Item
-            label="City"
-            name="city"
-            rules={[{ required: true, message: "Please input your city!" }]}
-          >
-            <InputComponent
-              value={stateUserDetails["city"]}
-              onChange={handleOnchangeDetails}
-              name="city"
             />
           </Form.Item>
           <Form.Item

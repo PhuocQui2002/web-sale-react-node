@@ -7,7 +7,7 @@ import ProductEvaluateComponent from "../../components/productEvaluateComponent/
 function ProductDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log("idProduct", id);
+  //console.log("idProduct", id);
 
   return (
     <div

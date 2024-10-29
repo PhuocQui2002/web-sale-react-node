@@ -54,6 +54,8 @@ export const cancelOrder = async (id, access_token, orderItems) => {
   return res.data;
 };
 
+
+
 export const getAllOrder = async (access_token) => {
   const res = await axiosJWT.get(
     `${import.meta.env.VITE_API_URL}/order/allOrder`,

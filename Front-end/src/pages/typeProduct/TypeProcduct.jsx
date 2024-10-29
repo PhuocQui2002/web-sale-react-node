@@ -21,7 +21,10 @@ function TypeProcduct() {
   const searchDebounce = useDebounce(searchProduct, 500);
   console.log("searchProduct", searchProduct);
   const [loading, setLoading] = useState(false);
+
   const [products, setProducts] = useState([]);
+  const [prices, setPrices] = useState([0, 100000]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const { state } = useLocation();
   const [panigate, setPanigate] = useState({
@@ -40,6 +43,7 @@ function TypeProcduct() {
     }
     console.log("res", res);
   };
+
   useEffect(() => {
     fetchAllTypeProduct();
   }, []);
@@ -72,34 +76,6 @@ function TypeProcduct() {
             ))}
           </div>
         );
-      //case "price":
-      // return (
-      //   <Select
-      //     defaultValue="lucy"
-      //     style={{
-      //       width: 120,
-      //     }}
-      //     options={[
-      //       {
-      //         value: "jack",
-      //         label: "Jack",
-      //       },
-      //       {
-      //         value: "lucy",
-      //         label: "Lucy",
-      //       },
-      //       {
-      //         value: "Yiminghe",
-      //         label: "yiminghe",
-      //       },
-      //       {
-      //         value: "disabled",
-      //         label: "Disabled",
-      //         disabled: true,
-      //       },
-      //     ]}
-      //   />
-      // );
       default:
         return {};
     }
@@ -108,9 +84,10 @@ function TypeProcduct() {
   const fetchProductType = async (type, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductType(type, page, limit);
-    //console.log("API response:", res);
+    console.log("API response:", res);
     if (res?.status == "OK") {
       setLoading(false);
+      setFilteredProducts(res?.data);
       setProducts(res?.data);
       setPanigate({ ...panigate, total: res?.totalPage });
     } else {
@@ -123,22 +100,32 @@ function TypeProcduct() {
       //console.log("API response:",state, panigate.page, panigate.limit);
       fetchProductType(selectedCheckbox, panigate.page, panigate.limit);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCheckbox, panigate.page, panigate.limit]);
 
   const onChange1 = (current, pageSize) => {
     // console.log("Trang hiện tại:", current);
     // console.log("Số sản phẩm mỗi trang:", pageSize);
     setPanigate({ ...panigate, page: current, limit: pageSize });
-    //fetchProductType(state, current, pageSize);
+    // fetchProductType(state, current, pageSize);
   };
 
   const onChange = (value) => {
-    console.log("onChange: ", value);
+    setPrices(value);
+    console.log("onChange: ", prices);
   };
   const onChangeComplete = (value) => {
+    setPrices(value);
     console.log("onChangeComplete: ", value);
   };
+  const onFilterClick = () => {
+    //console.log("onFilterClick", prices);
+    const filtered = products.filter(
+      (product) => product.price >= prices[0] && product.price <= prices[1]
+    );
+    //setProducts(filtered);
+    setFilteredProducts(filtered);
+  };
+
   return (
     <LoadingComponent isPending={loading}>
       <div
@@ -167,7 +154,7 @@ function TypeProcduct() {
               <WrapperContent>
                 {renderContent("checkbox", typeProducts)}
               </WrapperContent>
-              <p>Tìm kiếm theo giá</p>
+              <WrapperLableText>Tìm kiếm theo giá</WrapperLableText>
               <Slider
                 range
                 step={100000}
@@ -176,6 +163,7 @@ function TypeProcduct() {
                 onChange={onChange}
                 onChangeComplete={onChangeComplete}
               />
+              Giá: {prices?.join(" - ")}
               <ButtonCpmponent
                 size={40}
                 styleButton={{
@@ -185,8 +173,7 @@ function TypeProcduct() {
                   border: "none",
                   borderRadius: "5px",
                   cursor: "pointer",
-                  marginLeft: "80px"
-                 
+                  marginLeft: "80px",
                 }}
                 textButton={"Lọc"}
                 styleStextButton={{
@@ -194,6 +181,7 @@ function TypeProcduct() {
                   fontSize: "15px",
                   fontweight: "700",
                 }}
+                onClick={onFilterClick}
               />
             </WrapperNavbar>
 
@@ -206,7 +194,7 @@ function TypeProcduct() {
               }}
             >
               <WrapperProducts span={20}>
-                {products
+                {filteredProducts
                   ?.filter((pro) => {
                     if (searchDebounce === "") {
                       return pro;

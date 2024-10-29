@@ -4,6 +4,8 @@ const OrderRouter = require("./OrderRouter");
 const FrameRouter = require("./FrameRouter");
 const SizeRouter = require("./SizeRouter");
 const EvaluateRouter = require("./EvaluateRouter");
+const CartRouter = require("./CartRouter");
+
 
 
 
@@ -16,7 +18,9 @@ const routes = (app) => {
   app.use("/api/frame", FrameRouter);
   app.use("/api/size", SizeRouter);
   app.use("/api/evaluate", EvaluateRouter);
-  app.use('/api/payment', PaymentRouter)
+  app.use('/api/payment', PaymentRouter);
+  app.use('/api/cart', CartRouter)
+
 
 
 };

@@ -20,6 +20,8 @@ import ButtonInputSearch from "../buttonInputSearch/ButtonInputSearch";
 import mixilogo from "../../assets/images/mixilogo.jpg";
 import * as UserService from "../../services/UserService";
 import { resetUser } from "../../redux/slides/userSlide";
+import { clearCart } from "../../redux/slides/orderSlide";
+
 import { searchProduct } from "../../redux/slides/productSlide";
 import LoadingComponent from "../loadingComponent/loadingComponent";
 
@@ -35,7 +37,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
   const [userAvatar, setUserAvatar] = useState("");
   const [search, setSearch] = useState("");
 
-  const order = useSelector((state) => state.order);
+  const order = useSelector((state) => state?.order);
 
   const onSearch = (e) => {
     setSearch(e.target.value);
@@ -60,11 +62,11 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
 
   const handleLogOut = async () => {
     //setLoading(true);
-    console.log("setLoading1", loading);
+    //console.log("setLoading1", loading);
     await UserService.logOutUser();
     dispatch(resetUser());
     localStorage.removeItem("access_token");
-    //setLoading(false);
+    dispatch(clearCart())
   };
   const handleProfile = () => {
     navigate("/profilePage");

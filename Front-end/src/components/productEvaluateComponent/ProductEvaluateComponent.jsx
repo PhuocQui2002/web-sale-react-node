@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Avatar, Image, Rate, Typography } from "antd";
 import * as EvaluateService from "../../services/EvaluateService";
@@ -14,24 +14,25 @@ import { useSelector } from "react-redux";
 
 const ProductEvaluateComponent = ({ idProductEvaluate }) => {
   const user = useSelector((state) => state?.user);
-  console.log("user-ProductEvaluateComponent", user);
+  const [evaluate, setEvaluate] = useState();
+
+  //console.log("user-ProductEvaluateComponent", user);
 
   const fetchDetailsEvaluate = async () => {
     const res = await EvaluateService.getAllOrderByProductId(idProductEvaluate);
-    return res.data;
+    setEvaluate(res.data);
   };
 
-  const queryEvaluate = useQuery({
-    queryKey: ["Evaluate-details-test"],
-    queryFn: fetchDetailsEvaluate,
-  });
-
-  const { isLoading, data } = queryEvaluate;
+ 
 
   const fetchDetailUser = async (idUser, token) => {
     const res = await UserService.getDetailsUser(idUser, token);
     return res.data;
   };
+  useEffect(() => {
+    fetchDetailsEvaluate();
+  }, []);
+ 
   const UserAvatar = ({ userId, token, rating }) => {
     const { data: userData, isLoading } = useQuery({
       queryKey: ["user-avatar", userId],
@@ -56,8 +57,8 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
   return (
     <ReviewSection>
       <Typography.Title level={3}>Đánh giá sản phẩm</Typography.Title>
-      {data?.length > 0 ? (
-        data.map((data, index) => (
+      {evaluate?.length > 0 ? (
+        evaluate.map((data, index) => (
           <ReviewItem
             key={index}
             style={{

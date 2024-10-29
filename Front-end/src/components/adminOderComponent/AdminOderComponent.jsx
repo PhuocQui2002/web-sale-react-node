@@ -14,7 +14,7 @@ import PieChartComponent from "../pieChartComponent/PieChartComponent";
 import PieChartTypeComponent from "../pieChartComponent/PieChartTypeComponent";
 
 import DrawerComponent from "../drawerComponent/DrawerComponent";
-import { Button, Form, message } from "antd";
+import { Button, Form, Image, message, Tabs } from "antd";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import BarChartComponent from "../pieChartComponent/BarChartComponent ";
 import LineChartComponent from "../pieChartComponent/LineChartComponent ";
@@ -56,8 +56,8 @@ const AdminOderComponent = () => {
         phone: order?.shippingAddress?.phone,
         address: order?.shippingAddress?.address,
         paymentMethod: orderContant.payment[order?.paymentMethod],
-        isPaid: order?.isPaid ? "TRUE" : "FALSE",
-        isDelivered: order?.isDelivered ? "TRUE" : "FALSE",
+        isPaid: order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
+        isDelivered: order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng",
         totalPrice: convertPrice(order?.totalPrice),
       };
     });
@@ -85,7 +85,7 @@ const AdminOderComponent = () => {
 
   const fetchGetDetailsOrder = async (rowSelected) => {
     const res = await OrderService.getDetailsOrder(rowSelected);
-    console.log("1111res", res?.data?.isPaid);
+    // console.log("1111res", res?.data);
     if (res?.data) {
       setStateEditOrder({
         ...res.data,
@@ -151,43 +151,38 @@ const AdminOderComponent = () => {
 
   const columns = [
     {
-      title: "User name",
-      dataIndex: "userName",
+      title: "Mã đơn hàng",
+      dataIndex: "key",
       //sorter: (a, b) => a.userName.length - b.userName.length,
       //...getColumnSearchProps("userName"),
     },
+
     {
-      title: "Phone",
-      dataIndex: "phone",
-      // sorter: (a, b) => a.phone.length - b.phone.length,
-      // ...getColumnSearchProps("phone"),
-    },
-    {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       // sorter: (a, b) => a.address.length - b.address.length,
       // ...getColumnSearchProps("address"),
     },
     {
-      title: "Paided",
+      title: "Thanh toán",
       dataIndex: "isPaid",
       // sorter: (a, b) => a.isPaid.length - b.isPaid.length,
       // ...getColumnSearchProps("isPaid"),
     },
     {
-      title: "Shipped",
+      title: "Giao hàng",
       dataIndex: "isDelivered",
       // sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
       // ...getColumnSearchProps("isDelivered"),
     },
     {
-      title: "Payment method",
+      title: "Phương thức thanh toán",
       dataIndex: "paymentMethod",
       // sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
       // ...getColumnSearchProps("paymentMethod"),
     },
     {
-      title: "Total price",
+      title: "Giá",
       dataIndex: "totalPrice",
       // sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
       // ...getColumnSearchProps("totalPrice"),
@@ -245,16 +240,79 @@ const AdminOderComponent = () => {
     }
   }, [isSuccessUpdated]);
 
+  const onChange = (key) => {
+    console.log(key);
+  };
+  // ...order,
+  // key: order._id,
+  // userName: order?.shippingAddress?.fullName,
+  // phone: order?.shippingAddress?.phone,
+  // address: order?.shippingAddress?.address,
+  // paymentMethod: orderContant.payment[order?.paymentMethod],
+  // isPaid: order?.isPaid ? "TRUE" : "FALSE",
+  // isDelivered: order?.isDelivered ? "TRUE" : "FALSE",
+  // totalPrice: convertPrice(order?.totalPrice),
+  const customerInfo = (
+    <div>
+      <p>Tên: {stateEditOrder?.shippingAddress?.fullName}</p>
+      <p>Địa chỉ: {stateEditOrder?.shippingAddress?.address}</p>
+      <p>Số điện thoại: {stateEditOrder?.shippingAddress?.phone}</p>
+    </div>
+  );
+  const customerOrder = (
+    <div>
+      {stateEditOrder?.orderItems?.map((item, index) => (
+        //const finalPrice = item.totalPrice * (1 - item.discount / 100),
+        <div key={index}>
+          <div style={{ display: "flex" }}>
+            <Image
+              src={item.image}
+              style={{
+                width: "220px",
+                height: "200px",
+              }}
+            />
+            <div
+              style={{
+                marginLeft: "20px",
+              }}
+            >
+              <p>Tên sản phẩm: {item.name}</p>
+              <p>Số lượng: {item.amount}</p>
+              <p>
+                Giá: { convertPrice(item.totalPrice - ( item.totalPrice* (item.discount / 100)))}
+              </p>
+              <p>Kích thước: {item.size}</p>
+              <p>Khung: {item.frame}</p>
+            </div>
+          </div>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+  const items = [
+    {
+      key: "1",
+      label: "Thông tin khách hàng",
+      children: customerInfo,
+    },
+    {
+      key: "2",
+      label: "Thông tin đơn hàng",
+      children: customerOrder,
+    },
+  ];
   return (
     <div>
       <div>
-        <div style={{ display: "flex" }}>
-          <div style={{ height: 250, width: 250 }}>
+        <div style={{ display: "flex", marginBottom: "10px"}}>
+          <div style={{ height: 200, width: 250 }}>
             Thống kê đơn hàng theo type
             <PieChartTypeComponent data={orders?.data} field="type" />
           </div>
-          <div style={{ height: 250, width: 250 }}>
-            Thống kê đơn hàng đã giao
+          <div style={{ height: 200, width: 250 }}>
+           Thống kê đơn hàng đã giao
             <PieChartComponent data={orders?.data} field="isDelivered" />
           </div>
           {/* <div style={{ height: "100px",  width: 250 }}>
@@ -359,94 +417,19 @@ const AdminOderComponent = () => {
       </DrawerComponent>
 
       <DrawerComponent
-        title={<span style={{ color: "#ADD8E6" }}>Chi tiết đơn hàng</span>}
+        title={<span style={{ color: "black" }}>Chi tiết đơn hàng</span>}
         isOpen={isOpenDrawerDetail}
         onClose={handleCancel2}
         width="83%"
         style={{
           borderTopLeftRadius: "15px",
-          backgroundColor: "#3d3d3d",
+          backgroundColor: "#fff",
           color: "#FFD514",
         }}
       >
-        <Form
-          form={form2}
-          name="basic"
-          labelCol={{
-            span: 8,
-          }}
-          wrapperCol={{
-            span: 16,
-          }}
-          style={{
-            maxWidth: 600,
-          }}
-          autoComplete="off"
-        >
-          {stateDetailOrder?.orderItems?.map((item, index) => (
-            <div key={index}>
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Tên sản phẩm</span>}
-                name="item.name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Nhập tên sản phẩm",
-                  },
-                ]}
-              >
-                <InputComponent value={item.name} name="item.name " />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Số lượng</span>}
-                name="amount"
-                rules={[
-                  {
-                    required: true,
-                    message: "Nhập số lượng sản phẩm",
-                  },
-                ]}
-              >
-                <InputComponent value={item.amount} name="amount" />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Khung</span>}
-                name="frame"
-              >
-                <InputComponent value={item.frame} name="frame" />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Kích thước</span>}
-                name="size"
-              >
-                <InputComponent value={item.size} name="size" />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Tổng giá</span>}
-                name={`totalPrice_${index}`}
-              >
-                <InputComponent
-                  value={item.totalPrice}
-                  name={`totalPrice_${index}`}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={{ color: "#ADD8E6" }}>Giảm giá</span>}
-                name={`discount_${index}`}
-              >
-                <InputComponent
-                  value={item.discount}
-                  name={`discount_${index}`}
-                />
-              </Form.Item>
-            </div>
-          ))}
-        </Form>
+        <div>
+          <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        </div>
       </DrawerComponent>
     </div>
   );

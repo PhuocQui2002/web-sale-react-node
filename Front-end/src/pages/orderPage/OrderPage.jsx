@@ -57,7 +57,7 @@ function OrderPage() {
     name: "",
     phone: "",
     address: "",
-    city: "",
+    //city: "",
   });
 
   useEffect(() => {
@@ -79,10 +79,10 @@ function OrderPage() {
       setListChecked([...listChecked, e.target.value]);
     }
   };
-  console.log("listChecked-onChange", listChecked);
+  // console.log("listChecked-onChange", listChecked);
 
   const handleChangeCount = (type, idProduct, limited, size, frame) => {
-    console.log("listChecked-onChange", size, frame);
+    // console.log("listChecked-onChange", size, frame);
     if (type === "increase") {
       if (!limited) {
         dispatch(increaseAmount({ idProduct, size, frame }));
@@ -98,18 +98,31 @@ function OrderPage() {
     dispatch(removeOrderProduct({ idProduct, size, frame }));
   };
 
+  // const handleOnchangeCheckAll = (e) => {
+  //   // console.log("e.target.checked",order?.orderItems)
+  //   if (e.target.checked) {
+  //     const newListChecked = [];
+  //     order?.orderItems?.forEach((item) => {
+  //       newListChecked.push([item?.product, item?.size, item?.frame]);
+  //     });
+      
+  //     setListChecked(newListChecked);
+  //     //console.log("newListChecked", newListChecked)
+  //   } else {
+  //     setListChecked([]);
+  //   }
+  // };
   const handleOnchangeCheckAll = (e) => {
     if (e.target.checked) {
-      const newListChecked = [];
-      order?.orderItems?.forEach((item) => {
-        newListChecked.push(item?.product);
-      });
+      const newListChecked = order?.orderItems?.map(
+        (item) => item.product + item.size + item.frame
+      );
       setListChecked(newListChecked);
+      console.log("newListChecked", listChecked);
     } else {
       setListChecked([]);
     }
   };
-
   const handleRemoveAllOrder = () => {
     if (listChecked?.length > 1) {
       dispatch(removeAllOrderProduct({ listChecked }));
@@ -118,7 +131,7 @@ function OrderPage() {
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
-        city: user?.city,
+        //city: user?.city,
         name: user?.name,
         address: user?.address,
         phone: user?.phone,
@@ -175,7 +188,7 @@ function OrderPage() {
     console.log("user added card", user);
     if (!order?.orderItemsSlected?.length) {
       message.error("Vui lòng chọn sản phẩm");
-    } else if (!user?.phone || !user.address || !user.name || !user.city) {
+    } else if (!user?.phone || !user.address || !user.name ) {
       setIsOpenModalUpdateInfo(true);
     } else {
       navigate("/payment");
@@ -228,13 +241,13 @@ function OrderPage() {
 
   const handleUpdateInforUser = () => {
     console.log("Update-handleUpdateInforUser", stateUserDetails);
-    const { name, address, city, phone } = stateUserDetails;
-    if (name && address && city && phone) {
+    const { name, address, phone } = stateUserDetails;
+    if (name && address  && phone) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, phone }));
             setIsOpenModalUpdateInfo(false);
           },
         }
@@ -477,7 +490,7 @@ function OrderPage() {
                 <div>
                   <span>Địa chỉ: </span>
                   <span style={{ fontWeight: "bold" }}>
-                    {`${user?.address} ${user?.city}`}{" "}
+                    {`${user?.address} `}{" "}
                   </span>
                   <span
                     onClick={handleChangeAddress}
@@ -607,7 +620,7 @@ function OrderPage() {
               name="name"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="City"
             name="city"
             rules={[{ required: true, message: "Please input your city!" }]}
@@ -617,7 +630,7 @@ function OrderPage() {
               onChange={handleOnchangeDetails}
               name="city"
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Phone"
             name="phone"

@@ -61,7 +61,7 @@ const DetailsOrderPage = () => {
               <div className="name-info">{data?.shippingAddress?.fullName}</div>
               <div className="address-info">
                 <span>Địa chỉ: </span>{" "}
-                {`${data?.shippingAddress?.address} ${data?.shippingAddress?.city}`}
+                {`${data?.shippingAddress?.address} `}
               </div>
               <div className="type-info">
                 <span>Điện thoại: </span> {data?.shippingAddress?.phone}

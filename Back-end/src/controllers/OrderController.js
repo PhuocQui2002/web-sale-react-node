@@ -2,7 +2,7 @@ const OrderService = require("../services/OrderService");
 
 const createOrder = async (req, res) => {
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const {
       orderItems,
       paymentMethod,
@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
       totalPrice,
       fullName,
       address,
-      city,
+      
       phone,
     } = req.body;
     if (
@@ -21,7 +21,7 @@ const createOrder = async (req, res) => {
       !totalPrice ||
       !fullName ||
       !address ||
-      !city ||
+      
       !phone
     ) {
       return res.status(401).json({

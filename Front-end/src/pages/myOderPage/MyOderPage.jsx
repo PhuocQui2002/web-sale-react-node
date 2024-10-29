@@ -49,6 +49,7 @@ const MyOrderPage = () => {
 
   const mutation = useMutationHooks((data) => {
     const { id, token, orderItems } = data;
+    //console.log("userId", userId);
     const res = OrderService.cancelOrder(id, token, orderItems);
     return res;
   });
@@ -60,7 +61,7 @@ const MyOrderPage = () => {
         id: order._id,
         token: user?.access_token,
         orderItems: order?.orderItems,
-        //: user.id,
+        //userId: user.id
       },
       {
         onSuccess: () => {
@@ -73,18 +74,18 @@ const MyOrderPage = () => {
     isLoading: isLoadingCancel,
     isSuccess: isSuccessCancel,
     isError: isErrorCancle,
-   
+    data: dataCancel
   } = mutation;
 
-  // useEffect(() => {
-  //   if (isSuccessCancel && dataCancel?.status === "OK") {
-  //     message.success();
-  //   } else if (isSuccessCancel && dataCancel?.status === "ERR") {
-  //     message.error(dataCancel?.message);
-  //   } else if (isErrorCancle) {
-  //     message.error();
-  //   }
-  // }, [isErrorCancle, isSuccessCancel]);
+  useEffect(() => {
+    if (isSuccessCancel && dataCancel?.status === "OK") {
+      message.success("Xóa thành công");
+    } else if (isSuccessCancel && dataCancel?.status === "ERR") {
+      message.error(dataCancel?.message);
+    } else if (isErrorCancle) {
+      message.error();
+    }
+  }, [isErrorCancle, isSuccessCancel]);
 
   const renderProduct = (data, isDelivered) => {
     return data?.map((order) => {

@@ -10,8 +10,8 @@ import { getBase64 } from "../../utils";
 const EvaluateComponents = (Eva) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [evaluateProduct, setEvaluateProduct] = useState({});
-  console.log("Evaluate idProduct", Eva.idProduct);
-  console.log("Evaluate user", Eva.idUser);
+  //console.log("Evaluate idProduct", Eva.idProduct);
+  //console.log("Evaluate user", Eva.idUser);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -125,7 +125,7 @@ const EvaluateComponents = (Eva) => {
             rules={[
               {
                 required: true,
-                message: "Nhập tên sản phẩm",
+                message: "Nhập nội dung đánh giá",
               },
             ]}
           >
@@ -142,7 +142,7 @@ const EvaluateComponents = (Eva) => {
             rules={[
               {
                 required: true,
-                message: "Loại sản phẩm",
+                message: "Từ 1 đến 5 sao",
               },
             ]}
           >

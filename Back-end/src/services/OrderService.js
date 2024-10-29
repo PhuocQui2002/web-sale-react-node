@@ -11,7 +11,7 @@ const createOrder = (newOrder) => {
       totalPrice,
       fullName,
       address,
-      city,
+      //city,
       phone,
       user,
       isPaid,
@@ -64,7 +64,7 @@ const createOrder = (newOrder) => {
           shippingAddress: {
             fullName,
             address,
-            city,
+            //city,
             phone,
           },
           paymentMethod,
