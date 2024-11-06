@@ -55,8 +55,8 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
   };
 
   return (
-    <ReviewSection>
-      <Typography.Title level={3}>Đánh giá sản phẩm</Typography.Title>
+    <ReviewSection style={{ padding: "20px", backgroundColor: "#F5F5F5", borderRadius: "8px" }}>
+      <Typography.Title level={3} style={{ textAlign: "center", color: "#333" }}>Đánh giá sản phẩm</Typography.Title>
       {evaluate?.length > 0 ? (
         evaluate.map((data, index) => (
           <ReviewItem
@@ -74,7 +74,7 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
             <ReviewContent>
               <p>Ngày đánh giá: {data.createdAt.substring(0, 10)}</p>
               <p>Nội dung: {data.commentEvaluate}</p>
-              <ReviewImages>
+              {data.imgEvaluate ? <ReviewImages>
                 <p>Hình ảnh:</p>
                 <Image
                   style={{
@@ -85,7 +85,8 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
                   }}
                   src={data.imgEvaluate}
                 />
-              </ReviewImages>
+              </ReviewImages> : <dicv></dicv> }
+              
             </ReviewContent>
           </ReviewItem>
         ))

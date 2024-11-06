@@ -41,6 +41,7 @@ import {
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
+import { MDBBtn, MDBIcon } from "mdb-react-ui-kit";
 
 function OrderPage() {
   const order = useSelector((state) => state.order);
@@ -105,7 +106,7 @@ function OrderPage() {
   //     order?.orderItems?.forEach((item) => {
   //       newListChecked.push([item?.product, item?.size, item?.frame]);
   //     });
-      
+
   //     setListChecked(newListChecked);
   //     //console.log("newListChecked", newListChecked)
   //   } else {
@@ -188,7 +189,7 @@ function OrderPage() {
     console.log("user added card", user);
     if (!order?.orderItemsSlected?.length) {
       message.error("Vui lòng chọn sản phẩm");
-    } else if (!user?.phone || !user.address || !user.name ) {
+    } else if (!user?.phone || !user.address || !user.name) {
       setIsOpenModalUpdateInfo(true);
     } else {
       navigate("/payment");
@@ -242,7 +243,7 @@ function OrderPage() {
   const handleUpdateInforUser = () => {
     console.log("Update-handleUpdateInforUser", stateUserDetails);
     const { name, address, phone } = stateUserDetails;
-    if (name && address  && phone) {
+    if (name && address && phone) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
@@ -270,24 +271,49 @@ function OrderPage() {
   ];
 
   const reversedOrderItems = order?.orderItems?.slice().reverse();
+  const onNavigateSHome = () => {
+    navigate("/");
+  };
   return (
     <div style={{ background: "#D3D3D3", with: "100%", height: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
-        <div
-          style={{
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <span
+      <div
+        style={{
+          height: "40px",
+          backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
+          borderRadius: "6px",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 15px",
+          fontSize: "14px",
+          color: "#333",
+          marginBottom: "10px",
+        }}
+      >
+        <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }} onClick={onNavigateSHome}>
+          <MDBIcon
+            fas
+            icon="home"
             style={{
-              fontSize: "30px",
+              width: "14px",
+              marginRight: "8px",
+              color: "#007bff",
             }}
-          >
-            Giỏ hàng
-          </span>
+          />
+          <span style={{ marginRight: "8px" }}>Trang chủ</span>
+          <MDBIcon
+            fas
+            icon="angle-right"
+            style={{
+              width: "10px",
+              color: "#999",
+              marginRight: "8px",
+            }}
+          />
         </div>
+
+        <div style={{ color: "#666" }}>Giỏ hàng</div>
+      </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <WrapperLeft>
             <WrapperStyleHeaderDilivery>
@@ -303,10 +329,14 @@ function OrderPage() {
                     : 2 // Khi có 5 sản phẩm trở lên (trường hợp còn lại)
                 }
               />
-              <TruckFilled
+
+              <MDBIcon
+                fas
+                icon="shipping-fast"
                 style={{
                   fontSize: "30px",
                   marginRight: "10px",
+                  marginTop: "5px",
                 }}
               />
               <span
@@ -336,8 +366,8 @@ function OrderPage() {
               >
                 <span>Đơn giá</span>
                 <span>Số lượng</span>
-                <span>Khung</span>
-                <span>Kích thước</span>
+                {/* <span>Khung</span> */}
+                {/* <span>Kích thước</span> */}
                 <span>Thành tiền</span>
                 <DeleteOutlined
                   style={{ cursor: "pointer" }}
@@ -348,7 +378,7 @@ function OrderPage() {
             <WrapperListOrder>
               {reversedOrderItems.map((order) => {
                 console.log("oder-page", order);
-                
+
                 return (
                   <WrapperItemOrder key={order?.product}>
                     <div
@@ -357,6 +387,7 @@ function OrderPage() {
                         display: "flex",
                         alignItems: "center",
                         gap: 4,
+                        height: "150px",
                       }}
                     >
                       <CustomCheckbox
@@ -366,20 +397,14 @@ function OrderPage() {
                           order?.product + order?.size + order?.frame
                         )}
                       ></CustomCheckbox>
-                      {/* <img
-                        src={order?.image}
-                        style={{
-                          width: "77px",
-                          height: "79px",
-                          objectFit: "cover",
-                        }}
-                      /> */}
+
                       <Image
                         src={order?.image}
                         alt="img product"
                         preview={true}
                         style={{
-                          height: "77px",
+                          height: "140px",
+                          borderRadius: "5px",
                         }}
                       />
                       <div
@@ -388,9 +413,24 @@ function OrderPage() {
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
+                          marginLeft: "3px",
                         }}
                       >
-                        {order?.name}
+                        <p
+                          style={{
+                            color: "black",
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {order?.name}
+                        </p>
+                        <p>{order?.size}</p>
+                        <p>
+                          {order?.frame == "none"
+                            ? "Không khung"
+                            : order?.frame}
+                        </p>
                       </div>
                     </div>
                     <div
@@ -423,9 +463,7 @@ function OrderPage() {
                             )
                           }
                         >
-                          <MinusOutlined
-                            style={{ color: "#000", fontSize: "10px" }}
-                          />
+                          <MDBIcon fas icon="minus" />
                         </button>
                         <WrapperInputNumber
                           defaultValue={order?.amount}
@@ -450,26 +488,28 @@ function OrderPage() {
                             )
                           }
                         >
-                          <PlusOutlined
-                            style={{ color: "#000", fontSize: "10px" }}
-                          />
+                          <MDBIcon fas icon="plus" />
                         </button>
                       </WrapperCountOrder>
-                      <div>{order?.size}</div>
+                      {/* <div>{order?.size}</div>
                       <div>
                         {order?.frame == "none" ? "Không khung" : order?.frame}
-                      </div>
+                      </div> */}
                       <span
                         style={{
-                          color: "rgb(255, 66, 78)",
+                          //color: "",
                           fontSize: "13px",
                           fontWeight: 500,
                         }}
                       >
-                        {convertPrice(order?.totalPrice * order?.amount)}
+                        <strong>
+                          {convertPrice(order?.totalPrice * order?.amount)}
+                        </strong>
                       </span>
-                      <DeleteOutlined
-                        style={{ cursor: "pointer" }}
+                      <MDBIcon
+                        fas
+                        icon="trash"
+                        style={{ cursor: "pointer", color: "blue" }}
                         onClick={() =>
                           handleDeleteOrder(
                             order?.product,
@@ -496,7 +536,7 @@ function OrderPage() {
                     onClick={handleChangeAddress}
                     style={{ color: "#9255FD", cursor: "pointer" }}
                   >
-                    Thay đổi
+                    <MDBIcon fas icon="edit" />
                   </span>
                 </div>
               </WrapperInfo>
@@ -574,15 +614,21 @@ function OrderPage() {
                 </span>
               </WrapperTotal>
             </div>
+
             <ButtonCpmponent
               onClick={() => handleAddCard()}
               size={40}
               styleButton={{
-                background: "rgb(87 196 202 / 95%)",
+                background: "#3b71ca",
                 height: "48px",
                 width: "320px",
                 border: "none",
-                borderRadius: "4px",
+                borderRadius: "0.375rem",
+                cursor: "pointer",
+                display: "inline-block",
+                padding: "0.5rem 1rem",
+                transition: "background-color 0.3s, box-shadow 0.3s",
+                boxShadow: "0 4px 9px -4px rgba(0, 0, 0, 0.2)",
               }}
               textButton={"Đặt hàng"}
               styleTextButton={{
@@ -620,17 +666,7 @@ function OrderPage() {
               name="name"
             />
           </Form.Item>
-          {/* <Form.Item
-            label="City"
-            name="city"
-            rules={[{ required: true, message: "Please input your city!" }]}
-          >
-            <InputComponent
-              value={stateUserDetails["city"]}
-              onChange={handleOnchangeDetails}
-              name="city"
-            />
-          </Form.Item> */}
+
           <Form.Item
             label="Phone"
             name="phone"

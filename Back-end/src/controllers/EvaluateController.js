@@ -8,7 +8,7 @@ const createEvaluate = async (req, res) => {
         ratingEvaluate,
         imgEvaluate,
       } = req.body;
-      if (!commentEvaluate || !imgEvaluate)  {
+      if (!commentEvaluate || !ratingEvaluate)  {
         return res.status(401).json({
           status: "ERR",
           message: "The input is required",

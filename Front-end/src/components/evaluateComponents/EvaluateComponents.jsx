@@ -158,7 +158,7 @@ const EvaluateComponents = (Eva) => {
             name="imgEvaluate"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Hình ảnh sản phẩm",
               },
             ]}

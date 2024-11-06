@@ -6,7 +6,7 @@ import * as ProductService from "../../services/ProductService";
 import { Row, Col, Select, Checkbox, Slider } from "antd";
 import { Pagination } from "antd";
 import { WrapperProducts, WrapperNavbar } from "./styles";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingComponent from "../../components/loadingComponent/loadingComponent";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -15,11 +15,12 @@ import {
   WrapperLableText,
 } from "../../components/navbarComponent/style";
 import ButtonCpmponent from "../../components/buttonCpmponent/ButtonCpmponent";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 function TypeProcduct() {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
-  console.log("searchProduct", searchProduct);
+  //console.log("searchProduct", searchProduct);
   const [loading, setLoading] = useState(false);
 
   const [products, setProducts] = useState([]);
@@ -34,6 +35,7 @@ function TypeProcduct() {
   });
 
   const [typeProducts, setTypeProducts] = useState([]);
+
   const [selectedCheckbox, setSelectedCheckbox] = useState(state);
 
   const fetchAllTypeProduct = async () => {
@@ -105,8 +107,8 @@ function TypeProcduct() {
   const onChange1 = (current, pageSize) => {
     // console.log("Trang hiện tại:", current);
     // console.log("Số sản phẩm mỗi trang:", pageSize);
-    setPanigate({ ...panigate, page: current, limit: pageSize });
-    // fetchProductType(state, current, pageSize);
+    setPanigate((prev) => ({ ...prev, page: current - 1, limit: pageSize }));
+    fetchProductType(selectedCheckbox, panigate.page, panigate.limit);
   };
 
   const onChange = (value) => {
@@ -125,6 +127,10 @@ function TypeProcduct() {
     //setProducts(filtered);
     setFilteredProducts(filtered);
   };
+  const navigate = useNavigate();
+  const onNavigateSHome = () => {
+    navigate("/");
+  };
 
   return (
     <LoadingComponent isPending={loading}>
@@ -132,9 +138,50 @@ function TypeProcduct() {
         style={{
           width: "100%",
           background: "#efefef",
-          height: "700px",
+          height: "720px",
         }}
       >
+        <div
+          style={{
+            height: "40px",
+            backgroundColor: "#E0EAF4",
+            borderRadius: "6px",
+            display: "flex",
+            alignItems: "center",
+            padding: "0 15px",
+            fontSize: "14px",
+            color: "#333",
+            width: "1270px",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+            onClick={onNavigateSHome}
+          >
+            <MDBIcon
+              fas
+              icon="home"
+              style={{
+                width: "14px",
+                marginRight: "8px",
+                color: "#007bff",
+              }}
+            />
+            <span style={{ marginRight: "8px" }}>Trang chủ</span>
+            <MDBIcon
+              fas
+              icon="angle-right"
+              style={{
+                width: "10px",
+                color: "#999",
+                marginRight: "8px",
+              }}
+            />
+          </div>
+
+          <div style={{ color: "#666" }}>Lọc sản phẩm</div>
+        </div>
         <div
           style={{
             width: "1270px",
@@ -145,7 +192,7 @@ function TypeProcduct() {
           <Row
             style={{
               flexWrap: "nowrap",
-              paddingTop: "10px",
+
               height: "calc(100% - 5px)",
             }}
           >
@@ -228,11 +275,12 @@ function TypeProcduct() {
                 style={{
                   textAlign: "center",
                   marginTop: "10px",
+                  //height: "10px",
                 }}
-                defaultCurrent={panigate.page + 1}
-                total={panigate?.total}
+                current={panigate.page + 1} 
+                total={panigate?.total * panigate.limit} // Tổng số item thay vì số trang
                 onChange={onChange1}
-                //total={100}
+                pageSize={panigate.limit}
               />
             </Col>
           </Row>

@@ -45,34 +45,6 @@ function NavbarComponent({typeCheck}) {
             ))}
           </div>
         );
-      case "price":
-        return (
-          <Select
-            defaultValue="lucy"
-            style={{
-              width: 120,
-            }}
-            options={[
-              {
-                value: "jack",
-                label: "Jack",
-              },
-              {
-                value: "lucy",
-                label: "Lucy",
-              },
-              {
-                value: "Yiminghe",
-                label: "yiminghe",
-              },
-              {
-                value: "disabled",
-                label: "Disabled",
-                disabled: true,
-              },
-            ]}
-          />
-        );
       default:
         return {};
     }
@@ -84,9 +56,9 @@ function NavbarComponent({typeCheck}) {
       <WrapperContent>
         {renderContent("checkbox", typeProducts)}
       </WrapperContent>
-      <WrapperContent>
+      {/* <WrapperContent>
         {renderContent("price", ["duoi 400000 VNĐ", "trên 400000 VNĐ"])}
-      </WrapperContent>
+      </WrapperContent> */}
     </div>
   );
 }

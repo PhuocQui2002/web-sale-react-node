@@ -17,6 +17,7 @@ export const WrapperStyleNameProduct = styled.h1`
     font-weight: 300;
     line-height: 32px;
     word-break: break-word;
+    //text-align: center;
 `
 
 export const WrapperStyleTextSell = styled.span`

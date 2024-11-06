@@ -13,6 +13,7 @@ import {
 } from "./style.js";
 
 import { orderContant } from "../../contant";
+import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 
 const OrderSuccess = () => {
   const order = useSelector((state) => state.order);
@@ -35,16 +36,31 @@ const OrderSuccess = () => {
               <div>
                 <Lable>Phương thức giao hàng</Lable>
                 <WrapperValue>
-                  <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                    {orderContant.delivery[state?.delivery]}
+                  <span style={{ fontWeight: "bold" }}>
+                    {orderContant.delivery[state?.shippingMethod] == "FAST" ? (
+                      <div style={{ display: "flex" }}>
+                        <p style={{ color: "#ea8500" }}>FAST</p>{" "}
+                        <span style={{ marginLeft: "10px" }}>
+                          {" "}
+                          giao hàng nhanh kiệm
+                        </span>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex" }}>
+                        <p style={{ color: "#ea8500" }}>GO_JEK</p>{" "}
+                        <span style={{ marginLeft: "10px" }}>
+                          {" "}
+                          giao hàng tiết kiệm
+                        </span>
+                      </div>
+                    )}
                   </span>{" "}
-                  Giao hàng tiết kiệm
                 </WrapperValue>
               </div>
             </WrapperInfo>
             <WrapperInfo>
               <div>
-                <Lable>Chọn phương thức thanh toán</Lable>
+                <Lable>Phương thức thanh toán</Lable>
                 <WrapperValue>
                   {orderContant.payment[state?.payment]}
                 </WrapperValue>
@@ -54,13 +70,20 @@ const OrderSuccess = () => {
               {state.orders?.map((order) => {
                 console.log("orders-success", order);
                 return (
-                  <WrapperItemOrder key={order?.name}>
+                  <WrapperItemOrder
+                    key={order?.name}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
                     <div
                       style={{
-                        width: "300px",
                         display: "flex",
                         alignItems: "center",
-                        gap: 4,
+                        width: "180px",
+                        whiteSpace: "nowrap",
                       }}
                     >
                       <img
@@ -69,70 +92,69 @@ const OrderSuccess = () => {
                           width: "77px",
                           height: "79px",
                           objectFit: "cover",
+                          marginRight: "10px",
                         }}
                       />
-                      <div
-                        style={{
-                          width: 260,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <p>{order?.name}</p>
-                      </div>
+                      <p>{order?.name}</p>
                     </div>
-                    <div
+                    <p
                       style={{
-                        width: "500px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 4,
+                        width: "180px",
+                        textAlign: "center",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      <p style={{marginRight:"20px", fontSize: "15px" , width: "280px"}}>Kích thước: {order?.size}</p>
-                      <div
-                        style={{
-                          width: 200,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        Khung: {order?.frame == "none" ? "Không khung" : order?.frame}
-                      </div>
-                    </div>
-                    <div
+                      Kích thước: {order?.size}
+                    </p>
+                    <p
                       style={{
-                        flex: 1,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "40px",
+                        width: "120px",
+                        textAlign: "center",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      <p style={{  color: "#242424" , overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",}}>
-                        Giá tiền: {convertPrice(order?.totalPrice)}
-                      </p>
-
-                      <span>
-                        <span style={{  color: "#242424" }}>
-                          Số lượng: {order?.amount}
-                        </span>
-                      </span>
-                    </div>
+                      Khung:{" "}
+                      {order?.frame === "none" ? "Không khung" : order?.frame}
+                    </p>
+                    <p
+                      style={{
+                        width: "120px",
+                        textAlign: "center",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Giá tiền: {convertPrice(order?.totalPrice)} 
+                    </p>
+                    <p
+                      style={{
+                        width: "80px",
+                        textAlign: "center",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Số lượng: {order?.amount}
+                    </p>
                   </WrapperItemOrder>
                 );
               })}
             </WrapperItemOrderInfo>
-            <div>
-              <span style={{ fontSize: "16px", color: "red" }}>
+            <div style={{
+              marginTop: "10px",
+            }}>
+               <MDBCard className="mb-4">
+          <MDBCardBody>
+            <p>
+              <strong>Giá đơn hàng</strong>
+            </p>
+            <span style={{ fontSize: "16px", color: "red", marginRight: "20px" }}>
                 Phí ship : {convertPrice(state?.diliveryPriceMemo)}
               </span>
               <span style={{ fontSize: "16px", color: "red" }}>
                 Tổng tiền: {convertPrice(state?.totalPriceMemo)}
               </span>
+          </MDBCardBody>
+        </MDBCard>
+             
             </div>
           </WrapperContainer>
         </div>

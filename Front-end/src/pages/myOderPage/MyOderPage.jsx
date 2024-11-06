@@ -11,12 +11,15 @@ import {
   WrapperFooterItem,
   WrapperContainer,
   WrapperStatus,
+  FormatText,
 } from "./style";
 import ButtonComponent from "../../components/buttonCpmponent/ButtonCpmponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/messageComponent/messageComponent";
 import EvaluateComponents from "../../components/evaluateComponents/EvaluateComponents";
+import { MDBIcon } from "mdb-react-ui-kit";
+import { Image } from "antd";
 
 const MyOrderPage = () => {
   const navigate = useNavigate();
@@ -49,32 +52,34 @@ const MyOrderPage = () => {
 
   const mutation = useMutationHooks((data) => {
     const { id, token, orderItems } = data;
-    //console.log("userId", userId);
+    //console.log("userId", data);
     const res = OrderService.cancelOrder(id, token, orderItems);
     return res;
   });
 
   const handleCanceOrder = (order) => {
-    //console.log("user cancel order", user?.access_token)
-    mutation.mutate(
-      {
-        id: order._id,
-        token: user?.access_token,
-        orderItems: order?.orderItems,
-        //userId: user.id
-      },
-      {
-        onSuccess: () => {
-          queryOrder.refetch();
+    if (order.statusOrder) {
+      message.error("Xóa thất bại vì đơn hàng đã được vận chuyển");
+    } else {
+      mutation.mutate(
+        {
+          id: order._id,
+          token: user?.access_token,
+          orderItems: order?.orderItems,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            queryOrder.refetch();
+          },
+        }
+      );
+    }
   };
   const {
     isLoading: isLoadingCancel,
     isSuccess: isSuccessCancel,
     isError: isErrorCancle,
-    data: dataCancel
+    data: dataCancel,
   } = mutation;
 
   useEffect(() => {
@@ -94,17 +99,18 @@ const MyOrderPage = () => {
         <WrapperHeaderItem key={order?._id}>
           <div
             style={{
-              width: "300px",
+              width: "700px",
+              //height: "200px",
               display: "flex",
               alignItems: "center",
               gap: 4,
             }}
           >
-            <img
+            <Image
               src={order?.image}
               style={{
-                width: "70px",
-                height: "70px",
+                width: "170px",
+                height: "170px",
                 objectFit: "cover",
                 border: "1px solid rgb(238, 238, 238)",
                 padding: "2px",
@@ -112,47 +118,51 @@ const MyOrderPage = () => {
             />
             <div
               style={{
-                width: 260,
+                width: 350,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 marginLeft: "10px",
+                fontSize: "20px",
               }}
             >
-              {order?.name}
+              <FormatText>{order?.name}</FormatText>
+              <div
+                style={{
+                  width: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  //fontStyle: "italic",
+                  gap: 4,
+                }}
+              >
+                <FormatText>Kích thước: {order?.size}</FormatText>
+              </div>
+              <div
+                style={{
+                  width: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  //fontStyle: "italic",
+                  gap: 4,
+                }}
+              >
+                <FormatText>
+                  Khung: {order?.frame == "none" ? "Không khung" : order?.frame}
+                </FormatText>
+              </div>
             </div>
           </div>
+
           <div
             style={{
-              width: "400px",
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <p
-              style={{ marginRight: "20px", fontSize: "15px", width: "280px" }}
-            >
-              Kích thước: {order?.size}
-            </p>
-            <div
-              style={{
-                width: 200,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Khung: {order?.frame == "none" ? "Không khung" : order?.frame}
-            </div>
-          </div>
-          <div
-            style={{
-              width: 260,
+              marginTop: "62px",
+              width: 110,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              marginLeft: "10px",
+              textAlign: "center",
+              justifyContent: "center",
             }}
           >
             Số lượng {order?.amount}
@@ -160,11 +170,12 @@ const MyOrderPage = () => {
           {isDelivered ? (
             <div
               style={{
+              marginTop: "62px",
                 height: "48px",
-                width: "320px",
+                width: "200px",
                 border: "none",
                 borderRadius: "4px",
-                textAlign: "end",
+                textAlign: "center",
               }}
             >
               <EvaluateComponents idProduct={order?.product} idUser={user.id} />
@@ -172,11 +183,11 @@ const MyOrderPage = () => {
           ) : (
             <div></div>
           )}
-          <span
-            style={{ fontSize: "13px", color: "#242424", marginLeft: "auto" }}
+          <FormatText
+            style={{ fontSize: "20px", color: "#242424", marginLeft: "auto" ,marginTop: "62px", }}
           >
             Giá: {convertPrice(order?.totalPrice)}
-          </span>
+          </FormatText>
         </WrapperHeaderItem>
       );
     });
@@ -185,29 +196,38 @@ const MyOrderPage = () => {
   return (
     <WrapperContainer>
       <div style={{ height: "100vh", width: "1270px", margin: "0 auto" }}>
-        <span>Đơn hàng của tôi</span>
+        {/* <span>Đơn hàng của tôi</span> */}
         <WrapperListOrder>
           {data?.map((order) => {
             //console.log("odddd", order);
             return (
               <WrapperItemOrder key={order?._id}>
                 <WrapperStatus>
-                  <span style={{ fontSize: "14px", fontWeight: "bold" }}>
-                    Trạng thái
-                  </span>
                   <div>
                     <span style={{ color: "rgb(255, 66, 78)" }}>
-                      Giao hàng:{" "}
+                      <MDBIcon fas icon="box-open" /> Trạng thái đơn hàng:{" "}
                     </span>
                     <span
                       style={{ color: "rgb(90, 32, 193)", fontWeight: "bold" }}
                     >{`${
-                      order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"
+                      order?.statusOrder
+                        ? "Đã giao bên vận chuyển"
+                        : "Đang soạn hàng"
                     }`}</span>
                   </div>
                   <div>
                     <span style={{ color: "rgb(255, 66, 78)" }}>
-                      Thanh toán:{" "}
+                      <MDBIcon fas icon="truck" /> Giao hàng:{" "}
+                    </span>
+                    <span
+                      style={{ color: "rgb(90, 32, 193)", fontWeight: "bold" }}
+                    >{`${
+                      order.isDelivered ? "Đã giao hàng" : "Chưa nhận hàng"
+                    }`}</span>
+                  </div>
+                  <div>
+                    <span style={{ color: "rgb(255, 66, 78)" }}>
+                      <MDBIcon fas icon="money-bill-alt" /> Thanh toán:{" "}
                     </span>
                     <span
                       style={{ color: "rgb(90, 32, 193)", fontWeight: "bold" }}

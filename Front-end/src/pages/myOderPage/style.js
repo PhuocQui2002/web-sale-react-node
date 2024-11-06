@@ -28,7 +28,17 @@ export const WrapperStyleHeaderDilivery = styled.div`
 
 export const WrapperContainer = styled.div`
   width: 100%;
-  background-color: #f5f5fa;
+  height: 100vh;
+  background-color: inherit;
+`;
+export const FormatText = styled.p`
+  width: 260,
+  overflow: "hidden",
+  ext-overflow: "ellipsis",
+  white-space: "nowrap",
+  margin-left: "10px",
+  font-size: "20px",
+
 `;
 
 export const WrapperLeft = styled.div`
@@ -54,8 +64,9 @@ export const WrapperFooterItem = styled.div`
 export const WrapperHeaderItem = styled.div`
   display: flex;
   align-items: flex-start;
-  height: 90px;
+  height: 200px;
   width: 100%;
+  margin-top: 20px;
 `;
 
 export const WrapperItemOrder = styled.div`

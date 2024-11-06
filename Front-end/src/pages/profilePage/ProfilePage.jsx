@@ -100,10 +100,14 @@ const ProfilePage = () => {
         margin: "0 auto",
       }}
     >
-      <WrapperHeader style={{
-        textAlign:"center",
-        margin: "30px auto",
-      }}>Thông tin người dùng</WrapperHeader>
+      <WrapperHeader
+        style={{
+          textAlign: "center",
+          margin: "30px auto",
+        }}
+      >
+        Thông tin người dùng
+      </WrapperHeader>
       <WrapperContentProfile>
         <WrapperInput>
           <WrapperLabel htmlFor="name">Name</WrapperLabel>
@@ -211,19 +215,24 @@ const ProfilePage = () => {
             <Button icon={<UploadOutlined />}>Upload</Button>
           </WrapperUploadFile>
           {avatar && (
-            <img
-              key={avatar}
-              src={avatar}
-              style={{
-                height: "60px",
-                width: "60px",
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-              alt="avatar"
-            />
-          )}
-          <ButtonComponent
+          <img
+            key={avatar}
+            src={avatar}
+            style={{
+              height: "60px",
+              width: "60px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+            alt="avatar"
+          />
+        )}
+       
+        </WrapperInput> 
+        <div style={{
+          textAlign: "end",
+        }}>
+        <ButtonComponent
             onClick={handleUpdate}
             size={40}
             styleButton={{
@@ -239,7 +248,7 @@ const ProfilePage = () => {
               fontWeight: "700",
             }}
           ></ButtonComponent>
-        </WrapperInput>
+        </div>
       </WrapperContentProfile>
     </div>
   );

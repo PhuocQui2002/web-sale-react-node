@@ -56,9 +56,13 @@ const AdminOderComponent = () => {
         phone: order?.shippingAddress?.phone,
         address: order?.shippingAddress?.address,
         paymentMethod: orderContant.payment[order?.paymentMethod],
+        shippingMethod: orderContant.delivery[order?.shippingMethod],
         isPaid: order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán",
-        isDelivered: order?.isDelivered ? "Đã giao hàng" : "Chưa giao hàng",
+        isDelivered: order?.isDelivered ? "Đã giao hàng" : "Chưa nhận hàng",
         totalPrice: convertPrice(order?.totalPrice),
+        statusOrder: order?.statusOrder
+          ? "Đã giao bên vận chuyển"
+          : "Đang soạn hàng",
       };
     });
 
@@ -176,8 +180,8 @@ const AdminOderComponent = () => {
       // ...getColumnSearchProps("isDelivered"),
     },
     {
-      title: "Phương thức thanh toán",
-      dataIndex: "paymentMethod",
+      title: "Phương thức vận chuyển",
+      dataIndex: "shippingMethod",
       // sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
       // ...getColumnSearchProps("paymentMethod"),
     },
@@ -280,7 +284,10 @@ const AdminOderComponent = () => {
               <p>Tên sản phẩm: {item.name}</p>
               <p>Số lượng: {item.amount}</p>
               <p>
-                Giá: { convertPrice(item.totalPrice - ( item.totalPrice* (item.discount / 100)))}
+                Giá:{" "}
+                {convertPrice(
+                  item.totalPrice - item.totalPrice * (item.discount / 100)
+                )}
               </p>
               <p>Kích thước: {item.size}</p>
               <p>Khung: {item.frame}</p>
@@ -306,13 +313,13 @@ const AdminOderComponent = () => {
   return (
     <div>
       <div>
-        <div style={{ display: "flex", marginBottom: "10px"}}>
+        <div style={{ display: "flex", marginBottom: "10px" }}>
           <div style={{ height: 200, width: 250 }}>
             Thống kê đơn hàng theo type
             <PieChartTypeComponent data={orders?.data} field="type" />
           </div>
           <div style={{ height: 200, width: 250 }}>
-           Thống kê đơn hàng đã giao
+            Thống kê đơn hàng đã giao
             <PieChartComponent data={orders?.data} field="isDelivered" />
           </div>
           {/* <div style={{ height: "100px",  width: 250 }}>
@@ -362,6 +369,24 @@ const AdminOderComponent = () => {
           onFinish={onUpdateOrder}
           autoComplete="off"
         >
+          <Form.Item
+            label={
+              <span style={{ color: "#FFC107" }}>Trạng thái đơn hàng</span>
+            }
+            name="statusOrder"
+            rules={[
+              {
+                required: true,
+                message: "Nhập trạng thái thanh toán",
+              },
+            ]}
+          >
+            <InputComponent
+              onChange={handleOnChangeEdit}
+              value={stateEditOrder.statusOrder}
+              name="statusOrder"
+            />
+          </Form.Item>
           <Form.Item
             label={
               <span style={{ color: "#FFC107" }}>Trạng thái thanh toán</span>

@@ -1,11 +1,13 @@
 const Order = require("../models/OrderProduct");
 const Product = require("../models/ProductModel");
+const EmailService = require("../services/EmailService");
 
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
     const {
       orderItems,
       paymentMethod,
+      shippingMethod,
       itemsPrice,
       shippingPrice,
       totalPrice,
@@ -68,6 +70,7 @@ const createOrder = (newOrder) => {
             phone,
           },
           paymentMethod,
+          shippingMethod,
           itemsPrice,
           shippingPrice,
           totalPrice,
@@ -76,23 +79,22 @@ const createOrder = (newOrder) => {
           paidAt,
         });
         if (createdOrder) {
-          //   await EmailService.sendEmailCreateOrder(email, orderItems);
+          await EmailService.sendEmailCreateOrder(
+            email,
+            orderItems,
+            shippingPrice,
+            totalPrice
+          );
+          //await EmailService.createOrderPDF(orderItems);
           resolve({
             status: "OK",
             message: "success",
             data: createdOrder,
           });
         }
-        // if (createdOrder) {
-        //     await EmailService.sendEmailCreateOrder(email,orderItems)
-        //     resolve({
-        //         status: 'OK',
-        //         message: 'success'
-        //     })
-        // }
       }
     } catch (e) {
-      //   console.log('e', e)
+      console.log("e", e);
       reject(e);
     }
   });
@@ -189,72 +191,127 @@ const getOrderDetails = (id) => {
   });
 };
 
+// const cancelOrderDetails = (id, data) => {
+//   return new Promise(async (resolve, reject) => {
+//       try {
+//           let order = []
+//           const promises = data.map(async (order) => {
+//               const productData = await Product.findOneAndUpdate(
+//                   {
+//                   _id: order.product,
+//                   selled: {$gte: order.amount}
+//                   },
+//                   {$inc: {
+//                       countInStock: +order.amount,
+//                       selled: -order.amount
+//                   }},
+//                   {new: true}
+//               )
+//               if(productData) {
+//                   order = await Order.findByIdAndDelete(id)
+//                   //console.log("order-delete", order)
+//                   if (order === null) {
+//                       resolve({
+//                         status: 'OK',
+//                         message: 'success',
+//                       })
+//                   }
+//               } else {
+//                   return{
+//                       status: 'OK',
+//                       message: 'ERR',
+//                       id: order.product
+//                   }
+//               }
+//           })
+//           const results = await Promise.all(promises)
+//           const newData = results && results[0] && results[0].id
+
+//           if(newData) {
+//               resolve({
+//                   status: 'ERR',
+//                   message: `San pham voi id: ${newData} khong ton tai`
+//               })
+//           }
+//           resolve({
+//               status: 'OK',
+//               message: 'success',
+//               data: order
+//           })
+//       } catch (e) {
+//           reject(e)
+//       }
+//   })
+// }
 const cancelOrderDetails = (id, data) => {
   return new Promise(async (resolve, reject) => {
-      try {
-          let order = []
-          const promises = data.map(async (order) => {
-              const productData = await Product.findOneAndUpdate(
-                  {
-                  _id: order.product,
-                  selled: {$gte: order.amount}
-                  },
-                  {$inc: {
-                      countInStock: +order.amount,
-                      selled: -order.amount
-                  }},
-                  {new: true}
-              )
-              if(productData) {
-                  order = await Order.findByIdAndDelete(id)
-                  if (order === null) {
-                      resolve({
-                          status: 'ERR',
-                          message: 'The order is not defined'
-                      })
-                  }
-              } else {
-                  return{
-                      status: 'OK',
-                      message: 'ERR',
-                      id: order.product
-                  }
-              }
-          })
-          const results = await Promise.all(promises)
-          const newData = results && results[0] && results[0].id
-          
-          if(newData) {
-              resolve({
-                  status: 'ERR',
-                  message: `San pham voi id: ${newData} khong ton tai`
-              })
+    try {
+      let deletedOrder = null;
+      const promises = data.map(async (order) => {
+        const productData = await Product.findOneAndUpdate(
+          {
+            _id: order.product,
+            selled: { $gte: order.amount },
+          },
+          {
+            $inc: {
+              countInStock: +order.amount,
+              selled: -order.amount,
+            },
+          },
+          { new: true }
+        );
+
+        if (productData) {
+          if (!deletedOrder) {
+            deletedOrder = await Order.findByIdAndDelete(id);
           }
-          resolve({
-              status: 'OK',
-              message: 'success',
-              data: order
-          })
-      } catch (e) {
-          reject(e)
+          return { status: "OK", message: "success" };
+        } else {
+          return {
+            status: "ERR",
+            message: `Sản phẩm với id: ${order.product} không tồn tại hoặc không hợp lệ`,
+            id: order.product,
+          };
+        }
+      });
+      const results = await Promise.all(promises);
+      const errorResult = results.find((result) => result.status === "ERR");
+      if (errorResult) {
+        resolve({
+          status: "ERR",
+          message: errorResult.message,
+        });
+      } else {
+        resolve({
+          status: "OK",
+          message: "success",
+          data: deletedOrder,
+        });
       }
-  })
-}
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 const getAllOrder = () => {
   return new Promise(async (resolve, reject) => {
-      try {
-          const allOrder = await Order.find().sort({createdAt: -1, updatedAt: -1})
-          resolve({
-              status: 'OK',
-              message: 'Success',
-              data: allOrder
-          })
-      } catch (e) {
-          reject(e)
-      }
-  })
-}
+    try {
+      const allOrder = await Order.find().sort({
+        createdAt: -1,
+        updatedAt: -1,
+      });
+      resolve({
+        status: "OK",
+        message: "Success",
+        data: allOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 const updateOrder = (orderID, data) => {
   return new Promise(async (resolve, reject) => {
@@ -289,5 +346,5 @@ module.exports = {
   getOrderDetails,
   cancelOrderDetails,
   getAllOrder,
-  updateOrder
+  updateOrder,
 };

@@ -11,6 +11,7 @@ import {
 import { StarFilled } from "@ant-design/icons";
 //import logo from "../../assets/images/logo.png";
 import logo from "../../assets/images/logohinh.webp";
+import { MDBIcon } from "mdb-react-ui-kit";
 
 //import painting from "../../assets/images/logoDN.jpg";
 
@@ -62,7 +63,7 @@ const CartComponent = (props) => {
       <WrapperPriceText>
         {price.toLocaleString()} VNĐ{" "}
         {discount > 0 ? (
-          <WrapperDiscountText>giảm {discount}%</WrapperDiscountText>
+          <WrapperDiscountText><MDBIcon fas icon="tag" /> {discount}%</WrapperDiscountText>
         ) : (
           <div></div>
         )}

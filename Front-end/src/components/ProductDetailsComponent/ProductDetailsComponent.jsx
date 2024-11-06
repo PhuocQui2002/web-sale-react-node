@@ -239,6 +239,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           <span
             style={{
               fontFamily: "Playfair Display, serif",
+              
             }}
           >
             {productDetails?.name}
@@ -269,11 +270,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             Giá {(productDetails?.price + TotalPrice).toLocaleString()} VNĐ
           </WrapperPriceTextProduct>
         </WrapperPriceProduct>
-        {/* <WrapperAddressProduct>
-          <span>Giao đến </span>
-          <span className="address">{user?.address}</span>-
-          <span className="change-address">Đổi địa chỉ</span>
-        </WrapperAddressProduct> */}
+        
         <div
           style={{
             margin: "10px 0 20px",
@@ -288,7 +285,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 fontSize: "20px",
               }}
             >
-              Số lượng trong kho {productDetails?.countInStock}
+              Số lượng
             </span>{" "}
           </div>
           <WrapperQualityProduct>

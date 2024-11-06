@@ -26,6 +26,8 @@ import { PayPalButton } from "react-paypal-button-v2";
 import * as PaymentService from "../../services/PaymentService";
 import ModalComponent from "../../components/modalComponent/ModalComponent";
 import InputComponent from "../../components/inputComponent/InputComponent";
+import { MDBIcon } from "mdb-react-ui-kit";
+import LoadingComponent from "../../components/loadingComponent/loadingComponent";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
@@ -128,6 +130,7 @@ const PaymentPage = () => {
         phone: user?.phone,
         //city: user?.city,
         paymentMethod: payment,
+        shippingMethod: delivery,
         itemsPrice: priceMemo,
         shippingPrice: diliveryPriceMemo,
         totalPrice: totalPriceMemo,
@@ -147,7 +150,7 @@ const PaymentPage = () => {
 
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
-    console.log("order-payment-token", token);
+    //console.log("order-payment-token", token);
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });
@@ -155,12 +158,12 @@ const PaymentPage = () => {
   const { isLoading, data } = mutationUpdate;
   const {
     data: dataAdd,
-    isLoading: isLoadingAddOrder,
+    isPending: isLoadingAddOrder,
     isSuccess,
     isError,
   } = mutationAddOrder;
 
-  //console.log("mutationAddOrder", mutationAddOrder);
+  console.log("mutationAddOrder", mutationAddOrder);
   useEffect(() => {
     if (isSuccess && dataAdd?.status === "OK") {
       console.log("order?.orderItemsSlected", order?.orderItemsSlected)
@@ -181,7 +184,7 @@ const PaymentPage = () => {
         },
       });
     } else if (isError) {
-      message.error("đặt hàng thất bại");
+      message.error("đặt hàng thất bại");console.error("Lỗi đặt hàng:", mutationAddOrder.error);
     }
   }, [isSuccess, isError]);
 
@@ -205,6 +208,7 @@ const PaymentPage = () => {
       phone: user?.phone,
       //city: user?.city,
       paymentMethod: payment,
+      shippingMethod: delivery,
       itemsPrice: priceMemo,
       shippingPrice: diliveryPriceMemo,
       totalPrice: totalPriceMemo,
@@ -267,7 +271,8 @@ const PaymentPage = () => {
 
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
-      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
+     <LoadingComponent isPending={isLoadingAddOrder}>
+     <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
         <h3>Thanh toán</h3>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <WrapperLeft>
@@ -279,7 +284,7 @@ const PaymentPage = () => {
                     <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                       FAST
                     </span>{" "}
-                    Giao hàng tiết kiệm
+                    Giao hàng nhanh
                   </Radio>
                   <Radio value="gojek">
                     <span style={{ color: "#ea8500", fontWeight: "bold" }}>
@@ -315,7 +320,7 @@ const PaymentPage = () => {
                     onClick={handleChangeAddress}
                     style={{ color: "#9255FD", cursor: "pointer" }}
                   >
-                    Thay đổi
+                    <MDBIcon fas icon="edit" />
                   </span>
                 </div>
               </WrapperInfo>
@@ -413,22 +418,27 @@ const PaymentPage = () => {
               </div>
             ) : (
               <ButtonCpmponent
-                onClick={() => handleAddOrder()}
-                size={40}
-                styleButton={{
-                  background: "rgb(87 196 202 / 95%)",
-                  height: "48px",
-                  width: "320px",
-                  border: "none",
-                  borderRadius: "4px",
-                }}
-                textButton={"Thanh toán"}
-                styleTextButton={{
-                  color: "#fff",
-                  fontSize: "15px",
-                  fontWeight: "700",
-                }}
-              ></ButtonCpmponent>
+              onClick={() => handleAddOrder()}
+              size={40}
+              styleButton={{
+                background: "#3b71ca",
+                height: "48px",
+                width: "320px",
+                border: "none",
+                borderRadius: "0.375rem",
+                cursor: "pointer",
+                display: "inline-block",
+                padding: "0.5rem 1rem",
+                transition: "background-color 0.3s, box-shadow 0.3s",
+                boxShadow: "0 4px 9px -4px rgba(0, 0, 0, 0.2)",
+              }}
+              textButton={"Thanh toán"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+            />
             )}
           </WrapperRight>
         </div>
@@ -483,6 +493,7 @@ const PaymentPage = () => {
           </Form.Item>
         </Form>
       </ModalComponent>
+     </LoadingComponent>
     </div>
   );
 };

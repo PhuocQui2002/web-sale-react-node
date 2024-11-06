@@ -10,6 +10,7 @@ export const ReviewItem = styled.div`
 
 export const ReviewContent = styled.div`
   margin-left: 10px;
+  padding-bottom: 10px
 `;
 
 export const ReviewImages = styled.div`

@@ -5,6 +5,7 @@ const initialState = {
   orderItemsSlected: [],
   shippingAddress: {},
   paymentMethod: "",
+  shippingMethod: "",
   itemsPrice: 0,
   shippingPrice: 0,
   taxPrice: 0,

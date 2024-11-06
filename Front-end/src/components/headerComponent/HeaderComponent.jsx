@@ -66,7 +66,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
     await UserService.logOutUser();
     dispatch(resetUser());
     localStorage.removeItem("access_token");
-    dispatch(clearCart())
+    dispatch(clearCart());
   };
   const handleProfile = () => {
     navigate("/profilePage");

@@ -16,6 +16,7 @@ import LoadingComponent from "../../components/loadingComponent/loadingComponent
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
+import FooterComponent from "../../components/footerComponent/FooterComponent";
 
 function HomePage() {
   const [limit, setLimit] = useState(10);
@@ -72,7 +73,9 @@ function HomePage() {
           style={{
             width: "1270px",
             margin: "0 auto",
-            height: "1010px",
+            //height: "1010px",
+             minHeight: "1010px",
+             
           }}
         >
           <SliderComponent arrImages={[slider1, slider2, slider3]} />
@@ -121,8 +124,10 @@ function HomePage() {
               styleStextButton={{ fontWeight: 500 }}
             />
           </div>
+          <div style={{ height: "20px" }} />
         </div>
       </div>
+      <FooterComponent/>
     </LoadingComponent>
   );
 }

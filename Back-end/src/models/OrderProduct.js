@@ -26,6 +26,7 @@ const orderSchema = new mongoose.Schema(
       phone: { type: Number, required: true },
     },
     paymentMethod: { type: String, required: true },
+    shippingMethod: { type: String, required: true },
     itemsPrice: { type: Number, required: true },
     shippingPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
@@ -33,6 +34,7 @@ const orderSchema = new mongoose.Schema(
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
+    statusOrder: { type: Boolean, default: false },
     deliveredAt: { type: Date },
   },
   {

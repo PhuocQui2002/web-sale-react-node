@@ -28,7 +28,7 @@ export const WrapperStyleHeaderDilivery = styled.div`
 `
 
 export const WrapperLeft = styled.div`
-  width: 910px;
+  width: 920px;
 `
 
 export const WrapperListOrder = styled.div`
@@ -41,6 +41,7 @@ export const WrapperItemOrder = styled.div`
   padding: 9px 16px;
   background: #fff;
   margin-top: 12px;
+  border-radius: 20px;
 `
 
 export const WrapperPriceDiscount = styled.span`
@@ -58,7 +59,7 @@ export const WrapperCountOrder  = styled.div`
 `
 
 export const WrapperRight = styled.div`
-  width: 320px;
+  width: 330px;
   margin-left: 20px;
   display: flex ;
   flex-direction: column; 

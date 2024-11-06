@@ -715,12 +715,12 @@ const AdminUserComponent = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Hình ảnh sản phẩm"
+            label="Avatar"
             name="avatar"
             rules={[
               {
                 required: true,
-                message: "Hình ảnh sản phẩm",
+                message: "Hình ảnh Avatar",
               },
             ]}
           >
