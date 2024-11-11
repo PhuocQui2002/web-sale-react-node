@@ -5,17 +5,21 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
+import { MDBIcon } from "mdb-react-ui-kit";
 import { Menu } from "antd";
 import { getItem } from "../../utils";
 import HeaderComponent from "../../components/headerComponent/HeaderComponent";
 import AdminProductComponent from "../../components/adminProductComponent/AdminProductComponent";
 import AdminUserComponent from "../../components/adminUserComponent/AdminUserComponent";
 import AdminOderComponent from "../../components/adminOderComponent/AdminOderComponent";
+import AdminDashboarchComponent from "../../components/adminDashboarchComponent/AdminDashboarchComponent";
 const AdminPage = () => {
   const items = [
     getItem("Người dùng", "users", <UserOutlined />),
     getItem("Sản phẩm", "products", <AppstoreOutlined />),
     getItem("Đơn hàng", "orders", <ShoppingCartOutlined />),
+    getItem("Thống kê", "dashboard", <MDBIcon fas icon="chart-line" />),
+
   ];
 
   // const rootSubmenuKeys = ["user", "product"];
@@ -31,6 +35,8 @@ const AdminPage = () => {
         return <AdminProductComponent />;
       case "orders":
         return <AdminOderComponent />;
+        case "dashboard":
+        return <AdminDashboarchComponent />;
       default:
         return <></>;
     }

@@ -36,6 +36,7 @@ function HomePage() {
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
+    console.log(res);
     if (res?.status === "OK") {
       setTypeProducts(res?.data);
     }

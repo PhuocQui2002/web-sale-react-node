@@ -65,7 +65,7 @@ const createOrderPDF = (orderItems, shippingPrice, totalPrice) => {
               fit: [150, 150], // Kích thước hình ảnh
             });
             doc.moveDown();
-            
+
             // Xóa file ảnh tạm sau khi chèn xong
             fs.unlinkSync(tempImagePath);
           } else {
@@ -163,7 +163,29 @@ const sendEmailCreateOrder = async (
 
   console.log("Email sent: %s", info.messageId);
 };
+const sendOtpEmail = async (otp) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.MAIL_ACCOUNT,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
 
+
+  let info = await transporter.sendMail({
+    from: process.env.MAIL_ACCOUNT,
+    to: process.env.MAIL_ACCOUNT,
+    subject: "Max otp của bạn",
+    text: "Hello world?",
+    html: `<div><b>Mã OTP của bạn</b></div> ${otp}`,
+    
+  });
+
+};
 module.exports = {
   sendEmailCreateOrder,
+  sendOtpEmail
 };

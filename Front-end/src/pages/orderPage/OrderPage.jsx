@@ -383,7 +383,7 @@ function OrderPage() {
                   <WrapperItemOrder key={order?.product}>
                     <div
                       style={{
-                        width: "390px",
+                        width: "450px",
                         display: "flex",
                         alignItems: "center",
                         gap: 4,

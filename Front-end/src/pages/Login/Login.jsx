@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React from "react";
-import { Image } from "antd";
+import { Image, message } from "antd";
 import { useState, useEffect } from "react";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
@@ -47,6 +47,11 @@ function SignInPage() {
   };
 
   const handleLogin = () => {
+    const emailPattern = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+    if (!emailPattern.test(email)) {
+      message.error("Định dạng email không hợp lệ");
+      return;
+    }
     mutation.mutate({
       email,
       password,
@@ -58,32 +63,31 @@ function SignInPage() {
   };
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
   // eslint-disable-next-line no-unused-vars
-  const { data, isPending, isSuccess } = mutation;
+  const { data, isPending, isSuccess, isError } = mutation;
 
   useEffect(() => {
+    if (isError) {
+      message.error("Tài khoản hoặc mật khẩu không đúng");
+    }
     if (isSuccess) {
       if (location?.state) {
         navigate(location?.state);
       } else {
         navigate("/");
       }
-
-     
-
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
 
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
         //console.log("decoded", decoded);
-        
+
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
           CartService.getCartByUserId(decoded?.id, dispatch);
-
         }
       }
     }
-  }, [isSuccess]);
+  }, [isSuccess, isError]);
 
   const handleGetDetailsUser = async (id, token) => {
     // const storage = localStorage.getItem("refresh_token");
@@ -91,7 +95,6 @@ function SignInPage() {
     const res = await UserService.getDetailsUser(id, token);
     console.log("res", res);
     dispatch(updateUser({ ...res?.data, access_token: token }));
-    
   };
 
   return (
@@ -115,19 +118,7 @@ function SignInPage() {
       >
         <WrapperContainerLeft>
           <div style={{ display: "flex ", justifyContent: "center" }}>
-            <Image
-              src={mixilogo}
-              preview={false}
-              alt="logo-mixi"
-              height="30px"
-              width="60px"
-              style={{
-                height: "30px",
-                marginTop: "30px",
-                width: "55px",
-              }}
-            />
-            <h1>MIXISHOP</h1>
+            <h1>Canvas Story</h1>
           </div>
 
           <InputForm
@@ -157,7 +148,6 @@ function SignInPage() {
             />
           </div>
 
-          {/* <Link to="/"></Link> */}
           {data?.status === "ERR" && (
             <span style={{ color: "red", marginBottom: "5px" }}>
               {data?.message}
@@ -229,29 +219,3 @@ function SignInPage() {
 }
 
 export default SignInPage;
-
-// <FromContainer>
-//   <form action="" onSubmit={(event) => handleSubmit(event)}>
-//     <div className="brand">
-//       <img src={logo} alt="logo" />
-//       <h1>snappy</h1>
-//     </div>
-//     <input
-//       type="text"
-//       placeholder="Username"
-//       name="username"
-//       //onChange={(e) => handleChange(e)}
-//       min="3"
-//     />
-//     <input
-//       type="password"
-//       placeholder="Password"
-//       name="password"
-//       //onChange={(e) => handleChange(e)}
-//     />
-//     <button type="submit">Log In</button>
-//     <span>
-//       Already have an account ? <Link to="/register">Register.</Link>
-//     </span>
-//   </form>
-// </FromContainer>

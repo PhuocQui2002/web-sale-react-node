@@ -6,9 +6,10 @@ import {
   WrapperModal,
   WrapperTextLight,
 } from "./style";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useState } from "react";
 
-import { Image, Input, Modal } from "antd";
+import { Form, Image, Input, Modal } from "antd";
 import { useLocation, useNavigate } from "react-router";
 import InputForm from "../../components/InputForm/InputForm";
 import ButtonCpmponent from "../../components/buttonCpmponent/ButtonCpmponent";
@@ -16,13 +17,35 @@ import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../../components/loadingComponent/loadingComponent";
 import * as message from "../../components/messageComponent/messageComponent";
 import { useDispatch } from "react-redux";
+import * as UserService from "../../services/UserService";
 import login from "../../assets/images/logo-login.png";
+import ModalComponent from "../../components/modalComponent/ModalComponent";
+import InputComponent from "../../components/inputComponent/InputComponent";
+import Password from "antd/es/input/Password";
 
 const ForgetPasswordPage = () => {
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+
   const [email, setEmail] = useState("");
   const [otpSent, setOtpSent] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [stateUserDetails, setStateUserDetails] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  // console.log("stateUserDetails", stateUserDetails);
+
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
+
+  useEffect(() => {
+    form.setFieldsValue(stateUserDetails);
+  }, [form, stateUserDetails]);
+
+  const [isModalOpenOtp, setIsModalOpenOtp] = useState(false);
+  const [isModalOpenPass, setIsModalOpenPass] = useState(false);
+
   const [valueInput1, setValueInput1] = useState("");
   const [valueInput2, setValueInput2] = useState("");
   const [valueInput3, setValueInput3] = useState("");
@@ -33,14 +56,14 @@ const ForgetPasswordPage = () => {
   const handleNavigateSignIn = () => {
     navigate("/login");
   };
-  
+
   const mutation = useMutationHooks();
   //(data) => OtpService.createOtp(data)
   const { data, isLoading, isSuccess } = mutation;
-  console.log("data-forget", data)
+  // console.log("data-forget", data);
 
   const mutationDeleteOtp = useMutationHooks();
-  //(data) => OtpService.deleteOtp(data)
+
   const onDeleteOtp = () => {
     mutationDeleteOtp.mutate({ otp: otpSent });
   };
@@ -53,11 +76,17 @@ const ForgetPasswordPage = () => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     console.log("otp: " + otp);
     setOtpSent(otp);
+    UserService.sendPassword({ email, otp });
     mutation.mutate({
       email,
       otp,
     });
-    setIsModalOpen(true);
+    setStateUserDetails({
+      email: email,
+      password: "",
+      confirmPassword: "",
+    });
+    setIsModalOpenOtp(true);
   };
   const checkOTP = () => {
     const data = [
@@ -71,19 +100,44 @@ const ForgetPasswordPage = () => {
     let value = data.join("");
     if (Number(value) === otpSent) {
       message.success();
+
       onDeleteOtp();
-      setIsModalOpen(false);
-      navigate(`/createNewPassword`, { state: email });
+      setIsModalOpenOtp(false);
+      setIsModalOpenPass(true);
+      // navigate(`/createNewPassword`, { state: email });
     } else {
       message.error("OTP không đúng");
     }
   };
-
+  const mutationUpdatePassWord = useMutationHooks((data) => {
+    const { ...stateUserDetails } = data;
+    // console.log("...stateUserDetails", data);
+    const res = UserService.updatePassword(data);
+    console.log("res-pass", res);
+    return res;
+  });
+  const { isLoading: isLoadingUpdatePass, data: dataPAss } =
+    mutationUpdatePassWord;
+  const handleUpdatePassword = () => {
+    // console.log("Update-handleUpdateInforUser", stateUserDetails);
+    const { email, password } = stateUserDetails;
+    if (email && password) {
+      mutationUpdatePassWord.mutate(
+        { ...stateUserDetails },
+        {
+          onSuccess: () => {
+            message.success("Cập nhật mật khẩu thành công");
+            setIsModalOpenPass(false);
+          },
+        }
+      );
+    }
+  };
   const handleOk = () => {
     checkOTP();
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpenOtp(false);
   };
 
   const onChangeInput1 = (e) => {
@@ -104,7 +158,21 @@ const ForgetPasswordPage = () => {
   const onChangeInput6 = (e) => {
     setValueInput6(e.target.value);
   };
-
+  const handleOnchangeDetails = (e) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleCancleUpdate = () => {
+    setStateUserDetails({
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    form.resetFields();
+    setIsModalOpenPass(false);
+  };
 
   return (
     <div
@@ -135,7 +203,7 @@ const ForgetPasswordPage = () => {
           >
             Xin chào
           </h4>
-          <p >Quên mật khẩu</p>
+          <p>Quên mật khẩu</p>
           <InputForm
             placeholder="Nhập email"
             style={{ marginBottom: "10px" }}
@@ -197,7 +265,7 @@ const ForgetPasswordPage = () => {
 
         <WrapperModal
           title="Basic Modal"
-          open={isModalOpen}
+          open={isModalOpenOtp}
           onOk={handleOk}
           onCancel={handleCancel}
         >
@@ -247,6 +315,71 @@ const ForgetPasswordPage = () => {
             </div>
           </WrapperForm>
         </WrapperModal>
+        <ModalComponent
+          title="Cập nhật mật khẩu"
+          open={isModalOpenPass}
+          onCancel={handleCancleUpdate}
+          onOk={handleUpdatePassword}
+        >
+          {/* <LoadingComponent isLoading={isLoading}> */}
+          <Form
+            name="basic"
+            labelCol={{ span: 7 }}
+            wrapperCol={{ span: 20 }}
+            // onFinish={onUpdateUser}
+            autoComplete="on"
+            form={form}
+          >
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: "Please input your name!" }]}
+            >
+              <InputComponent
+                value={email}
+                onChange={handleOnchangeDetails}
+                name="email"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: "Please input your  phone!" }]}
+            >
+              <Input.Password
+                value={stateUserDetails.password}
+                onChange={handleOnchangeDetails}
+                name="password"
+                placeholder="Enter your password"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="confirmPassword"
+              name="confirmPassword"
+              rules={[
+                { required: true, message: "Please input confirmPassword!" },
+              ]}
+            >
+              <Input.Password
+                value={stateUserDetails.confirmPassword}
+                onChange={handleOnchangeDetails}
+                name="confirmPassword"
+                placeholder="Enter your confirmPassword"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                
+                type="password"
+              />
+            </Form.Item>
+          </Form>
+          {/* </LoadingComponent> */}
+        </ModalComponent>
       </div>
     </div>
   );

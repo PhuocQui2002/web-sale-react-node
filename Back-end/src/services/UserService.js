@@ -1,7 +1,7 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const { genneralAccessToken, genneralRefreshToken } = require("./JwtService");
-
+const EmailService = require("../services/EmailService");
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
     const { name, email, password, confirmPassword, phone } = newUser;
@@ -178,6 +178,51 @@ const deleteManyUser = (ids) => {
       }
   })
 }
+const sendPassword = (newPass) => {
+  return new Promise(async (resolve, reject) => {
+    const { email, otp } = newPass;
+    try {
+      if (otp) {
+        await EmailService.sendOtpEmail(
+          otp
+        );
+      }
+      
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+const updatePassword = (newPass) => {
+  return new Promise(async (resolve, reject) => {
+    const { email, password, confirmPassword } = newPass;
+    // console.log("email, password", email, password)
+    try {
+      const checkUser = await User.findOne({
+        email: email,
+      });
+      if (!checkUser) {
+        resolve({
+          status: "ERR",
+          message: "The email is not find",
+        });
+        return;
+      }
+      const hashPassword = bcrypt.hashSync(password, 10);
+      checkUser.password = hashPassword;
+      const updateUser = await checkUser.save();
+      if (createUser) {
+        resolve({
+          status: "OK",
+          message: "success",
+          data: updateUser,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 module.exports = {
   createUser,
   loginUser,
@@ -186,4 +231,6 @@ module.exports = {
   getAllUser,
   deleteUser,
   deleteManyUser,
+  sendPassword,
+  updatePassword
 };

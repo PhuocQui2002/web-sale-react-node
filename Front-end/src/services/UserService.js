@@ -98,6 +98,23 @@ export const deleteManyUser = async (data, access_token) => {
   );
   return res.data;
 };
+export const sendPassword = async (data) => {
+  console.log("data-otp", data);
+  const res = await axios.put(
+    `${import.meta.env.VITE_API_URL}/user/sendPassword`,
+    data
+  );
+  return res.data;
+};
+
+export const updatePassword = async (data) => {
+  console.log("data-pass-update", data);
+  const res = await axios.put(
+    `${import.meta.env.VITE_API_URL}/user/updatePassword`,
+    data
+  );
+  return res.data;
+};
 
 // export const refreshToken = async (refreshToken) => {
 //     console.log('refreshToken', refreshToken)

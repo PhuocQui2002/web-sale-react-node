@@ -231,7 +231,43 @@ const deleteMany = async (req, res) => {
       })
   }
 }
-
+const sendPassword = async (req, res) => {
+  try {
+    const { email, otp} = req.body;
+    console.log("updatePass", email, otp)
+    if (!otp) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The otp is required",
+      });
+    }
+    const response = await UserService.sendPassword(req.body);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+const updatePassword = async (req, res) => {
+  try {
+    const { email, password, confirmPassword } = req.body;
+    // console.log("updatePassword", email, password, confirmPassword)
+    if (!email || !password) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The userId is required",
+      });
+    }
+    const response = await UserService.updatePassword(req.body);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 module.exports = {
   createUser,
   loginUser,
@@ -241,5 +277,7 @@ module.exports = {
   deleteUser,
   refreshToken,
   logOutUser,
-  deleteMany
+  deleteMany,
+  sendPassword,
+  updatePassword
 };

@@ -15,5 +15,7 @@ router.get("/getDetails/:id", userController.getDetailsUser);
 router.post("/refreshToken", userController.refreshToken);
 router.post("/logOut", userController.logOutUser);
 router.post('/deleteMany', authMiddleWare, userController.deleteUser)
+router.put("/sendPassword", userController.sendPassword);
+router.put("/updatePassword", userController.updatePassword);
 
 module.exports = router;

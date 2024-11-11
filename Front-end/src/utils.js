@@ -28,6 +28,7 @@ export function getItem(label, key, icon, children, type) {
 }
 
 export const renderOptions = (arr) => {
+  console.log('renderOptions', arr)
   let results = [];
   if (arr) {
     results = arr?.map((opt) => {
@@ -37,6 +38,7 @@ export const renderOptions = (arr) => {
       };
     });
   }
+  console.log('renderOptions-add', results)
   results.push({
     label: "Thêm type",
     value: "add_type",
@@ -140,3 +142,37 @@ export const convertDataChart2 = (data) => {
     return [];
   }
 };
+export const convertDataBarChart = (data) => {
+  try {
+    const object = {};
+    
+    Array.isArray(data) &&
+      data.forEach((order) => {
+        if (order.isPaid) { 
+          const fullName = order.shippingAddress.fullName;
+          const totalPrice = order.totalPrice;
+
+          if (!object[fullName]) {
+            object[fullName] = totalPrice;
+          } else {
+            object[fullName] += totalPrice;
+          }
+        }
+      });
+    
+    // Convert to array and sort by totalPrice in descending order
+    const results = Object.keys(object)
+      .map((name) => ({
+        name,
+        value: object[name],
+      }))
+      .sort((a, b) => b.value - a.value) // Sort by value in descending order
+      .slice(0, 5); // Take the top 5 customers
+
+    return results;
+  } catch (e) {
+    return [];
+  }
+};
+
+

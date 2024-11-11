@@ -21,7 +21,7 @@ function ProductDetailsPage() {
         height: "100vh",
       }}
     >
-       <div
+      <div
         style={{
           height: "40px",
           backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
@@ -33,7 +33,10 @@ function ProductDetailsPage() {
           color: "#333",
         }}
       >
-        <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }} onClick={onNavigateSHome}>
+        <div
+          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+          onClick={onNavigateSHome}
+        >
           <MDBIcon
             fas
             icon="home"

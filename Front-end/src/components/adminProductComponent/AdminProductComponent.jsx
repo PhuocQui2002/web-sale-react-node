@@ -400,20 +400,7 @@ const AdminProductComponent = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    // render: (text) =>
-    //   searchedColumn === dataIndex ? (
-    //     <Highlighter
-    //       highlightStyle={{
-    //         backgroundColor: "#ffc069",
-    //         padding: 0,
-    //       }}
-    //       searchWords={[searchText]}
-    //       autoEscape
-    //       textToHighlight={text ? text.toString() : ""}
-    //     />
-    //   ) : (
-    //     text
-    //   ),
+    
   });
   ////////////////////////////////
   const fetchAllTypeProduct = async () => {
@@ -569,6 +556,8 @@ const AdminProductComponent = () => {
       type: value,
     });
   };
+  
+  
   return (
     <div>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -657,11 +646,6 @@ const AdminProductComponent = () => {
               },
             ]}
           >
-            {/* <InputComponent
-              onChange={handleOnChange}
-              value={stateProduct.type}
-              name="type"
-            /> */}
             <Select
               name="type"
               defaultValue=""
@@ -679,7 +663,6 @@ const AdminProductComponent = () => {
             >
               <InputComponent
                 value={stateProduct.newType}
-                // eslint-disable-next-line no-undef
                 onChange={handleOnChange}
                 name="newType"
               />

@@ -135,7 +135,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
               cursor: "pointer",
             }}
           />
-          <WrapperTextHeader> MIXI SHOP</WrapperTextHeader>
+          <WrapperTextHeader> Canvas Story</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
