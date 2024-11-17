@@ -94,6 +94,7 @@ const deleteCart = (id) => {
 };
 
 const deleteOrderItemCart = (userID, orderItems) => {
+  //console.log("orderItems", orderItems);
   return new Promise(async (resolve, reject) => {
     try {
       // Tìm giỏ hàng của người dùng

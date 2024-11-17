@@ -17,6 +17,7 @@ export const getCartByUserId = async (userId, dispatch) => {
   const res = await axios
     .get(`${import.meta.env.VITE_API_URL}/cart/getCartByUserId/${userId}`)
     .then(function (response) {
+      // console.log("response", response)
       dispatch(updateCart(response?.data?.data[0].orderItems));
       console.log(response);
     });

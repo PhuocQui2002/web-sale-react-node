@@ -3,6 +3,8 @@ import counterReducer from "./slides/counterSlide";
 import userSlide from "./slides/userSlide";
 import productReducer from "./slides/productSlide";
 import orderSlide from "./slides/orderSlide";
+import cartSlide from "./slides/cartSlide";
+
 import {
   persistStore,
   persistReducer,
@@ -27,6 +29,7 @@ const rootReducer = combineReducers({
   product: productReducer,
   user: userSlide,
   order: orderSlide,
+  cart: cartSlide,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

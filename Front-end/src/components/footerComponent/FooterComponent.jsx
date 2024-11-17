@@ -70,7 +70,7 @@ const FooterComponent = () => {
       >
         © 2024 :
         <a className="text-body" href="http://localhost:3000/">
-          MIXISHOP.com
+        canvasstore.com
         </a>
       </div>
       {/* Copyright */}

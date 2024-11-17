@@ -24,6 +24,8 @@ import {
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import LoadingComponent from "../loadingComponent/loadingComponent";
 import { addOrderProduct, buyNowProduct } from "../../redux/slides/orderSlide";
+import { addCart } from "../../redux/slides/cartSlide";
+
 import { useMutationHooks } from "../../hooks/useMutationHook";
 
 const ProductDetailsComponent = ({ idProduct }) => {
@@ -150,6 +152,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         countInstock: productDetails?.countInStock,
       };
       dispatch(
+        // addCart({orderItem}),
         addOrderProduct({
           orderItem: {
             name: productDetails?.name,

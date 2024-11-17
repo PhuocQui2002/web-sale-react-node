@@ -291,13 +291,10 @@ const deleteManyProduct = (ids) => {
 const getAllType = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Truy vấn tất cả các sản phẩm, sắp xếp theo thời gian tạo (createdAt) tăng dần
       const products = await Product.find().sort({ createdAt: 1 });
-      
       // Lọc ra các loại (type) duy nhất dựa trên thứ tự thời gian tăng dần
       const allType = [...new Set(products.map(product => product.type))];
-      
-      console.log(allType);
+      //console.log(allType);
       resolve({
         status: 'OK',
         message: 'Success',

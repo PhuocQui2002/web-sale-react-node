@@ -31,6 +31,7 @@ import ModalComponent from "../../components/modalComponent/ModalComponent";
 import { convertPrice } from "../../utils";
 import { updateUser } from "../../redux/slides/userSlide";
 import StepComponent from "../../components/StepConponent/StepComponent";
+import * as CartService from "../../services/CartService";
 import {
   decreaseAmount,
   increaseAmount,
@@ -95,8 +96,12 @@ function OrderPage() {
     }
   };
 
-  const handleDeleteOrder = (idProduct, size, frame) => {
+  const handleDeleteOrder = (order ,idProduct, size, frame) => {
+    const cartItem = [];
+    cartItem.push(order)
     dispatch(removeOrderProduct({ idProduct, size, frame }));
+    CartService.deleteOrderItemCart(user?.id, cartItem, user?.access_token);
+    
   };
 
   // const handleOnchangeCheckAll = (e) => {
@@ -512,6 +517,7 @@ function OrderPage() {
                         style={{ cursor: "pointer", color: "blue" }}
                         onClick={() =>
                           handleDeleteOrder(
+                            order,
                             order?.product,
                             order?.size,
                             order?.frame

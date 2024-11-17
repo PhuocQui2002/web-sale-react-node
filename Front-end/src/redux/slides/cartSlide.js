@@ -20,3 +20,4 @@ export const cartSlide = createSlice({
 export const {
     addCart,
   } = cartSlide.actions;
+  export default cartSlide.reducer;
