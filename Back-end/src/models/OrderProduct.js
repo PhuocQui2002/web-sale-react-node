@@ -17,6 +17,7 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
+        isEvaluate: { type: Boolean, default: false },
       },
     ],
     shippingAddress: {

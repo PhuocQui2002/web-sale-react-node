@@ -183,6 +183,7 @@ function TypeProcduct() {
           <div style={{ color: "#666" }}>Lọc sản phẩm</div>
         </div>
         <div
+        
           style={{
             width: "1270px",
             margin: "0 auto",
@@ -233,6 +234,7 @@ function TypeProcduct() {
             </WrapperNavbar>
 
             <Col
+            // className="animate__animated animate__swing animate__flipInY"
               span={20}
               style={{
                 display: "flex",

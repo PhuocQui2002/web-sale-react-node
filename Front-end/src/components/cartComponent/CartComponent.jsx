@@ -60,10 +60,10 @@ const CartComponent = (props) => {
         </span>
         <span>| Đã bán {selled} </span>
       </WrapperReportText>
-      <WrapperPriceText>
+      <WrapperPriceText >
         {price.toLocaleString()} VNĐ{" "}
         {discount > 0 ? (
-          <WrapperDiscountText><MDBIcon fas icon="tag" /> {discount}%</WrapperDiscountText>
+          <WrapperDiscountText ><MDBIcon fas icon="tag" /> {discount}%</WrapperDiscountText>
         ) : (
           <div></div>
         )}

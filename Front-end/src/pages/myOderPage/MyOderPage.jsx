@@ -92,7 +92,8 @@ const MyOrderPage = () => {
     }
   }, [isErrorCancle, isSuccessCancel]);
 
-  const renderProduct = (data, isDelivered) => {
+  const renderProduct = (data, isDelivered, idOrder) => {
+    //console.log("ID CỦA ĐƠN HÀNG", idOrder);
     return data?.map((order) => {
       console.log("order-myorder", order);
       return (
@@ -170,7 +171,7 @@ const MyOrderPage = () => {
           {isDelivered ? (
             <div
               style={{
-              marginTop: "62px",
+                marginTop: "62px",
                 height: "48px",
                 width: "200px",
                 border: "none",
@@ -178,13 +179,23 @@ const MyOrderPage = () => {
                 textAlign: "center",
               }}
             >
-              <EvaluateComponents idProduct={order?.product} idUser={user.id} />
+              <EvaluateComponents
+                idProduct={order?.product}
+                idUser={user.id}
+                order={order}
+                idOrder={idOrder}
+              />
             </div>
           ) : (
             <div></div>
           )}
           <FormatText
-            style={{ fontSize: "20px", color: "#242424", marginLeft: "auto" ,marginTop: "62px", }}
+            style={{
+              fontSize: "20px",
+              color: "#242424",
+              marginLeft: "auto",
+              marginTop: "62px",
+            }}
           >
             Giá: {convertPrice(order?.totalPrice)}
           </FormatText>
@@ -193,10 +204,52 @@ const MyOrderPage = () => {
     });
   };
 
+  const onNavigateSHome = () => {
+    navigate("/");
+  };
   return (
     <WrapperContainer>
       <div style={{ height: "100vh", width: "1270px", margin: "0 auto" }}>
-        {/* <span>Đơn hàng của tôi</span> */}
+        <div
+          style={{
+            height: "40px",
+            backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
+            borderRadius: "6px",
+            display: "flex",
+            alignItems: "center",
+            padding: "0 15px",
+            fontSize: "14px",
+            color: "#333",
+            marginBottom: "10px",
+          }}
+        >
+          <div
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+            onClick={onNavigateSHome}
+          >
+            <MDBIcon
+              fas
+              icon="home"
+              style={{
+                width: "14px",
+                marginRight: "8px",
+                color: "#007bff",
+              }}
+            />
+            <span style={{ marginRight: "8px" }}>Trang chủ</span>
+            <MDBIcon
+              fas
+              icon="angle-right"
+              style={{
+                width: "10px",
+                color: "#999",
+                marginRight: "8px",
+              }}
+            />
+          </div>
+
+          <div style={{ color: "#666" }}>Đơn hàng của tôi</div>
+        </div>
         <WrapperListOrder>
           {data?.map((order) => {
             //console.log("odddd", order);
@@ -236,7 +289,11 @@ const MyOrderPage = () => {
                     }`}</span>
                   </div>
                 </WrapperStatus>
-                {renderProduct(order?.orderItems, order?.isDelivered)}
+                {renderProduct(
+                  order?.orderItems,
+                  order?.isDelivered,
+                  order?._id
+                )}
                 <WrapperFooterItem>
                   <div>
                     <span style={{ color: "rgb(255, 66, 78)" }}>

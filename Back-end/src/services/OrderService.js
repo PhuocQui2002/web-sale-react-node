@@ -339,6 +339,51 @@ const updateOrder = (orderID, data) => {
     }
   });
 };
+const updateOrderItems = (orderID, data) => {
+  console.log("Update order", orderID, data);
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Tìm đơn hàng theo orderID
+      const order = await Order.findById(orderID);
+
+      if (!order) {
+        return reject({
+          status: "ERR",
+          message: "The order is not defined",
+        });
+      }
+
+      // Tìm item trong mảng orderItems dựa vào product
+      const itemIndex = order.orderItems.findIndex(
+        item => item.product.toString() === data.idProduct
+      );
+
+      if (itemIndex === -1) {
+        return reject({
+          status: "ERR",
+          message: "The product is not found in the orderItems",
+        });
+      }
+
+      // Cập nhật giá trị isEvaluate cho item
+      order.orderItems[itemIndex].isEvaluate = data.isEvaluate;
+
+      // Lưu thay đổi
+      await order.save();
+
+      return resolve({
+        status: "OK",
+        message: "Order item updated successfully",
+        data: order,
+      });
+    } catch (e) {
+      console.error("Error updating order items:", e);
+      return reject(e);
+    }
+  });
+};
+
+
 module.exports = {
   createOrder,
   addProductReview,
@@ -347,4 +392,5 @@ module.exports = {
   cancelOrderDetails,
   getAllOrder,
   updateOrder,
+  updateOrderItems,
 };

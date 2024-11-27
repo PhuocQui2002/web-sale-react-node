@@ -52,7 +52,7 @@ const AdminProductComponent = () => {
     rating: "",
     image: "",
     type: "",
-    countInStock: "",
+    countInStock: "100",
     discount: "",
   });
 
@@ -685,7 +685,7 @@ const AdminProductComponent = () => {
               name="price"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Số lượng sản phẩm"
             name="countInStock"
             rules={[
@@ -700,7 +700,7 @@ const AdminProductComponent = () => {
               value={stateProduct.countInStock}
               name="countInStock"
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Đánh giá"
             name="rating"
@@ -832,9 +832,9 @@ const AdminProductComponent = () => {
               name="name"
             />
           </Form.Item>
-
-          <Form.Item
-            label={<span style={{ color: "#FF69B4" }}>Loại sản phẩm</span>}
+          {/* #FF69B4 */}
+          <Form.Item 
+            label={<span style={{ color: "#FFC107" }}>Loại sản phẩm</span>}
             name="type"
             rules={[
               {
@@ -850,7 +850,7 @@ const AdminProductComponent = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Giá sản phẩm"
+            label={<span style={{ color: "#FFC107" }}>Giá sản phẩm</span>}
             name="price"
             rules={[
               {
@@ -865,7 +865,7 @@ const AdminProductComponent = () => {
               name="price"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Số lượng sản phẩm"
             name="countInStock"
             rules={[
@@ -880,9 +880,9 @@ const AdminProductComponent = () => {
               value={stateEditProduct.countInStock}
               name="countInStock"
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
-            label="Đánh giá"
+            label={<span style={{ color: "#FFC107" }}>Đánh giá</span>}
             name="rating"
             rules={[
               {
@@ -898,7 +898,7 @@ const AdminProductComponent = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Mô tả sản phẩm"
+            label={<span style={{ color: "#FFC107" }}>Mô tả sản phẩm</span>}
             name="description"
             rules={[
               {
@@ -914,7 +914,7 @@ const AdminProductComponent = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Giảm giá"
+            label={<span style={{ color: "#FFC107" }}>Giảm giá</span>}
             name="discount"
             rules={[
               {
@@ -930,7 +930,7 @@ const AdminProductComponent = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Hình ảnh sản phẩm"
+            label={<span style={{ color: "#FFC107" }}>Hình ảnh sản phẩm</span>}
             name="image"
             rules={[
               {

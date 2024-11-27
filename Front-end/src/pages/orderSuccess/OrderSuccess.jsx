@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { convertPrice } from "../../utils";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   WrapperItemOrder,
   WrapperItemOrderInfo,
@@ -13,7 +13,7 @@ import {
 } from "./style.js";
 
 import { orderContant } from "../../contant";
-import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import { MDBCard, MDBCardBody, MDBIcon } from "mdb-react-ui-kit";
 
 const OrderSuccess = () => {
   const order = useSelector((state) => state.order);
@@ -25,11 +25,52 @@ const OrderSuccess = () => {
   //   console.log("Payment:", location.state?.payment);
   //   console.log("Orders:", location.state?.orders);
   //   console.log("Total Price:", location.state?.totalPriceMemo);
-
+  const navigate = useNavigate();
+  const onNavigateSHome = () => {
+    navigate("/");
+  };
   return (
     <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
-        <h3>Đơn hàng đặt thành công</h3>
+      <div
+        style={{
+          height: "40px",
+          backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
+          borderRadius: "6px",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 15px",
+          fontSize: "14px",
+          color: "#333",
+        }}
+      >
+        <div
+          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+          onClick={onNavigateSHome}
+        >
+          <MDBIcon
+            fas
+            icon="home"
+            style={{
+              width: "14px",
+              marginRight: "8px",
+              color: "#007bff",
+            }}
+          />
+          <span style={{ marginRight: "8px" }}>Trang chủ</span>
+          <MDBIcon
+            fas
+            icon="angle-right"
+            style={{
+              width: "10px",
+              color: "#999",
+              marginRight: "8px",
+            }}
+          />
+        </div>
+
+        <div style={{ color: "#666" }}>Đơn hàng đặt thàng công</div>
+      </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <WrapperContainer>
             <WrapperInfo>

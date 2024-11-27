@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Checkbox, Form, Image, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import 'animate.css';
 import {
   DeleteOutlined,
   MinusOutlined,
@@ -281,8 +282,9 @@ function OrderPage() {
   };
   return (
     <div style={{ background: "#D3D3D3", with: "100%", height: "100vh" }}>
-      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
-      <div
+      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }} className="animate__animated animate__backInLeft">
+      <div 
+      
         style={{
           height: "40px",
           backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
@@ -320,8 +322,9 @@ function OrderPage() {
         <div style={{ color: "#666" }}>Giỏ hàng</div>
       </div>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <WrapperLeft>
-            <WrapperStyleHeaderDilivery>
+        
+          <WrapperLeft >
+            <WrapperStyleHeaderDilivery >
               <StepComponent
                 items={itemsDelivery}
                 current={
@@ -335,7 +338,8 @@ function OrderPage() {
                 }
               />
 
-              <MDBIcon
+              <MDBIcon 
+              
                 fas
                 icon="shipping-fast"
                 style={{

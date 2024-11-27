@@ -1,16 +1,30 @@
 import React, { useState } from "react";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
-import { Button, Modal, Form, Space, Select, message } from "antd";
+import { Button, Modal, Form, Space, Select, message, Alert } from "antd";
 import InputComponent from "../inputComponent/InputComponent";
 import { WrapperUploadFile } from "../adminProductComponent/style";
 import { UploadOutlined } from "@ant-design/icons";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as EvaluateService from "../../services/EvaluateService";
+import * as OrderService from "../../services/OrderService";
 import { getBase64 } from "../../utils";
+import { useSelector } from "react-redux";
 const EvaluateComponents = (Eva) => {
+  const user = useSelector((state) => state?.user);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [evaluateProduct, setEvaluateProduct] = useState({});
-  //console.log("Evaluate idProduct", Eva.idProduct);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+
+  const handleAlertClick = () => {
+    setIsAlertVisible(true);
+    // Ẩn Alert sau 3 giây (nếu muốn)
+    setTimeout(() => {
+      setIsAlertVisible(false);
+    }, 3000);
+  };
+
+  console.log("Evaluate idProduct", Eva.order);
   //console.log("Evaluate user", Eva.idUser);
 
   const showModal = () => {
@@ -66,11 +80,36 @@ const EvaluateComponents = (Eva) => {
     mutation.mutate(params, {
       onSuccess: () => {
         message.success("Thêm đánh giá thành công");
+        onUpdateOrder();
         handleCancel();
       },
       onError: () => {
         message.error("Thêm đánh giá thất bại");
       },
+    });
+  };
+
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, token, idProduct, isEvaluate } = data;
+    const res = OrderService.updateOrderItems(id, token, idProduct, {
+      isEvaluate,
+    });
+    return res;
+  });
+
+  const {
+    data: dataUpdated,
+    //isLoading: isLoadingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated,
+  } = mutationUpdate;
+
+  const onUpdateOrder = () => {
+    mutationUpdate.mutate({
+      id: Eva.idOrder,
+      token: user?.access_token,
+      idProduct: Eva?.order?.product,
+      isEvaluate: true,
     });
   };
   const handleOnChange = (e) => {
@@ -82,18 +121,40 @@ const EvaluateComponents = (Eva) => {
   };
   return (
     <div>
-      <ButtonCpmponent
-        onClick={showModal}
-        //onClick={() => handleCanceOrder(order)}
-        size={40}
-        styleButton={{
-          height: "36px",
-          border: "1px solid #9255FD",
-          borderRadius: "4px",
-        }}
-        textButton={"Đánh giá"}
-        styleTextButton={{ color: "#9255FD", fontSize: "14px" }}
-      ></ButtonCpmponent>
+      {!Eva?.order?.isEvaluate ? (
+        <ButtonCpmponent
+          onClick={showModal}
+          //onClick={() => handleCanceOrder(order)}
+          size={40}
+          styleButton={{
+            height: "36px",
+            border: "1px solid #9255FD",
+            borderRadius: "4px",
+          }}
+          textButton={"Đánh giá"}
+          styleTextButton={{ color: "#9255FD", fontSize: "14px" }}
+        ></ButtonCpmponent>
+      ) : (
+        <ButtonCpmponent
+          size={40}
+          onClick={handleAlertClick}
+          styleButton={{
+            height: "36px",
+            border: "1px solid #9255FD",
+            borderRadius: "4px",
+          }}
+          textButton={"Đã đánh giá"}
+          styleTextButton={{ color: "#9255FD", fontSize: "14px" }}
+        ></ButtonCpmponent>
+      )}
+      {isAlertVisible && (
+        <Alert
+          message="Bạn đã đánh giá rồi"
+          type="info"
+          showIcon
+          style={{ marginTop: "20px" }}
+        />
+      )}
 
       <Modal
         forceRender

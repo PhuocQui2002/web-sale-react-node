@@ -10,6 +10,8 @@ router.get('/getAllOrderByUserId/:id', authUserMiddleWare,OrderController.getAll
 router.delete('/cancelOrder/:id', OrderController.cancelOrderDetails)
 router.get('/allOrder',authMiddleWare, OrderController.getAllOrder)
 router.put('/updateOrder/:id',authMiddleWare, OrderController.updateOrder)
+router.put('/updateOrderItems/:id', OrderController.updateOrderItems)
+
 
 
 

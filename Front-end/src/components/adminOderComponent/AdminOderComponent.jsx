@@ -120,7 +120,7 @@ const AdminOderComponent = () => {
     isError: isErrorUpdated,
   } = mutationUpdate;
 
-  console.log("dataUpdated", dataUpdated);
+  // console.log("dataUpdated", dataUpdated);
 
   const onUpdateOrder = () => {
     mutationUpdate.mutate(

@@ -154,9 +154,9 @@ const sendEmailCreateOrder = async (
   let info = await transporter.sendMail({
     from: process.env.MAIL_ACCOUNT,
     to: process.env.MAIL_ACCOUNT,
-    subject: "Bạn đã đặt hàng tại MIXISHOP",
+    subject: "Bạn đã đặt hàng tại Canvas Store",
     text: "Hello world?",
-    html: `<div><b>Bạn đã đặt hàng thành công tại MIXISHOP</b></div> ${listItem}`,
+    html: `<div><b>Bạn đã đặt hàng thành công tại Canvas Store</b></div> ${listItem}`,
     attachments: attachments,
     attachImage, // Sử dụng mảng attachments đã được khai báo
   });

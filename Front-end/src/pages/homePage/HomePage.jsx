@@ -60,7 +60,10 @@ function HomePage() {
 
   return (
     <LoadingComponent isPending={isLoading || isFetching} delay={0}>
-      <div style={{ width: "1270px", margin: "0 auto" }}>
+      <div
+        style={{ width: "1270px", margin: "0 auto" }}
+        className="animate__animated animate__lightSpeedInLeft"
+      >
         <WrapperTypeProduct>
           {typeProducts.map((item) => {
             return <TypeProduct name={item} key={item} />;
@@ -75,8 +78,7 @@ function HomePage() {
             width: "1270px",
             margin: "0 auto",
             //height: "1010px",
-             minHeight: "1010px",
-             
+            minHeight: "1010px",
           }}
         >
           <SliderComponent arrImages={[slider1, slider2, slider3]} />
@@ -128,7 +130,7 @@ function HomePage() {
           <div style={{ height: "20px" }} />
         </div>
       </div>
-      <FooterComponent/>
+      <FooterComponent />
     </LoadingComponent>
   );
 }

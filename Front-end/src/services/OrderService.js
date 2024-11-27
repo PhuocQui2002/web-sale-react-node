@@ -80,3 +80,26 @@ export const updateOrder = async (id, access_token, data) => {
   );
   return res.data;
 };
+
+export const updateOrderItems = async (idOder, access_token, idProduct, data) => {
+  
+
+  
+  const payload = {
+    idProduct,
+    ...data, 
+  };
+  console.log("Updating order_test_order", payload);
+  
+  const res = await axiosJWT.put(
+    `${import.meta.env.VITE_API_URL}/order/updateOrderItems/${idOder}`,
+    payload, 
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+
+  return res.data;
+};

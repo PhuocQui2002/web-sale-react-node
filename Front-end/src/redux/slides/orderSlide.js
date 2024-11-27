@@ -69,8 +69,8 @@ export const orderSlide = createSlice({
 
     increaseAmount: (state, action) => {
       const orderItem = action.payload;
-      console.log("Order item:", orderItem);
-      console.log("State order items:", state.orderItems);
+      // console.log("Order item:", orderItem);
+      // console.log("State order items:", state.orderItems);
       const existingOrder = state?.orderItems?.find(
         (item) =>
           item?.product === orderItem.idProduct &&
@@ -90,16 +90,21 @@ export const orderSlide = createSlice({
     },
     decreaseAmount: (state, action) => {
       const orderItem = action.payload;
-      const itemOrder = state?.orderItems?.find(
+      // console.log("Order item:", orderItem);
+      // console.log("State order items:", state.orderItems);
+      const existingOrder = state?.orderItems?.find(
         (item) =>
           item?.product === orderItem.idProduct &&
           item?.size === orderItem.size &&
           item?.frame === orderItem.frame
       );
       const itemOrderSelected = state?.orderItemsSlected?.find(
-        (item) => item?.product === orderItem
+        (item) =>
+          item?.product === orderItem.idProduct &&
+          item?.size === orderItem.size &&
+          item?.frame === orderItem.frame
       );
-      itemOrder.amount--;
+      existingOrder.amount--;
       if (itemOrderSelected) {
         itemOrderSelected.amount--;
       }
