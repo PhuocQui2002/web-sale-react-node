@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import { Button, Modal, Form, Space, Select, message, Alert } from "antd";
 import InputComponent from "../inputComponent/InputComponent";
@@ -9,7 +9,12 @@ import * as EvaluateService from "../../services/EvaluateService";
 import * as OrderService from "../../services/OrderService";
 import { getBase64 } from "../../utils";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const EvaluateComponents = (Eva) => {
+  const navigate = useNavigate();
+  const onNavigateHome = (idProduct) => {
+    navigate(`/productdetails/${idProduct}`);
+  };
   const user = useSelector((state) => state?.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +31,19 @@ const EvaluateComponents = (Eva) => {
 
   console.log("Evaluate idProduct", Eva.order);
   //console.log("Evaluate user", Eva.idUser);
+
+  const fetchMyOrder = async () => {
+    const res = await OrderService.getAllOrderByUserId(
+      user?.id,
+      user?.access_token
+    );
+
+    return res?.data;
+  };
+  useEffect(() => {
+    fetchMyOrder(user?.id, user?.access_token);
+  });
+  
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -82,13 +100,13 @@ const EvaluateComponents = (Eva) => {
         message.success("Thêm đánh giá thành công");
         onUpdateOrder();
         handleCancel();
+        onNavigateHome(params.idProduct);
       },
       onError: () => {
         message.error("Thêm đánh giá thất bại");
       },
     });
   };
-
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, idProduct, isEvaluate } = data;
     const res = OrderService.updateOrderItems(id, token, idProduct, {

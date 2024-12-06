@@ -39,3 +39,7 @@ export const WrapperSliderStyle = styled(Slider)`
         }
     }
 `
+
+
+
+

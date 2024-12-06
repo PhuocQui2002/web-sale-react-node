@@ -20,6 +20,7 @@ import {
   WrapperAddressProduct,
   WrapperQualityProduct,
   WrapperInputNumber,
+  WrapperFlexBox
 } from "./style";
 import ButtonCpmponent from "../buttonCpmponent/ButtonCpmponent";
 import LoadingComponent from "../loadingComponent/loadingComponent";
@@ -230,14 +231,20 @@ const ProductDetailsComponent = ({ idProduct }) => {
     navigate("/payment");
   };
   return (
-    <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
+    <Row gutter={[16, 16]} style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
-        span={10}
+       xs={24}
+       sm={24}
+       md={10}
+       lg={10}
+        //span={10}
         style={{ borderRight: "1px solid #e5e5e5", paddingRight: "5px" }}
       >
         <Image src={productDetails?.image} alt="img product" preview={true} />
       </Col>
-      <Col span={14} style={{ paddingLeft: "10px" }}>
+      <Col xs={24} sm={24} md={14} lg={14}
+      //span={14} 
+      style={{ paddingLeft: "10px" }}>
         <WrapperStyleNameProduct>
           <span
             style={{
@@ -248,7 +255,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             {productDetails?.name}
           </span>
         </WrapperStyleNameProduct>
-        <div>
+        <WrapperFlexBox>
           <Rate
             allowHalf
             defaultValue={productDetails?.rating}
@@ -259,7 +266,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             {" "}
             | Đã bán {productDetails?.selled}+
           </WrapperStyleTextSell>
-        </div>
+        </WrapperFlexBox>
 
         <p
           style={{

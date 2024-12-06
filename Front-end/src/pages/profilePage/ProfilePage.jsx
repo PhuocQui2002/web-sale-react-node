@@ -29,6 +29,7 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
+  // const [loading, setLoading] = useState(false);
 
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
@@ -50,10 +51,14 @@ const ProfilePage = () => {
     if (isSuccess) {
       message.success("Cập nhật thành công");
       handleGetDetailsUser(user?.id, user?.access_token);
+      //setLoading(true);
     } else if (isError) {
-      message.error();
+      message.error("Cập nhật thông tin thất bại");
     }
   }, [isSuccess, isError]);
+  // useEffect(() => {
+  //     handleGetDetailsUser(user?.id, user?.access_token);
+  // }, [loading]);
 
   const handleOnchangeEmail = (value) => {
     setEmail(value);

@@ -6,7 +6,15 @@ const fs = require("fs");
 const path = require("path");
 var inlineBase64 = require("nodemailer-plugin-inline-base64");
 
-const createOrderPDF = (orderItems, shippingPrice, totalPrice) => {
+const createOrderPDF = (
+  orderItems,
+  shippingPrice,
+  totalPrice,
+  fullName,
+  address,
+  phone,
+  
+) => {
   const pdfFileName = `order_${Date.now()}.pdf`;
   const pdfDir = path.resolve(__dirname, "../assets/PDF");
   const pdfPath = path.join(pdfDir, pdfFileName);
@@ -33,6 +41,12 @@ const createOrderPDF = (orderItems, shippingPrice, totalPrice) => {
 
   doc.pipe(fs.createWriteStream(pdfPath));
   doc.fontSize(25).text("Đơn hàng của bạn", { align: "center" });
+  doc.moveDown();
+  doc.fontSize(15).text(`Tên khách hàng: ${fullName}`);
+  doc.fontSize(15).text(`Địa chỉ: ${address}`);
+  doc.fontSize(15).text(`Số điện thoại: ${phone}`);
+  doc.fontSize(15).text(`Phí ship: ${shippingPrice} VND`);
+  doc.fontSize(15).text(`Tổng đơn hàng phải trả: ${totalPrice} VND`);
   doc.moveDown();
 
   orderItems.forEach((order, index) => {
@@ -94,8 +108,7 @@ const createOrderPDF = (orderItems, shippingPrice, totalPrice) => {
 
   // Thêm thông tin giá ship và tổng đơn hàng
   doc.moveDown();
-  doc.text(`Giá ship: ${shippingPrice} VND`);
-  doc.text(`Tổng đơn hàng: ${totalPrice} VND`);
+  
 
   doc.end();
   return pdfPath;
@@ -105,7 +118,10 @@ const sendEmailCreateOrder = async (
   email,
   orderItems,
   shippingPrice,
-  totalPrice
+  totalPrice,
+  fullName,
+  address,
+  phone
 ) => {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -123,7 +139,14 @@ const sendEmailCreateOrder = async (
   const attachments = [];
   const attachImage = [];
   // Tạo PDF và lấy đường dẫn
-  const pdfPath = createOrderPDF(orderItems, shippingPrice, totalPrice);
+  const pdfPath = createOrderPDF(
+    orderItems,
+    shippingPrice,
+    totalPrice,
+    fullName,
+    address,
+    phone,
+  );
   orderItems.forEach((order, index) => {
     attachImage.push({ path: order.image });
     if (pdfPath) {
@@ -174,18 +197,15 @@ const sendOtpEmail = async (otp) => {
     },
   });
 
-
   let info = await transporter.sendMail({
     from: process.env.MAIL_ACCOUNT,
     to: process.env.MAIL_ACCOUNT,
     subject: "Max otp của bạn",
     text: "Hello world?",
     html: `<div><b>Mã OTP của bạn</b></div> ${otp}`,
-    
   });
-
 };
 module.exports = {
   sendEmailCreateOrder,
-  sendOtpEmail
+  sendOtpEmail,
 };

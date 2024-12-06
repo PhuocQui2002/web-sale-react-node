@@ -12,6 +12,7 @@ import {
   WrapperContainer,
   WrapperStatus,
   FormatText,
+  BreadcrumbWrapper,
 } from "./style";
 import ButtonComponent from "../../components/buttonCpmponent/ButtonCpmponent";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -104,17 +105,24 @@ const MyOrderPage = () => {
               //height: "200px",
               display: "flex",
               alignItems: "center",
-              gap: 4,
+              //gap: 4,
+              gap: 0 /* Xóa khoảng cách giữa các phần tử */,
+              marginLeft: "0" /* Đảm bảo không có khoảng cách bên trái */,
             }}
           >
             <Image
               src={order?.image}
               style={{
+                // width: "100%", /* Thay đổi để tự điều chỉnh theo kích thước container */
+                // maxWidth: "170px", /* Kích thước tối đa */
+                // height: "auto", /* Tỉ lệ tự nhiên */
                 width: "170px",
                 height: "170px",
                 objectFit: "cover",
                 border: "1px solid rgb(238, 238, 238)",
-                padding: "2px",
+                //padding: "2px",
+                padding: "0", // Xóa padding
+                margin: "0", // Xóa margin
               }}
             />
             <div
@@ -210,7 +218,7 @@ const MyOrderPage = () => {
   return (
     <WrapperContainer>
       <div style={{ height: "100vh", width: "1270px", margin: "0 auto" }}>
-        <div
+        <BreadcrumbWrapper
           style={{
             height: "40px",
             backgroundColor: "#E0EAF4", // Màu nền nhẹ nhàng hơn cho breadcrumb
@@ -249,7 +257,7 @@ const MyOrderPage = () => {
           </div>
 
           <div style={{ color: "#666" }}>Đơn hàng của tôi</div>
-        </div>
+        </BreadcrumbWrapper>
         <WrapperListOrder>
           {data?.map((order) => {
             //console.log("odddd", order);
@@ -301,9 +309,9 @@ const MyOrderPage = () => {
                     </span>
                     <span
                       style={{
-                        fontSize: "13px",
+                        fontSize: "20px",
                         color: "rgb(56, 56, 61)",
-                        fontWeight: 700,
+                        fontWeight: 600,
                       }}
                     >
                       {convertPrice(order?.totalPrice)}

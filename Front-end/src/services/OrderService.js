@@ -89,7 +89,7 @@ export const updateOrderItems = async (idOder, access_token, idProduct, data) =>
     idProduct,
     ...data, 
   };
-  console.log("Updating order_test_order", payload);
+
   
   const res = await axiosJWT.put(
     `${import.meta.env.VITE_API_URL}/order/updateOrderItems/${idOder}`,

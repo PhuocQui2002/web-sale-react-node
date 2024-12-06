@@ -41,7 +41,7 @@ const DetailsOrderPage = () => {
       }, 0) || 0
     );
   }, [data]);
-const onNavigateSHome = () => {
+  const onNavigateSHome = () => {
     navigate("/");
   };
   return (
@@ -66,10 +66,12 @@ const onNavigateSHome = () => {
           marginBottom: "10px",
           maxWidth: "1200px",
           margin: "0 auto",
-          
         }}
       >
-        <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }} onClick={onNavigateSHome}>
+        <div
+          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+          onClick={onNavigateSHome}
+        >
           <MDBIcon
             fas
             icon="home"
@@ -103,7 +105,6 @@ const onNavigateSHome = () => {
           padding: "30px",
         }}
       >
-         
         <div
           style={{
             display: "flex",
@@ -131,14 +132,15 @@ const onNavigateSHome = () => {
             >
               Địa chỉ người nhận
             </h5>
-            <p style={{ fontSize: "14px", fontWeight: "600", color: "#333" }}>
+            <p style={{ fontSize: "14px" }}>
+              <strong>Tên khách hàng: </strong>{" "}
               {data?.shippingAddress?.fullName}
             </p>
             <p style={{ fontSize: "14px", color: "#666" }}>
-              Địa chỉ: {data?.shippingAddress?.address}
+              <strong>Địa chỉ:</strong> {data?.shippingAddress?.address}
             </p>
             <p style={{ fontSize: "14px", color: "#666" }}>
-              Điện thoại: {data?.shippingAddress?.phone}
+              <strong>Điện thoại:</strong> {data?.shippingAddress?.phone}
             </p>
           </div>
 
@@ -296,6 +298,7 @@ const onNavigateSHome = () => {
             <span>Phí vận chuyển</span>
             <span>{convertPrice(data?.shippingPrice)}</span>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -304,7 +307,7 @@ const onNavigateSHome = () => {
               fontWeight: "bold",
             }}
           >
-            <span>Tổng cộng</span>
+            <span>Tổng tiền đơn hàng</span>
             <span>{convertPrice(data?.totalPrice)}</span>
           </div>
         </div>

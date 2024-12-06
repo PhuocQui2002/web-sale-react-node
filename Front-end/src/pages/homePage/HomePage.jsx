@@ -81,7 +81,8 @@ function HomePage() {
             minHeight: "1010px",
           }}
         >
-          <SliderComponent arrImages={[slider1, slider2, slider3]} />
+          
+          <SliderComponent  arrImages={[slider1, slider2, slider3]} />
           <WrapperProducts>
             {products?.data?.map((product) => {
               return (

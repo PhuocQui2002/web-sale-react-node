@@ -23,9 +23,24 @@ export const WrapperButtonMore = styled(ButtonComponent)`
     cursor: ${(props) => props.disabled ? 'not-allowed' : 'pointers'}
 `
 
+// export const WrapperProducts = styled.div`
+//     display: flex;
+//     gap: 30px;
+//     margin-top:20px;
+//     flex-wrap: wrap;
+// `
+
 export const WrapperProducts = styled.div`
-    display: flex;
-    gap: 30px;
-    margin-top:20px;
-    flex-wrap: wrap;
-`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Hiển thị 1 sản phẩm mỗi hàng trên màn hình nhỏ */
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(5, 1fr); /* Hiển thị 5 sản phẩm mỗi hàng trên màn hình rộng */
+  }
+`;

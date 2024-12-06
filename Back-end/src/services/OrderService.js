@@ -49,7 +49,7 @@ const createOrder = (newOrder) => {
         }
       });
       const results = await Promise.all(promises);
-      console.log("results", results);
+      //console.log("results", results);
       const newData = results && results.filter((item) => item.id);
       if (newData.length) {
         const arrId = [];
@@ -83,7 +83,10 @@ const createOrder = (newOrder) => {
             email,
             orderItems,
             shippingPrice,
-            totalPrice
+            totalPrice,
+            fullName,
+            address,
+            phone
           );
           //await EmailService.createOrderPDF(orderItems);
           resolve({
@@ -340,7 +343,6 @@ const updateOrder = (orderID, data) => {
   });
 };
 const updateOrderItems = (orderID, data) => {
-  console.log("Update order", orderID, data);
   return new Promise(async (resolve, reject) => {
     try {
       // Tìm đơn hàng theo orderID
@@ -355,7 +357,7 @@ const updateOrderItems = (orderID, data) => {
 
       // Tìm item trong mảng orderItems dựa vào product
       const itemIndex = order.orderItems.findIndex(
-        item => item.product.toString() === data.idProduct
+        (item) => item.product.toString() === data.idProduct
       );
 
       if (itemIndex === -1) {
@@ -382,7 +384,6 @@ const updateOrderItems = (orderID, data) => {
     }
   });
 };
-
 
 module.exports = {
   createOrder,

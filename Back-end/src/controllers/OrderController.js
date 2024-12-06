@@ -165,13 +165,7 @@ const updateOrder = async (req, res) => {
 const updateOrderItems = async (req, res) => {
   try {
     const orderID = req.params.id;
-    //const idProduct = req.params.idProduct;
     const data = req.body;
-    console.log("Updating order:", {
-      orderID,
-      updates: req.body,
-      params: req.params,
-    });
     if (!orderID) {
       return res.status(200).json({
         status: "ERR",

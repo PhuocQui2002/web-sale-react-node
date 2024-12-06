@@ -255,6 +255,7 @@ function OrderPage() {
         {
           onSuccess: () => {
             dispatch(updateUser({ name, address, phone }));
+      message.success("Cập nhật địa chỉ thành công");
             setIsOpenModalUpdateInfo(false);
           },
         }

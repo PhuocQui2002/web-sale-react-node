@@ -1,16 +1,16 @@
 import { Card } from "antd";
 import styled from "styled-components";
 
-export const WrapperCardStyle = styled(Card)`
-    width: 100px;
-    & img {
-        height: 200px;
-        width: 100px;
-    },
-    position: relative;
-    background-color: ${props => props.disabled ? 'red' : '#fff'};
-    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
-`
+// export const WrapperCardStyle = styled(Card)`
+//     width: 100px;
+//     & img {
+//         height: 200px;
+//         width: 100px;
+//     },
+//     position: relative;
+//     background-color: ${props => props.disabled ? 'red' : '#fff'};
+//     cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}
+// `
 
 export const StyleNameProduct = styled.div`
     font-weight: 400;
@@ -45,3 +45,14 @@ export const WrapperStyleTextSell = styled.span`
     line-height: 24px;
     color: rgb(120, 120, 120)
 `
+export const WrapperCardStyle = styled(Card)`
+  width: 100%;
+  & img {
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+  }
+  position: relative;
+  background-color: ${(props) => (props.disabled ? "red" : "#fff")};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+`;

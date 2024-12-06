@@ -15,6 +15,8 @@ import {
   WrapperTextHeader,
   WrapperHeaderAccout,
   WrapperContentPopup,
+  WrapperSearch,
+  WrapperCart,
 } from "./style";
 import ButtonInputSearch from "../buttonInputSearch/ButtonInputSearch";
 import mixilogo from "../../assets/images/mixilogo.jpg";
@@ -121,7 +123,8 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
             isHiddenSearch && isHiddenSearch ? "space-between" : "unset",
         }}
       >
-        <Col onClick={onNavigateSHome} span={5}>
+        {/* span={5} */}
+        <Col onClick={onNavigateSHome} xs={6} sm={5} md={5}>
           <Image
             src={mixilogo}
             preview={false}
@@ -138,21 +141,29 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
           <WrapperTextHeader> Canvas Story</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
-          <Col span={13}>
-            <ButtonInputSearch
-              //allowClear size, placeholder,textButon
-              textButton="Search"
-              bordered=""
-              size="large"
-              onChange={onSearch}
-              placeholder="input search text"
-            />
+          //span={13}
+          <Col xs={12} sm={12} md={13}>
+            <WrapperSearch>
+              <ButtonInputSearch
+                //allowClear size, placeholder,textButon
+                textButton="Search"
+                bordered=""
+                size={window.innerWidth <= 768 ? "small" : "large"}
+                onChange={onSearch}
+                placeholder="input search text"
+              />
+            </WrapperSearch>
           </Col>
         )}
 
         <Col
-          span={6}
-          style={{ display: "flex", gap: "54px", alignItems: "center" }}
+          xs={6}
+          sm={7}
+          md={6}
+          //span={6}
+          style={{ display: "flex", gap: "54px", alignItems: "center",
+            justifyContent: "flex-end"
+          }}
         >
           <LoadingComponent isPending={loading}>
             <WrapperHeaderAccout
@@ -207,7 +218,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
           </LoadingComponent>
 
           {!isHiddenCart && (
-            <div
+            <WrapperCart
               onClick={onNavigateShopingCart}
               style={{
                 cursor: "pointer",
@@ -218,7 +229,7 @@ function HeaderComponent({ isHiddenSearch = false, isHiddenCart = false }) {
                 <ShoppingOutlined style={{ fontSize: "30px", color: "#fff" }} />
               </Badge>
               <WrapperTextHeader>Cart</WrapperTextHeader>
-            </div>
+            </WrapperCart>
           )}
         </Col>
       </WrapperHeader>

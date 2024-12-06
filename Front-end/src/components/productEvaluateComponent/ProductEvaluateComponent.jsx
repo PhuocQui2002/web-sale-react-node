@@ -66,6 +66,7 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
               boxShadow: "0 12px 12px #ccc",
             }}
           >
+            <div>
             <UserAvatar
               userId={data.userId}
               token={user.access_token}
@@ -73,9 +74,12 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
             />
             <ReviewContent>
               <p>Ngày đánh giá: {data.createdAt.substring(0, 10)}</p>
-              <p>Nội dung: {data.commentEvaluate}</p>
-              {data.imgEvaluate ? <ReviewImages>
-                <p>Hình ảnh:</p>
+              <p>Nội dung: {data.commentEvaluate}</p>   
+            </ReviewContent>
+            {data.imgEvaluate ? <ReviewImages>
+                <p style={{
+                  marginRight: "20px",
+                }}>Hình ảnh:</p>
                 <Image
                   style={{
                     height: "100px",
@@ -86,8 +90,7 @@ const ProductEvaluateComponent = ({ idProductEvaluate }) => {
                   src={data.imgEvaluate}
                 />
               </ReviewImages> : <dicv></dicv> }
-              
-            </ReviewContent>
+            </div>
           </ReviewItem>
         ))
       ) : (
