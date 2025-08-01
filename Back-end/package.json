@@ -26,5 +26,8 @@
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.15.1",
     "socket.io": "^4.7.5"
+  },
+   "engines": {
+    "node": "18.x"
   }
 }

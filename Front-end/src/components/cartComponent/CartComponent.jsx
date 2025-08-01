@@ -10,7 +10,7 @@ import {
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
 //import logo from "../../assets/images/logo.png";
-import logo from "../../assets/images/logohinh.webp";
+import logo from "../../assets/images/logohinh3.webp";
 import { MDBIcon } from "mdb-react-ui-kit";
 
 //import painting from "../../assets/images/logoDN.jpg";
@@ -60,10 +60,12 @@ const CartComponent = (props) => {
         </span>
         <span>| Đã bán {selled} </span>
       </WrapperReportText>
-      <WrapperPriceText >
+      <WrapperPriceText>
         {price.toLocaleString()} VNĐ{" "}
         {discount > 0 ? (
-          <WrapperDiscountText ><MDBIcon fas icon="tag" /> {discount}%</WrapperDiscountText>
+          <WrapperDiscountText>
+            <MDBIcon fas icon="tag" /> {discount}%
+          </WrapperDiscountText>
         ) : (
           <div></div>
         )}

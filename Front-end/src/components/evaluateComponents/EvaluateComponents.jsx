@@ -11,6 +11,14 @@ import { getBase64 } from "../../utils";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const EvaluateComponents = (Eva) => {
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const handleOk2 = () => {
+    setIsModalOpen2(false);
+    onNavigateHome(Eva.idProduct);
+  };
+  const handleCancel2 = () => {
+    setIsModalOpen2(false);
+  };
   const navigate = useNavigate();
   const onNavigateHome = (idProduct) => {
     navigate(`/productdetails/${idProduct}`);
@@ -29,7 +37,7 @@ const EvaluateComponents = (Eva) => {
     }, 3000);
   };
 
-  console.log("Evaluate idProduct", Eva.order);
+  // console.log("Evaluate idProduct", Eva.order);
   //console.log("Evaluate user", Eva.idUser);
 
   const fetchMyOrder = async () => {
@@ -43,7 +51,6 @@ const EvaluateComponents = (Eva) => {
   useEffect(() => {
     fetchMyOrder(user?.id, user?.access_token);
   });
-  
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -73,7 +80,7 @@ const EvaluateComponents = (Eva) => {
       idProduct,
       userId,
     });
-    console.log("res-danhgia", res);
+    // console.log("res-danhgia", res);
     return res;
   });
   const handleOnchangeAvatar = async ({ fileList }) => {
@@ -100,7 +107,8 @@ const EvaluateComponents = (Eva) => {
         message.success("Thêm đánh giá thành công");
         onUpdateOrder();
         handleCancel();
-        onNavigateHome(params.idProduct);
+        // onNavigateHome(params.idProduct);
+        setIsModalOpen2(true);
       },
       onError: () => {
         message.error("Thêm đánh giá thất bại");
@@ -272,6 +280,14 @@ const EvaluateComponents = (Eva) => {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="Đánh giá thành công"
+        open={isModalOpen2}
+        onOk={handleOk2}
+        onCancel={handleCancel2}
+      >
+        <p>Bạn có muốn xem đánh giá của mình?</p>
       </Modal>
     </div>
   );
