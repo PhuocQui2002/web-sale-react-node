@@ -9,7 +9,9 @@
 - **Giỏ hàng:** Khách hàng có thể thêm sản phẩm vào giỏ hàng và thanh toán một cách an toàn.
 - **Tìm kiếm sản phẩm:** Tìm kiếm nhanh chóng và dễ dàng.
 - **Chatbot tích hợp:** Hỗ trợ khách hàng qua chat trực tiếp.
-
+![Trang_chu](https://github.com/user-attachments/assets/0a1bc25b-05bc-4c99-8410-9b403ee1a116)
+![Gio_hang](https://github.com/user-attachments/assets/21c7500d-987f-47ca-82c9-515b24b44ffe)
+![Quan_ly](https://github.com/user-attachments/assets/8f8d28e1-e30c-4fb4-af00-4764e1f66094)
 
 
 ## Công nghệ sử dụng
