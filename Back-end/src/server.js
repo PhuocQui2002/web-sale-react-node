@@ -19,7 +19,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 routes(app);
-
+app.get("/", (req, res) => {
+  res.send("✅ API is running...");
+});
 mongoose
   .connect(process.env.MONGO_DB_URI, {
     useNewUrlParser: true,

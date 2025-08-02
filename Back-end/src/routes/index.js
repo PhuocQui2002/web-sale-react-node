@@ -5,11 +5,7 @@ const FrameRouter = require("./FrameRouter");
 const SizeRouter = require("./SizeRouter");
 const EvaluateRouter = require("./EvaluateRouter");
 const CartRouter = require("./CartRouter");
-
-
-
-
- const PaymentRouter = require('./PaymentRouter')
+const PaymentRouter = require('./PaymentRouter')
 
 const routes = (app) => {
   app.use("/api/user", UserRouter);
